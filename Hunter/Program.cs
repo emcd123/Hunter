@@ -34,6 +34,9 @@ namespace Hunter
         private static readonly int _statHeight = 70;
         private static RLConsole _statConsole;
 
+        private static bool _renderRequired = true;
+
+        public static CommandSystem CommandSystem { get; private set; }
         public static Player Player { get; private set; }
         public static DungeonMap DungeonMap { get; private set; }
 
@@ -56,6 +59,7 @@ namespace Hunter
 
 
             Player = new Player();
+            CommandSystem = new CommandSystem();
             //Generate the map
             MapGenerator mapGenerator = new MapGenerator(_mapWidth, _mapHeight);
             DungeonMap = mapGenerator.CreateMap();
@@ -73,6 +77,38 @@ namespace Hunter
         // Event handler for RLNET's Update event
         private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
         {
+            bool didPlayerAct = false;
+            RLKeyPress keyPress = _rootConsole.Keyboard.GetKeyPress();
+
+            if (keyPress != null)
+            {
+                if (keyPress.Key == RLKey.Up)
+                {
+                    didPlayerAct = CommandSystem.MovePlayer(Direction.Up);
+                }
+                else if (keyPress.Key == RLKey.Down)
+                {
+                    didPlayerAct = CommandSystem.MovePlayer(Direction.Down);
+                }
+                else if (keyPress.Key == RLKey.Left)
+                {
+                    didPlayerAct = CommandSystem.MovePlayer(Direction.Left);
+                }
+                else if (keyPress.Key == RLKey.Right)
+                {
+                    didPlayerAct = CommandSystem.MovePlayer(Direction.Right);
+                }
+                else if (keyPress.Key == RLKey.Escape)
+                {
+                    _rootConsole.Close();
+                }
+            }
+
+            if (didPlayerAct)
+            {
+                _renderRequired = true;
+            }
+
             // Set background color and text for each console 
             // so that we can verify they are in the correct positions
             _mapConsole.SetBackColor(0, 0, _mapWidth, _mapHeight, Colors.FloorBackground);
@@ -87,20 +123,23 @@ namespace Hunter
         // Event handler for RLNET's Render event
         private static void OnRootConsoleRender(object sender, UpdateEventArgs e)
         {
-            DungeonMap.Draw(_mapConsole);
-            Player.Draw(_mapConsole, DungeonMap);
+            if (_renderRequired)
+            {
+                DungeonMap.Draw(_mapConsole);
+                Player.Draw(_mapConsole, DungeonMap);
 
-            // Blit the sub consoles to the root console in the correct locations
-            RLConsole.Blit(_mapConsole, 0, 0, _mapWidth, _mapHeight,
-              _rootConsole, 0, 0);
-            RLConsole.Blit(_statConsole, 0, 0, _statWidth, _statHeight,
-              _rootConsole, _mapWidth, 0);
-            RLConsole.Blit(_messageConsole, 0, 0, _messageWidth, _messageHeight,
-              _rootConsole, 0, _screenHeight - _messageHeight);
+                // Blit the sub consoles to the root console in the correct locations
+                RLConsole.Blit(_mapConsole, 0, 0, _mapWidth, _mapHeight,
+                  _rootConsole, 0, 0);
+                RLConsole.Blit(_statConsole, 0, 0, _statWidth, _statHeight,
+                  _rootConsole, _mapWidth, 0);
+                RLConsole.Blit(_messageConsole, 0, 0, _messageWidth, _messageHeight,
+                  _rootConsole, 0, _screenHeight - _messageHeight);
 
-
-            // Tell RLNET to draw the console that we set
-            _rootConsole.Draw();
+                // Tell RLNET to draw the console that we set
+                _rootConsole.Draw();
+                _renderRequired = false;
+            }           
         }
     }
 }
