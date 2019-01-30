@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using RLNET;
+
 namespace Hunter.Core
 {
     public class Player : Actor
@@ -14,8 +16,11 @@ namespace Hunter.Core
             Name = "Rogue";
             Color = Colors.Player;
             Symbol = '@';
-            X = 10;
-            Y = 10;
+        }
+
+        public void Draw(RLConsole mapConsole)
+        {
+            mapConsole.Set(X, Y, Color, null, Symbol);
         }
     }
 }
