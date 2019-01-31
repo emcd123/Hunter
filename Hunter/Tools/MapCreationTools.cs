@@ -42,17 +42,51 @@ namespace Hunter.Tools
         //Intialise a map with correct width and height
             _map.Initialize(_width, _height);
 
+            List<Rectangle> Segments = new List<Rectangle>();
+
             int roomXCoord = 0;
             int roomYCoord = 0;
 
-            for (int i = 0; i < _maxRooms; i++)
+            var FullRectangle = new Rectangle(roomXCoord, roomYCoord, _width, _height);
+            //Segments.Add(Segment);
+
+            Segments = SplitRect(FullRectangle);
+            foreach (Rectangle o in Segments)
             {
-                CreateRectangleRoom(roomXCoord, roomYCoord);
-                int increment = _roomSize + 10;
-                roomXCoord += increment;
+                List<Rectangle> IterLi = new List<Rectangle>();
+                IterLi = SplitRect(o);
+                for (int i = 0; i < IterLi.Count; i++)
+                {
+                    Console.WriteLine(IterLi[i]);
+                    //List<Cell> borderCells = _map.GetCellsAlongLine(IterLi[i].Left, IterLi[i].Top, IterLi[i].Right, IterLi[i].Bottom).ToList();
+                }                
             }
-            PlacePlayer(_map);
+
+
+
+
+            //for (int i = 0; i < _maxRooms; i++)
+            //{
+            //    CreateRectangleRoom(roomXCoord, roomYCoord);
+            //    int increment = _roomSize + 10;
+            //    roomXCoord += increment;
+            //}
+            //PlacePlayer(_map);
             return _map;
+        }
+
+        public List<Rectangle> SplitRect(Rectangle rect)
+        {
+            int width = rect.Width;
+            int height = rect.Height;
+            int xBreak = width / 2;
+            int yBreak = height / 2;
+
+            var Segment1 = new Rectangle(rect.Left, rect.Top, xBreak, height);
+            var Segment2 = new Rectangle(xBreak, rect.Top, width - xBreak, height);
+
+            List<Rectangle> rect_li = new List<Rectangle>() { Segment1, Segment2 };
+            return  rect_li; 
         }
 
         //Create a rectangular room.
@@ -61,7 +95,7 @@ namespace Hunter.Tools
             int xCoord = roomXCoord;
             int yCoord = roomYCoord;
 
-            roomArray = CreateRect(xCoord, yCoord, _roomSize);
+            roomArray = CreateRect(xCoord, yCoord, _roomSize, _roomSize);
             Rectangle newRoom = roomArray[0];
 
             for (int x = newRoom.Left + 1; x < newRoom.Right; x++)
@@ -89,9 +123,9 @@ namespace Hunter.Tools
             }
         }
 
-        public Rectangle[] CreateRect(int xCoord, int yCoord, int _roomSize)
+        public Rectangle[] CreateRect(int xCoord, int yCoord, int width, int height)
         {
-            var newRoom = new Rectangle(xCoord, yCoord, _roomSize, _roomSize);
+            var newRoom = new Rectangle(xCoord, yCoord, width, height);
             Rectangle[] roomArray = new Rectangle[] { newRoom };
             return roomArray;
         }

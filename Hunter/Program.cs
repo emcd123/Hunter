@@ -41,7 +41,7 @@ namespace Hunter
         public static Player Player { get; private set; }
         public static DungeonMap DungeonMap { get; private set; }
 
-        public static int _maxrooms = 3;
+        public static int _maxrooms = 4;
         public static int _roomMinSize = 10;
         public static int _roomMaxSize = 15;
 
