@@ -48,21 +48,19 @@ namespace Hunter.Tools
             int roomYCoord = 0;
 
             var FullRectangle = new Rectangle(roomXCoord, roomYCoord, _width, _height);
-            //Segments.Add(Segment);
+            Segments.Add(FullRectangle);
 
-            Segments = SplitRect(FullRectangle);
-            foreach (Rectangle o in Segments)
+            //Segments = SplitRect(FullRectangle);
+            for (int i = 0; i < 2; i++)
             {
-                List<Rectangle> IterLi = new List<Rectangle>();
-                IterLi = SplitRect(o);
-                for (int i = 0; i < IterLi.Count; i++)
-                {
-                    Console.WriteLine(IterLi[i]);
-                    //List<Cell> borderCells = _map.GetCellsAlongLine(IterLi[i].Left, IterLi[i].Top, IterLi[i].Right, IterLi[i].Bottom).ToList();
-                }                
+                RectSplitIteration(Segments);
             }
+            Console.WriteLine(Segments.Count);
 
-
+            foreach (object o in Segments)
+            {
+                Console.WriteLine(o);
+            }
 
 
             //for (int i = 0; i < _maxRooms; i++)
@@ -89,46 +87,61 @@ namespace Hunter.Tools
             return  rect_li; 
         }
 
-        //Create a rectangular room.
-        public void CreateRectangleRoom(int roomXCoord, int roomYCoord)
+        public void RectSplitIteration(List<Rectangle> Slice)
         {
-            int xCoord = roomXCoord;
-            int yCoord = roomYCoord;
-
-            roomArray = CreateRect(xCoord, yCoord, _roomSize, _roomSize);
-            Rectangle newRoom = roomArray[0];
-
-            for (int x = newRoom.Left + 1; x < newRoom.Right; x++)
+            foreach (Rectangle o in Slice.ToList())
             {
-                for (int y = newRoom.Top + 1; y < newRoom.Bottom; y++)
+                List<Rectangle> IterLi = new List<Rectangle>();
+                IterLi = SplitRect(o);
+                for (int i = 0; i < IterLi.Count; i++)
                 {
-                    _map.SetCellProperties(x, y, true, true, true);
+                    //Console.WriteLine(IterLi[i]);
+                    Slice.Add(IterLi[i]);
+                    //List<Cell> borderCells = _map.GetCellsAlongLine(IterLi[i].Left, IterLi[i].Top, IterLi[i].Right, IterLi[i].Bottom).ToList();
                 }
             }
-            for (int x = newRoom.Left; x < newRoom.Right + 1; x++)
-            {
-                _map.SetCellProperties(x, yCoord, false, false, true);
-            }
-            for (int y = newRoom.Top; y < newRoom.Bottom + 1; y++)
-            {
-                _map.SetCellProperties(xCoord, y, false, false, true);
-            }
-            for (int x = newRoom.Left; x < newRoom.Right + 1; x++)
-            {
-                _map.SetCellProperties(x, yCoord + _roomSize, false, false, true);
-            }
-            for (int y = newRoom.Top; y < newRoom.Bottom + 1; y++)
-            {
-                _map.SetCellProperties(xCoord + _roomSize, y, false, false, true);
-            }
         }
 
-        public Rectangle[] CreateRect(int xCoord, int yCoord, int width, int height)
-        {
-            var newRoom = new Rectangle(xCoord, yCoord, width, height);
-            Rectangle[] roomArray = new Rectangle[] { newRoom };
-            return roomArray;
-        }
+        ////Create a rectangular room.
+        //public void CreateRectangleRoom(int roomXCoord, int roomYCoord)
+        //{
+        //    int xCoord = roomXCoord;
+        //    int yCoord = roomYCoord;
+
+        //    roomArray = CreateRect(xCoord, yCoord, _roomSize, _roomSize);
+        //    Rectangle newRoom = roomArray[0];
+
+        //    for (int x = newRoom.Left + 1; x < newRoom.Right; x++)
+        //    {
+        //        for (int y = newRoom.Top + 1; y < newRoom.Bottom; y++)
+        //        {
+        //            _map.SetCellProperties(x, y, true, true, true);
+        //        }
+        //    }
+        //    for (int x = newRoom.Left; x < newRoom.Right + 1; x++)
+        //    {
+        //        _map.SetCellProperties(x, yCoord, false, false, true);
+        //    }
+        //    for (int y = newRoom.Top; y < newRoom.Bottom + 1; y++)
+        //    {
+        //        _map.SetCellProperties(xCoord, y, false, false, true);
+        //    }
+        //    for (int x = newRoom.Left; x < newRoom.Right + 1; x++)
+        //    {
+        //        _map.SetCellProperties(x, yCoord + _roomSize, false, false, true);
+        //    }
+        //    for (int y = newRoom.Top; y < newRoom.Bottom + 1; y++)
+        //    {
+        //        _map.SetCellProperties(xCoord + _roomSize, y, false, false, true);
+        //    }
+        //}
+
+        //public Rectangle[] CreateRect(int xCoord, int yCoord, int width, int height)
+        //{
+        //    var newRoom = new Rectangle(xCoord, yCoord, width, height);
+        //    Rectangle[] roomArray = new Rectangle[] { newRoom };
+        //    return roomArray;
+        //}
 
         public void PlacePlayer(DungeonMap map)
         {
