@@ -22,7 +22,8 @@ namespace Hunter.Tools
         private readonly DungeonMap _map;
 
         private readonly int _roomSize = 10;
-        private Rectangle[] roomArray;
+        public List<Rectangle> roomArr;
+        private Random rnd = new Random();
 
         public MapCreationTools(int width, int height, int maxRooms, int roomMaxSize, int roomMinSize, int roomSize = 10)
         {
@@ -36,6 +37,11 @@ namespace Hunter.Tools
   
         }
 
+        public int GenerateRandomInt(int min, int max)
+        {
+            int num = rnd.Next(min, max);
+            return num;
+        }
 
         public DungeonMap CreateMap()
         {            
@@ -51,9 +57,12 @@ namespace Hunter.Tools
             Rooms.Add(FullRectangle);
 
             ////Segments = SplitRect(FullRectangle);
-            for (int i = 0; i < 2; i++)
+
+            RectSplitIteration(Rooms);
+            for (int i = 0; i < 3; i++)
             {
                 RectSplitIteration(Rooms);
+                
             }
             Console.WriteLine(Rooms.Count);
 
@@ -63,7 +72,7 @@ namespace Hunter.Tools
                 MakeRoom(_map, o);
             }
 
-
+            //Console.WriteLine(GenerateRandomInt(1, 100));
             //for (int i = 0; i < _maxRooms; i++)
             //{
             //    CreateRectangleRoom(roomXCoord, roomYCoord);
@@ -73,6 +82,16 @@ namespace Hunter.Tools
             PlacePlayer(_map, Rooms);
             return _map;
         }
+
+        public static void RectangleIteration(Rectangle Slice)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                
+            }
+        }
+
+
 
         private static void MakeRoom(DungeonMap map, Rectangle room)
         {
@@ -139,16 +158,25 @@ namespace Hunter.Tools
 
         public void RectSplitIteration(List<Rectangle> Slice)
         {
+            int startSize = Slice.Count;
+            int number = GenerateRandomInt(1, 5);
             foreach (Rectangle o in Slice.ToList())
             {
                 List<Rectangle> IterLi = new List<Rectangle>();
-                IterLi = SplitRectHorizontal(o);
+                if (number > 3)
+                {
+                    IterLi = SplitRectVertical(o);
+                }
+                else
+                {
+                    IterLi = SplitRectHorizontal(o);
+                }
                 for (int i = 0; i < IterLi.Count; i++)
                 {
                     //Console.WriteLine(IterLi[i]);
                     Slice.Add(IterLi[i]);
                     //List<Cell> borderCells = _map.GetCellsAlongLine(IterLi[i].Left, IterLi[i].Top, IterLi[i].Right, IterLi[i].Bottom).ToList();
-                }
+                }                
             }
         }
 
