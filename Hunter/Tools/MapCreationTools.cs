@@ -132,7 +132,9 @@ namespace Hunter.Tools
         {
             int width = rect.Width;
             int height = rect.Height;
-            int xBreak = width / 2;
+
+            int xBreak = GenerateRandomInt(1, width);
+            //int xBreak = width / 2;
             int yBreak = height / 2;
 
             var Segment1 = new Rectangle(rect.Left, rect.Top, xBreak, height);
@@ -146,8 +148,10 @@ namespace Hunter.Tools
         {
             int width = rect.Width;
             int height = rect.Height;
+
+            int yBreak = GenerateRandomInt(1, height);
             int xBreak = width / 2;
-            int yBreak = height / 2;
+            //nt yBreak = height / 2;
 
             var Segment1 = new Rectangle(rect.Left, rect.Top, width, yBreak);
             var Segment2 = new Rectangle(rect.Left, yBreak, width, height-yBreak);
@@ -158,6 +162,10 @@ namespace Hunter.Tools
 
         public void RectSplitIteration(List<Rectangle> Slice)
         {
+            //TO FIX: Slows compilation and will impact later when have multiple floors.
+            // Sloppy fix to stop multiple split in some orientation causing too small
+            //rooms to be generated
+            System.Threading.Thread.Sleep(1000);
             int startSize = Slice.Count;
             int number = GenerateRandomInt(1, 5);
             foreach (Rectangle o in Slice.ToList())
