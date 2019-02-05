@@ -37,15 +37,9 @@ namespace Hunter.Tools
   
         }
 
-        public int GenerateRandomInt(int min, int max)
-        {
-            int num = rnd.Next(min, max);
-            return num;
-        }
-
         public DungeonMap CreateMap()
         {            
-        //Intialise a map with correct width and height
+            //Intialise a map with correct width and height
             _map.Initialize(_width, _height);
 
             List<Rectangle> Rooms = new List<Rectangle>();
@@ -55,8 +49,6 @@ namespace Hunter.Tools
 
             var FullRectangle = new Rectangle(roomXCoord, roomYCoord, _width, _height);
             Rooms.Add(FullRectangle);
-
-            ////Segments = SplitRect(FullRectangle);
 
             RectSplitIteration(Rooms);
             for (int i = 0; i < 3; i++)
@@ -72,26 +64,9 @@ namespace Hunter.Tools
                 MakeRoom(_map, o);
             }
 
-            //Console.WriteLine(GenerateRandomInt(1, 100));
-            //for (int i = 0; i < _maxRooms; i++)
-            //{
-            //    CreateRectangleRoom(roomXCoord, roomYCoord);
-            //    int increment = _roomSize + 10;
-            //    roomXCoord += increment;
-            //}
             PlacePlayer(_map, Rooms);
             return _map;
         }
-
-        public static void RectangleIteration(Rectangle Slice)
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                
-            }
-        }
-
-
 
         private static void MakeRoom(DungeonMap map, Rectangle room)
         {
@@ -128,6 +103,33 @@ namespace Hunter.Tools
             }
         }
 
+        public void RectSplitIteration(List<Rectangle> Slice)
+        {
+            //TO FIX: Slows compilation and will impact later when have multiple floors.
+            // Sloppy fix to stop multiple split in some orientation causing too small
+            //rooms to be generated
+            System.Threading.Thread.Sleep(1000);
+            int startSize = Slice.Count;
+            int number = GenerateRandomInt(1, 5);
+            foreach (Rectangle o in Slice.ToList())
+            {
+                List<Rectangle> IterLi = new List<Rectangle>();
+                if (number > 3)
+                {
+                    IterLi = SplitRectVertical(o);
+                }
+                else
+                {
+                    IterLi = SplitRectHorizontal(o);
+                }
+                for (int i = 0; i < IterLi.Count; i++)
+                {
+                    //Console.WriteLine(IterLi[i]);
+                    Slice.Add(IterLi[i]);
+                }
+            }
+        }
+
         public List<Rectangle> SplitRectVertical(Rectangle rect)
         {
             int width = rect.Width;
@@ -160,82 +162,6 @@ namespace Hunter.Tools
             return rect_li;
         }
 
-        public void RectSplitIteration(List<Rectangle> Slice)
-        {
-            //TO FIX: Slows compilation and will impact later when have multiple floors.
-            // Sloppy fix to stop multiple split in some orientation causing too small
-            //rooms to be generated
-            System.Threading.Thread.Sleep(1000);
-            int startSize = Slice.Count;
-            int number = GenerateRandomInt(1, 5);
-            foreach (Rectangle o in Slice.ToList())
-            {
-                List<Rectangle> IterLi = new List<Rectangle>();
-                if (number > 3)
-                {
-                    IterLi = SplitRectVertical(o);
-                }
-                else
-                {
-                    IterLi = SplitRectHorizontal(o);
-                }
-                for (int i = 0; i < IterLi.Count; i++)
-                {
-                    //Console.WriteLine(IterLi[i]);
-                    Slice.Add(IterLi[i]);
-                    //List<Cell> borderCells = _map.GetCellsAlongLine(IterLi[i].Left, IterLi[i].Top, IterLi[i].Right, IterLi[i].Bottom).ToList();
-                }                
-            }
-        }
-
-        public void FillInWalls(List<Rectangle> Slice)
-        {
-
-            List<Rectangle> WallCoordLi = new List<Rectangle>();
-            for (int i = 0; i < WallCoordLi.Count; i++)
-            {
-                
-                //List<Cell> borderCells = _map.GetCellsAlongLine(WallCoordLi[i].Left, WallCoordLi[i].Top, WallCoordLi[i].Right, WallCoordLi[i].Bottom).ToList();
-            }
-        }
-        //Create a rectangular room.
-        public void CreateRectangleRoom(DungeonMap map, Rectangle newRoom)
-        {
-            int xCoord = newRoom.Left;
-            int yCoord = newRoom.Top;
-
-            for (int x = newRoom.Left + 1; x < newRoom.Right; x++)
-            {
-                for (int y = newRoom.Top + 1; y < newRoom.Bottom; y++)
-                {
-                    map.SetCellProperties(x, y, true, true, true);
-                }
-            }
-            for (int x = newRoom.Left; x < newRoom.Right; x++)
-            {
-                map.SetCellProperties(x, yCoord, false, false, true);
-            }
-            for (int y = newRoom.Top; y < newRoom.Bottom; y++)
-            {
-                map.SetCellProperties(xCoord, y, false, false, true);
-            }
-            for (int x = newRoom.Left; x < newRoom.Right; x++)
-            {
-                map.SetCellProperties(x, yCoord + _roomSize, false, false, true);
-            }
-            for (int y = newRoom.Top; y < newRoom.Bottom; y++)
-            {
-                map.SetCellProperties(xCoord + _roomSize, y, false, false, true);
-            }
-        }
-
-        //public Rectangle[] CreateRect(int xCoord, int yCoord, int width, int height)
-        //{
-        //    var newRoom = new Rectangle(xCoord, yCoord, width, height);
-        //    Rectangle[] roomArray = new Rectangle[] { newRoom };
-        //    return roomArray;
-        //}
-
         public void PlacePlayer(DungeonMap map, List<Rectangle> roomArray)
         {
             int size = roomArray.Count;
@@ -260,6 +186,12 @@ namespace Hunter.Tools
             {
                 _map.SetCellProperties(xPosition, y, true, true);
             }
+        }
+
+        public int GenerateRandomInt(int min, int max)
+        {
+            int num = rnd.Next(min, max);
+            return num;
         }
     }
 }
