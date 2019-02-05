@@ -111,6 +111,9 @@ namespace Hunter.Core
         //    SetCellProperties(cell.X, cell.Y, cell.IsTransparent, isWalkable, cell.IsExplored);
         //}
 
+        public void GetCellsAlongLine()
+        {
 
+        }
     }
 }
