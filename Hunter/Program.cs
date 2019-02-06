@@ -17,12 +17,12 @@ namespace Hunter
     {
         // The screen height and width are in number of tiles
         private static readonly int _screenWidth = 100;
-        private static readonly int _screenHeight = 70;
+        private static readonly int _screenHeight = 90;
         private static RLRootConsole _rootConsole;
 
         // The map console takes up most of the screen and is where the map will be drawn
         private static readonly int _mapWidth = 80;
-        private static readonly int _mapHeight = 60;
+        private static readonly int _mapHeight = 80;
         private static RLConsole _mapConsole;
 
         // Below the map console is the message console which displays attack rolls and other information

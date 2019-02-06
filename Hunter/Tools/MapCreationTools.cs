@@ -135,15 +135,29 @@ namespace Hunter.Tools
             int width = rect.Width;
             int height = rect.Height;
 
-            int xBreak = GenerateRandomInt(1, width);
-            //int xBreak = width / 2;
-            int yBreak = height / 2;
+            int xBreak = 0;
+            if(width >= 4)
+            {
+                xBreak = GenerateRandomInt(2, width-2);
+                var Segment1 = new Rectangle(rect.Left, rect.Top, xBreak, height);
+                var Segment2 = new Rectangle(xBreak, rect.Top, width - xBreak, height);
 
-            var Segment1 = new Rectangle(rect.Left, rect.Top, xBreak, height);
-            var Segment2 = new Rectangle(xBreak, rect.Top, width - xBreak, height);
+                List<Rectangle> rect_li = new List<Rectangle>() { Segment1, Segment2 };
+                return rect_li;
+            }
+            else
+            {
+                var Segment1 = rect;
+                var Segment2 = rect;
 
-            List<Rectangle> rect_li = new List<Rectangle>() { Segment1, Segment2 };
-            return  rect_li; 
+                List<Rectangle> rect_li = new List<Rectangle>() { Segment1, Segment2 };
+                return rect_li;
+            }
+            //var Segment1 = new Rectangle(rect.Left, rect.Top, xBreak, height);
+            //var Segment2 = new Rectangle(xBreak, rect.Top, width - xBreak, height);
+
+            //List<Rectangle> rect_li = new List<Rectangle>() { Segment1, Segment2 };
+            //return rect_li;
         }
 
         public List<Rectangle> SplitRectHorizontal(Rectangle rect)
@@ -151,15 +165,31 @@ namespace Hunter.Tools
             int width = rect.Width;
             int height = rect.Height;
 
-            int yBreak = GenerateRandomInt(1, height);
-            int xBreak = width / 2;
-            //nt yBreak = height / 2;
+            int yBreak = 0;
+            if (height >= 4)
+            {
+                yBreak = GenerateRandomInt(2, height-2);
+                var Segment1 = new Rectangle(rect.Left, rect.Top, width, yBreak);
+                var Segment2 = new Rectangle(rect.Left, yBreak, width, height - yBreak);
 
-            var Segment1 = new Rectangle(rect.Left, rect.Top, width, yBreak);
-            var Segment2 = new Rectangle(rect.Left, yBreak, width, height-yBreak);
+                List<Rectangle> rect_li = new List<Rectangle>() { Segment1, Segment2 };
+                return rect_li;
+            }
+            else
+            {
+                var Segment1 = rect;
+                var Segment2 = rect;
 
-            List<Rectangle> rect_li = new List<Rectangle>() { Segment1, Segment2 };
-            return rect_li;
+                List<Rectangle> rect_li = new List<Rectangle>() { Segment1, Segment2 };
+                return rect_li;
+            }
+           
+
+            //var Segment1 = new Rectangle(rect.Left, rect.Top, width, yBreak);
+            //var Segment2 = new Rectangle(rect.Left, yBreak, width, height-yBreak);
+
+            //List<Rectangle> rect_li = new List<Rectangle>() { Segment1, Segment2 };
+            //return rect_li;
         }
 
         public void PlacePlayer(DungeonMap map, List<Rectangle> roomArray)
