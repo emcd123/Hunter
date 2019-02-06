@@ -53,6 +53,8 @@ namespace Hunter.Tools
             RectSplitIteration(Rooms);
             for (int i = 0; i < 3; i++)
             {
+                //Idea: This function needs to return a list of rectangles
+                // which overwrite the original list passed as an argument
                 RectSplitIteration(Rooms);
                 
             }
@@ -105,10 +107,6 @@ namespace Hunter.Tools
 
         public void RectSplitIteration(List<Rectangle> Slice)
         {
-            //TO FIX: Slows compilation and will impact later when have multiple floors.
-            // Sloppy fix to stop multiple split in some orientation causing too small
-            //rooms to be generated
-            System.Threading.Thread.Sleep(1000);
             int startSize = Slice.Count;
             int number = GenerateRandomInt(1, 5);
             foreach (Rectangle o in Slice.ToList())
