@@ -22,8 +22,8 @@ namespace Hunter.Tools
         private readonly DungeonMap _map;
 
         private readonly int _roomSize = 10;
-        private Rectangle[] roomArray;
-        
+        public List<Rectangle> roomArr;
+        private Random rnd = new Random();
 
         public MapCreationTools(int width, int height, int maxRooms, int roomMaxSize, int roomMinSize, int roomSize = 10)
         {
@@ -34,73 +34,168 @@ namespace Hunter.Tools
             _roomMinSize = roomMinSize;
             _map = new DungeonMap();
             _roomSize = roomSize;
+  
         }
-
 
         public DungeonMap CreateMap()
         {            
-        //Intialise a map with correct width and height
+            //Intialise a map with correct width and height
             _map.Initialize(_width, _height);
+
+            List<Rectangle> Rooms = new List<Rectangle>();
 
             int roomXCoord = 0;
             int roomYCoord = 0;
 
-            for (int i = 0; i < _maxRooms; i++)
+            var FullRectangle = new Rectangle(roomXCoord, roomYCoord, _width, _height);
+            Rooms.Add(FullRectangle);
+
+            RectSplitIteration(Rooms);
+            for (int i = 0; i < 3; i++)
             {
-                CreateRectangleRoom(roomXCoord, roomYCoord);
-                int increment = _roomSize + 10;
-                roomXCoord += increment;
+                //Idea: This function needs to return a list of rectangles
+                // which overwrite the original list passed as an argument
+                RectSplitIteration(Rooms);
+                
             }
-            PlacePlayer(_map);
+            Console.WriteLine(Rooms.Count);
+
+            foreach (Rectangle o in Rooms)
+            {
+                Console.WriteLine(o);
+                MakeRoom(_map, o);
+            }
+
+            PlacePlayer(_map, Rooms);
             return _map;
         }
 
-        //Create a rectangular room.
-        public void CreateRectangleRoom(int roomXCoord, int roomYCoord)
+        private static void MakeRoom(DungeonMap map, Rectangle room)
         {
-            int xCoord = roomXCoord;
-            int yCoord = roomYCoord;
+            int xi = room.Left;
+            int yi = room.Top;
 
-            roomArray = CreateRect(xCoord, yCoord, _roomSize);
-            Rectangle newRoom = roomArray[0];
-
-            for (int x = newRoom.Left + 1; x < newRoom.Right; x++)
+            for (int x = room.Left + 1; x < room.Right; x++)
             {
-                for (int y = newRoom.Top + 1; y < newRoom.Bottom; y++)
+                map.SetCellProperties(x, yi, false, false, true);
+            }
+            for (int y = room.Top + 1; y < room.Bottom; y++)
+            {
+                map.SetCellProperties(xi, y, false, false, true);
+            }
+
+            xi = room.Right-1;
+            yi = room.Bottom-1;
+
+            for (int x = room.Left + 1; x < room.Right; x++)
+            {
+                map.SetCellProperties(x, yi, false, false, true);
+            }
+            for (int y = room.Top + 1; y < room.Bottom; y++)
+            {
+                map.SetCellProperties(xi, y, false, false, true);
+            }
+
+            for (int x = room.Left + 1; x < room.Right-1; x++)
+            {
+                for (int y = room.Top + 1; y < room.Bottom-1; y++)
                 {
-                    _map.SetCellProperties(x, y, true, true, true);
+                    map.SetCellProperties(x, y, true, true, true);
                 }
             }
-            for (int x = newRoom.Left; x < newRoom.Right + 1; x++)
+        }
+
+        public void RectSplitIteration(List<Rectangle> Slice)
+        {
+            int startSize = Slice.Count;
+            int number = GenerateRandomInt(1, 5);
+            foreach (Rectangle o in Slice.ToList())
             {
-                _map.SetCellProperties(x, yCoord, false, false, true);
-            }
-            for (int y = newRoom.Top; y < newRoom.Bottom + 1; y++)
-            {
-                _map.SetCellProperties(xCoord, y, false, false, true);
-            }
-            for (int x = newRoom.Left; x < newRoom.Right + 1; x++)
-            {
-                _map.SetCellProperties(x, yCoord + _roomSize, false, false, true);
-            }
-            for (int y = newRoom.Top; y < newRoom.Bottom + 1; y++)
-            {
-                _map.SetCellProperties(xCoord + _roomSize, y, false, false, true);
+                List<Rectangle> IterLi = new List<Rectangle>();
+                if (number > 3)
+                {
+                    IterLi = SplitRectVertical(o);
+                }
+                else
+                {
+                    IterLi = SplitRectHorizontal(o);
+                }
+                for (int i = 0; i < IterLi.Count; i++)
+                {
+                    //Console.WriteLine(IterLi[i]);
+                    Slice.Add(IterLi[i]);
+                }
             }
         }
 
-        public Rectangle[] CreateRect(int xCoord, int yCoord, int _roomSize)
+        public List<Rectangle> SplitRectVertical(Rectangle rect)
         {
-            var newRoom = new Rectangle(xCoord, yCoord, _roomSize, _roomSize);
-            Rectangle[] roomArray = new Rectangle[] { newRoom };
-            return roomArray;
+            int width = rect.Width;
+            int height = rect.Height;
+
+            int xBreak = 0;
+            if(width >= 4)
+            {
+                xBreak = GenerateRandomInt(2, width-2);
+                var Segment1 = new Rectangle(rect.Left, rect.Top, xBreak, height);
+                var Segment2 = new Rectangle(xBreak, rect.Top, width - xBreak, height);
+
+                List<Rectangle> rect_li = new List<Rectangle>() { Segment1, Segment2 };
+                return rect_li;
+            }
+            else
+            {
+                var Segment1 = rect;
+                var Segment2 = rect;
+
+                List<Rectangle> rect_li = new List<Rectangle>() { Segment1, Segment2 };
+                return rect_li;
+            }
+            //var Segment1 = new Rectangle(rect.Left, rect.Top, xBreak, height);
+            //var Segment2 = new Rectangle(xBreak, rect.Top, width - xBreak, height);
+
+            //List<Rectangle> rect_li = new List<Rectangle>() { Segment1, Segment2 };
+            //return rect_li;
         }
 
-        public void PlacePlayer(DungeonMap map)
+        public List<Rectangle> SplitRectHorizontal(Rectangle rect)
         {
+            int width = rect.Width;
+            int height = rect.Height;
+
+            int yBreak = 0;
+            if (height >= 4)
+            {
+                yBreak = GenerateRandomInt(2, height-2);
+                var Segment1 = new Rectangle(rect.Left, rect.Top, width, yBreak);
+                var Segment2 = new Rectangle(rect.Left, yBreak, width, height - yBreak);
+
+                List<Rectangle> rect_li = new List<Rectangle>() { Segment1, Segment2 };
+                return rect_li;
+            }
+            else
+            {
+                var Segment1 = rect;
+                var Segment2 = rect;
+
+                List<Rectangle> rect_li = new List<Rectangle>() { Segment1, Segment2 };
+                return rect_li;
+            }
+           
+
+            //var Segment1 = new Rectangle(rect.Left, rect.Top, width, yBreak);
+            //var Segment2 = new Rectangle(rect.Left, yBreak, width, height-yBreak);
+
+            //List<Rectangle> rect_li = new List<Rectangle>() { Segment1, Segment2 };
+            //return rect_li;
+        }
+
+        public void PlacePlayer(DungeonMap map, List<Rectangle> roomArray)
+        {
+            int size = roomArray.Count;
             Player player = Game.Player;
-            int X = roomArray[0].Center.X;
-            int Y = roomArray[0].Center.Y;
+            int X = roomArray[size-1].Center.X;
+            int Y = roomArray[size-1].Center.Y;
             map.SetActorPosition(player, X, Y);
         }
 
@@ -119,6 +214,12 @@ namespace Hunter.Tools
             {
                 _map.SetCellProperties(xPosition, y, true, true);
             }
+        }
+
+        public int GenerateRandomInt(int min, int max)
+        {
+            int num = rnd.Next(min, max);
+            return num;
         }
     }
 }

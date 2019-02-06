@@ -17,17 +17,17 @@ namespace Hunter
     {
         // The screen height and width are in number of tiles
         private static readonly int _screenWidth = 100;
-        private static readonly int _screenHeight = 70;
+        private static readonly int _screenHeight = 90;
         private static RLRootConsole _rootConsole;
 
         // The map console takes up most of the screen and is where the map will be drawn
         private static readonly int _mapWidth = 80;
-        private static readonly int _mapHeight = 58;
+        private static readonly int _mapHeight = 80;
         private static RLConsole _mapConsole;
 
         // Below the map console is the message console which displays attack rolls and other information
         private static readonly int _messageWidth = 80;
-        private static readonly int _messageHeight = 12;
+        private static readonly int _messageHeight = 10;
         private static RLConsole _messageConsole;
 
         // The stat console is to the right of the map and display player and monster stats
@@ -41,7 +41,7 @@ namespace Hunter
         public static Player Player { get; private set; }
         public static DungeonMap DungeonMap { get; private set; }
 
-        public static int _maxrooms = 3;
+        public static int _maxrooms = 4;
         public static int _roomMinSize = 10;
         public static int _roomMaxSize = 15;
 

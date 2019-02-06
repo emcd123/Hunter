@@ -79,7 +79,6 @@ namespace Hunter.Core
         // Returns true when able to place the Actor on the cell or false otherwise
         public bool SetActorPosition(Actor actor, int x, int y)
         {
-            bool firstRun = true;
             // Only allow actor placement if the cell is walkable
             if (GetCell(x, y).IsWalkable)
             {
@@ -112,6 +111,9 @@ namespace Hunter.Core
         //    SetCellProperties(cell.X, cell.Y, cell.IsTransparent, isWalkable, cell.IsExplored);
         //}
 
+        public void GetCellsAlongLine()
+        {
 
+        }
     }
 }
