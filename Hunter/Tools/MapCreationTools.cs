@@ -49,9 +49,7 @@ namespace Hunter.Tools
 
             var FullRectangle = new Rectangle(roomXCoord, roomYCoord, _width, _height);
             MakeExteriorWall(FullRectangle);
-            Rooms.Add(FullRectangle);
-
-            RectSplitIteration(Rooms);
+            Rooms.Add(FullRectangle);            
             for (int i = 0; i < 2; i++)
             {
                 //Idea: This function needs to return a list of rectangles
