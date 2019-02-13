@@ -12,6 +12,7 @@ namespace Hunter.Core
     // Our custom DungeonMap class extends the base RogueSharp Map class
     public class DungeonMap : Map
     {
+        private bool firstRun;
         // The Draw method will be called each time the map is updated
         // It will render all of the symbols/colors for each cell to the map sub console
         public void Draw(RLConsole mapConsole)
@@ -82,7 +83,11 @@ namespace Hunter.Core
             if (GetCell(x, y).IsWalkable)
             {
                 // The cell the actor was previously on is now walkable
-                SetCellProperties(actor.X, actor.Y, GetCell(actor.X, actor.Y).IsTransparent, true, GetCell(actor.X, actor.Y).IsExplored);
+                if (firstRun)
+                {
+                    SetCellProperties(actor.X, actor.Y, GetCell(actor.X, actor.Y).IsTransparent, true, GetCell(actor.X, actor.Y).IsExplored);
+                    firstRun = false;
+                }                
                 // Update the actor's position
                 actor.X = x;
                 actor.Y = y;
@@ -96,6 +101,7 @@ namespace Hunter.Core
                 return true;
             }
             return false;
+            
         }
 
         //// A helper method for setting the IsWalkable property on a Cell
@@ -105,6 +111,9 @@ namespace Hunter.Core
         //    SetCellProperties(cell.X, cell.Y, cell.IsTransparent, isWalkable, cell.IsExplored);
         //}
 
+        public void GetCellsAlongLine()
+        {
 
+        }
     }
 }

@@ -9,6 +9,7 @@ using RogueSharp;
 
 using Hunter.Core;
 using Hunter.Systems;
+using Hunter.Tools;
 
 namespace Hunter
 {
@@ -16,17 +17,17 @@ namespace Hunter
     {
         // The screen height and width are in number of tiles
         private static readonly int _screenWidth = 100;
-        private static readonly int _screenHeight = 70;
+        private static readonly int _screenHeight = 90;
         private static RLRootConsole _rootConsole;
 
         // The map console takes up most of the screen and is where the map will be drawn
         private static readonly int _mapWidth = 80;
-        private static readonly int _mapHeight = 58;
+        private static readonly int _mapHeight = 80;
         private static RLConsole _mapConsole;
 
         // Below the map console is the message console which displays attack rolls and other information
         private static readonly int _messageWidth = 80;
-        private static readonly int _messageHeight = 12;
+        private static readonly int _messageHeight = 10;
         private static RLConsole _messageConsole;
 
         // The stat console is to the right of the map and display player and monster stats
@@ -39,6 +40,10 @@ namespace Hunter
         public static CommandSystem CommandSystem { get; private set; }
         public static Player Player { get; private set; }
         public static DungeonMap DungeonMap { get; private set; }
+
+        public static int _maxrooms = 4;
+        public static int _roomMinSize = 10;
+        public static int _roomMaxSize = 15;
 
         public static void Main()
         {
@@ -60,9 +65,12 @@ namespace Hunter
 
             Player = new Player();
             CommandSystem = new CommandSystem();
-            //Generate the map
-            MapGenerator mapGenerator = new MapGenerator(_mapWidth, _mapHeight);
-            DungeonMap = mapGenerator.CreateMap();
+            
+            //Generate the map           
+            SimpleBsp mapCreation = new SimpleBsp(_mapWidth, _mapHeight);
+            //FullRoomBsp mapCreation = new FullRoomBsp(_mapWidth, _mapHeight);
+
+            DungeonMap = mapCreation.CreateMap();
             DungeonMap.UpdatePlayerFieldOfView();
 
 
@@ -126,7 +134,7 @@ namespace Hunter
             if (_renderRequired)
             {
                 DungeonMap.Draw(_mapConsole);
-                Player.Draw(_mapConsole, DungeonMap);
+                Player.Draw(_mapConsole);
 
                 // Blit the sub consoles to the root console in the correct locations
                 RLConsole.Blit(_mapConsole, 0, 0, _mapWidth, _mapHeight,
