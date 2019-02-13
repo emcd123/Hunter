@@ -16,25 +16,16 @@ namespace Hunter.Tools
         //private readonly IRandom _random;
         private readonly int _width;
         private readonly int _height;
-        private readonly int _maxRooms;
-        private readonly int _roomMaxSize;
-        private readonly int _roomMinSize;
         private readonly DungeonMap _map;
-
-        private readonly int _roomSize = 10;
         public List<Rectangle> roomArr;
         private Random rnd = new Random();
         private bool flag = true;
 
-        public SimpleBsp(int width, int height, int maxRooms, int roomMaxSize, int roomMinSize, int roomSize = 10)
+        public SimpleBsp(int width, int height)
         {
             _width = width;
             _height = height;
-            _maxRooms = maxRooms;
-            _roomMaxSize = roomMaxSize;
-            _roomMinSize = roomMinSize;
             _map = new DungeonMap();
-            _roomSize = roomSize;
 
         }
         public DungeonMap CreateMap()

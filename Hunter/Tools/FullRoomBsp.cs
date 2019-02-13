@@ -11,29 +11,20 @@ using Hunter.Core;
 
 namespace Hunter.Tools
 {
-    public class MapCreateRedo
+    public class FullRoomBsp
     {
         //private readonly IRandom _random;
         private readonly int _width;
         private readonly int _height;
-        private readonly int _maxRooms;
-        private readonly int _roomMaxSize;
-        private readonly int _roomMinSize;
         private readonly DungeonMap _map;
-
-        private readonly int _roomSize = 10;
         public List<Rectangle> roomArr;
         private Random rnd = new Random();
 
-        public MapCreateRedo(int width, int height, int maxRooms, int roomMaxSize, int roomMinSize, int roomSize = 10)
+        public FullRoomBsp(int width, int height)
         {
             _width = width;
             _height = height;
-            _maxRooms = maxRooms;
-            _roomMaxSize = roomMaxSize;
-            _roomMinSize = roomMinSize;
             _map = new DungeonMap();
-            _roomSize = roomSize;
 
         }
         public DungeonMap CreateMap()
@@ -125,7 +116,7 @@ namespace Hunter.Tools
             Rectangle rect1;
             Rectangle rect2;
 
-            int yBreak = GenerateRandomInt(4, height);
+            int yBreak = GenerateRandomInt(2, height);
             rect1 = new Rectangle(rect.Left, rect.Top, width, yBreak);
             rect2 = new Rectangle(rect.Left, rect.Top + yBreak, width, rect.Height - yBreak);    
 
