@@ -48,7 +48,7 @@ namespace Hunter.Tools
             MakeExteriorWall(FullRectangle);
             Rooms.Add(FullRectangle);
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 4; i++)
             {
                 Rooms = SplitAction(Rooms);
             }
@@ -112,7 +112,7 @@ namespace Hunter.Tools
             int xBreak = GenerateRandomInt(2, width);
                 
             rect1 = new Rectangle(rect.Left, rect.Top, xBreak, rect.Height);
-            rect2 = new Rectangle(xBreak, rect.Top, rect.Width - xBreak, rect.Height);
+            rect2 = new Rectangle(rect.Left + xBreak, rect.Top, rect.Width - xBreak, rect.Height);
 
             return new List<Rectangle>() { rect1, rect2 };
         }
@@ -127,7 +127,7 @@ namespace Hunter.Tools
 
             int yBreak = GenerateRandomInt(4, height);
             rect1 = new Rectangle(rect.Left, rect.Top, width, yBreak);
-            rect2 = new Rectangle(rect.Left, yBreak, width, rect.Height - yBreak);    
+            rect2 = new Rectangle(rect.Left, rect.Top + yBreak, width, rect.Height - yBreak);    
 
             return new List<Rectangle>() { rect1, rect2 };
         }
