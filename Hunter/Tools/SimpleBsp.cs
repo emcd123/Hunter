@@ -17,15 +17,18 @@ namespace Hunter.Tools
         private readonly int _width;
         private readonly int _height;
         private readonly DungeonMap _map;
+        private RLConsole _mapConsole;
         public List<Rectangle> roomArr;
+        public List<Cell> DoorCoords;
         private Random rnd = new Random();
         private bool flag = true;
 
-        public SimpleBsp(int width, int height)
+        public SimpleBsp(int width, int height, RLConsole mapConsole)
         {
             _width = width;
             _height = height;
             _map = new DungeonMap();
+            _mapConsole = mapConsole;
 
         }
         public DungeonMap CreateMap()
@@ -62,12 +65,21 @@ namespace Hunter.Tools
             int DoorCoordX = ROOM.Left;
             int DoorCoordY = ROOM.Center.Y;
             if (DoorCoordX != 0)
-                _map.SetCellProperties(DoorCoordX, DoorCoordY, true, true, true);
+            {
+                _map.SetCellProperties(DoorCoordX, DoorCoordY, false, true, true);
+            }
 
             DoorCoordX = ROOM.Center.X;
             DoorCoordY = ROOM.Top;
             if (DoorCoordY != 0)
-                _map.SetCellProperties(DoorCoordX, DoorCoordY, true, true, true);
+            {
+                _map.SetCellProperties(DoorCoordX, DoorCoordY, false, true, true);
+            }
+        }
+
+        private List<Cell> ReturnDoors()
+        {
+            return DoorCoords;
         }
 
         private void MakeRoom(Rectangle rm)
