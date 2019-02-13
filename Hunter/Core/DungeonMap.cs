@@ -13,6 +13,7 @@ namespace Hunter.Core
     public class DungeonMap : Map
     {
         private bool firstRun;
+        private List<object> IsWalkedOn;
         // The Draw method will be called each time the map is updated
         // It will render all of the symbols/colors for each cell to the map sub console
         public void Draw(RLConsole mapConsole)
@@ -45,6 +46,15 @@ namespace Hunter.Core
                 {
                     console.Set(cell.X, cell.Y, Colors.WallFov, Colors.WallBackgroundFov, '#');
                 }
+                if (IsDoor(cell.X, cell.Y))
+                {
+                    console.Set(cell.X, cell.Y, Colors.DoorFov, Colors.DoorBackgroundFov, '+');
+                }
+
+            }
+            else if (IsDoor(cell.X, cell.Y))
+            {
+                console.Set(cell.X, cell.Y, Colors.DoorFov, Colors.DoorBackground, '+');
             }
             // When a cell is outside of the field of view draw it with darker colors
             else
@@ -53,11 +63,13 @@ namespace Hunter.Core
                 {
                     console.Set(cell.X, cell.Y, Colors.Floor, Colors.FloorBackground, '.');
                 }
+
                 else
                 {
                     console.Set(cell.X, cell.Y, Colors.Wall, Colors.WallBackground, '#');
                 }
             }
+            
         }
 
         // This method will be called any time we move the player to update field-of-view
@@ -104,16 +116,37 @@ namespace Hunter.Core
             
         }
 
-        //// A helper method for setting the IsWalkable property on a Cell
-        //public void SetIsWalkable(int x, int y, bool isWalkable)
-        //{
-        //    Cell cell = Cell(x, y);
-        //    SetCellProperties(cell.X, cell.Y, cell.IsTransparent, isWalkable, cell.IsExplored);
-        //}
-
-        public void GetCellsAlongLine()
+        private void OpenDoor(Actor actor, int x, int y)
         {
+            bool door = IsDoor(x, y);
+            if (door == true)
+            {
+                if(actor.X == x && actor.Y == y)
+                {
+                    var cell = GetCell(x, y);
+                    IsWalkedOn.Add(cell);
+                }
+                
+                // Once the door is opened it should be marked as transparent and no longer block field-of-view
+            }
+        }
 
+        public bool IsDoor(int x, int y)
+        {
+            if(GetCell(x, y).IsWalkable)
+            {
+                if (!GetCell(x, y + 1).IsWalkable && !GetCell(x, y - 1).IsWalkable && GetCell(x + 1, y).IsWalkable && GetCell(x - 1, y).IsWalkable)
+                {                    
+                    return true;
+                }
+                else if (GetCell(x, y + 1).IsWalkable && GetCell(x, y - 1).IsWalkable && !GetCell(x + 1, y).IsWalkable && !GetCell(x - 1, y).IsWalkable)
+                {
+                    return true;
+                }
+                else
+                    return false;
+            }
+            return false;
         }
     }
 }
