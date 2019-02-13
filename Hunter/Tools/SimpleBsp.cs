@@ -48,10 +48,26 @@ namespace Hunter.Tools
             {
                 Console.WriteLine(Rooms[i]);
                 MakeRoom(Rooms[i]);
+                if(i != 0 || i != Rooms.Count)
+                    MakeDoor(Rooms[i]);
             }
 
             PlacePlayer(_map, Rooms);
             return _map;
+        }
+
+        private void MakeDoor(Rectangle ROOM)
+        {
+
+            int DoorCoordX = ROOM.Left;
+            int DoorCoordY = ROOM.Center.Y;
+            if (DoorCoordX != 0)
+                _map.SetCellProperties(DoorCoordX, DoorCoordY, true, true, true);
+
+            DoorCoordX = ROOM.Center.X;
+            DoorCoordY = ROOM.Top;
+            if (DoorCoordY != 0)
+                _map.SetCellProperties(DoorCoordX, DoorCoordY, true, true, true);
         }
 
         private void MakeRoom(Rectangle rm)
