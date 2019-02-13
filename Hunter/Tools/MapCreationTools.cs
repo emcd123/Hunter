@@ -41,22 +41,21 @@ namespace Hunter.Tools
         {            
             //Intialise a map with correct width and height
             _map.Initialize(_width, _height);
-
+            
             List<Rectangle> Rooms = new List<Rectangle>();
 
             int roomXCoord = 0;
             int roomYCoord = 0;
 
             var FullRectangle = new Rectangle(roomXCoord, roomYCoord, _width, _height);
-            Rooms.Add(FullRectangle);
-
-            RectSplitIteration(Rooms);
-            for (int i = 0; i < 3; i++)
+            MakeExteriorWall(FullRectangle);
+            Rooms.Add(FullRectangle);            
+            for (int i = 0; i < 2; i++)
             {
                 //Idea: This function needs to return a list of rectangles
                 // which overwrite the original list passed as an argument
-                RectSplitIteration(Rooms);
-                
+                Rooms = RectSplitIteration(Rooms);
+                Console.WriteLine(Rooms.Count);
             }
             Console.WriteLine(Rooms.Count);
 
@@ -70,7 +69,26 @@ namespace Hunter.Tools
             return _map;
         }
 
-        private static void MakeRoom(DungeonMap map, Rectangle room)
+        public void MakeExteriorWall(Rectangle FullRectangle)
+        {
+            int height = FullRectangle.Height;
+            int width = FullRectangle.Width;
+            foreach (Cell cell in _map.GetAllCells())
+            {
+                _map.SetCellProperties(cell.X, cell.Y, true, true, true);
+            }
+            foreach (Cell cell in _map.GetCellsInRows(0, height - 1))
+            {
+                _map.SetCellProperties(cell.X, cell.Y, false, false, true);
+            }
+
+            // Set the first and last columns in the map to not be transparent or walkable
+            foreach (Cell cell in _map.GetCellsInColumns(0, width - 1))
+            {
+                _map.SetCellProperties(cell.X, cell.Y, false, false, true);
+            }
+        }
+        private void MakeRoom(DungeonMap map, Rectangle room)
         {
             int xi = room.Left;
             int yi = room.Top;
@@ -84,8 +102,8 @@ namespace Hunter.Tools
                 map.SetCellProperties(xi, y, false, false, true);
             }
 
-            xi = room.Right-1;
-            yi = room.Bottom-1;
+            xi = room.Right - 1;
+            yi = room.Bottom - 1;
 
             for (int x = room.Left + 1; x < room.Right; x++)
             {
@@ -96,21 +114,23 @@ namespace Hunter.Tools
                 map.SetCellProperties(xi, y, false, false, true);
             }
 
-            for (int x = room.Left + 1; x < room.Right-1; x++)
-            {
-                for (int y = room.Top + 1; y < room.Bottom-1; y++)
-                {
-                    map.SetCellProperties(x, y, true, true, true);
-                }
-            }
+            //for (int x = room.Left + 1; x < room.Right-1; x++)
+            //{
+            //    for (int y = room.Top + 1; y < room.Bottom-1; y++)
+            //    {
+            //        map.SetCellProperties(x, y, true, true, true);
+            //    }
+            //}
         }
 
-        public void RectSplitIteration(List<Rectangle> Slice)
+        public List<Rectangle> RectSplitIteration(List<Rectangle> Slice)
         {
             int startSize = Slice.Count;
+            List<Rectangle> IterRectangles = new List<Rectangle>(); 
             int number = GenerateRandomInt(1, 5);
             foreach (Rectangle o in Slice.ToList())
             {
+                number = GenerateRandomInt(1, 5);
                 List<Rectangle> IterLi = new List<Rectangle>();
                 if (number > 3)
                 {
@@ -123,9 +143,10 @@ namespace Hunter.Tools
                 for (int i = 0; i < IterLi.Count; i++)
                 {
                     //Console.WriteLine(IterLi[i]);
-                    Slice.Add(IterLi[i]);
+                    IterRectangles.Add(IterLi[i]);
                 }
             }
+            return IterRectangles;
         }
 
         public List<Rectangle> SplitRectVertical(Rectangle rect)
@@ -151,11 +172,6 @@ namespace Hunter.Tools
                 List<Rectangle> rect_li = new List<Rectangle>() { Segment1, Segment2 };
                 return rect_li;
             }
-            //var Segment1 = new Rectangle(rect.Left, rect.Top, xBreak, height);
-            //var Segment2 = new Rectangle(xBreak, rect.Top, width - xBreak, height);
-
-            //List<Rectangle> rect_li = new List<Rectangle>() { Segment1, Segment2 };
-            //return rect_li;
         }
 
         public List<Rectangle> SplitRectHorizontal(Rectangle rect)
@@ -181,13 +197,7 @@ namespace Hunter.Tools
                 List<Rectangle> rect_li = new List<Rectangle>() { Segment1, Segment2 };
                 return rect_li;
             }
-           
 
-            //var Segment1 = new Rectangle(rect.Left, rect.Top, width, yBreak);
-            //var Segment2 = new Rectangle(rect.Left, yBreak, width, height-yBreak);
-
-            //List<Rectangle> rect_li = new List<Rectangle>() { Segment1, Segment2 };
-            //return rect_li;
         }
 
         public void PlacePlayer(DungeonMap map, List<Rectangle> roomArray)

@@ -64,7 +64,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Systems\CommandSystems.cs" />
     <Compile Include="Systems\MapGenerator.cs" />
+    <Compile Include="Tools\FullRoomBsp.cs" />
     <Compile Include="Tools\MapCreationTools.cs" />
+    <Compile Include="Tools\SimpleBsp.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
