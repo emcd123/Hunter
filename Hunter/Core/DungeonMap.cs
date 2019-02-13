@@ -12,6 +12,8 @@ namespace Hunter.Core
     // Our custom DungeonMap class extends the base RogueSharp Map class
     public class DungeonMap : Map
     {
+        private bool firstRun;
+        private List<object> IsWalkedOn;
         // The Draw method will be called each time the map is updated
         // It will render all of the symbols/colors for each cell to the map sub console
         public void Draw(RLConsole mapConsole)
@@ -44,6 +46,15 @@ namespace Hunter.Core
                 {
                     console.Set(cell.X, cell.Y, Colors.WallFov, Colors.WallBackgroundFov, '#');
                 }
+                if (IsDoor(cell.X, cell.Y))
+                {
+                    console.Set(cell.X, cell.Y, Colors.DoorFov, Colors.DoorBackgroundFov, '+');
+                }
+
+            }
+            else if (IsDoor(cell.X, cell.Y))
+            {
+                console.Set(cell.X, cell.Y, Colors.DoorFov, Colors.DoorBackground, '+');
             }
             // When a cell is outside of the field of view draw it with darker colors
             else
@@ -52,11 +63,13 @@ namespace Hunter.Core
                 {
                     console.Set(cell.X, cell.Y, Colors.Floor, Colors.FloorBackground, '.');
                 }
+
                 else
                 {
                     console.Set(cell.X, cell.Y, Colors.Wall, Colors.WallBackground, '#');
                 }
             }
+            
         }
 
         // This method will be called any time we move the player to update field-of-view
@@ -82,7 +95,12 @@ namespace Hunter.Core
             if (GetCell(x, y).IsWalkable)
             {
                 // The cell the actor was previously on is now walkable
-                SetCellProperties(actor.X, actor.Y, GetCell(actor.X, actor.Y).IsTransparent, true, GetCell(actor.X, actor.Y).IsExplored);
+                if (firstRun)
+                {
+                    SetCellProperties(actor.X, actor.Y, GetCell(actor.X, actor.Y).IsTransparent, true, GetCell(actor.X, actor.Y).IsExplored);
+                    firstRun = false;
+                }
+                firstRun = true;
                 // Update the actor's position
                 actor.X = x;
                 actor.Y = y;
@@ -96,15 +114,25 @@ namespace Hunter.Core
                 return true;
             }
             return false;
+            
         }
-
-        //// A helper method for setting the IsWalkable property on a Cell
-        //public void SetIsWalkable(int x, int y, bool isWalkable)
-        //{
-        //    Cell cell = Cell(x, y);
-        //    SetCellProperties(cell.X, cell.Y, cell.IsTransparent, isWalkable, cell.IsExplored);
-        //}
-
-
+        
+        public bool IsDoor(int x, int y)
+        {
+            if(GetCell(x, y).IsWalkable)
+            {
+                if (!GetCell(x, y + 1).IsWalkable && !GetCell(x, y - 1).IsWalkable && GetCell(x + 1, y).IsWalkable && GetCell(x - 1, y).IsWalkable)
+                {                    
+                    return true;
+                }
+                else if (GetCell(x, y + 1).IsWalkable && GetCell(x, y - 1).IsWalkable && !GetCell(x + 1, y).IsWalkable && !GetCell(x - 1, y).IsWalkable)
+                {
+                    return true;
+                }
+                else
+                    return false;
+            }
+            return false;
+        }
     }
 }
