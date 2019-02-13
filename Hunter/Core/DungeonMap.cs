@@ -87,7 +87,8 @@ namespace Hunter.Core
                 {
                     SetCellProperties(actor.X, actor.Y, GetCell(actor.X, actor.Y).IsTransparent, true, GetCell(actor.X, actor.Y).IsExplored);
                     firstRun = false;
-                }                
+                }
+                firstRun = true;
                 // Update the actor's position
                 actor.X = x;
                 actor.Y = y;
@@ -102,18 +103,6 @@ namespace Hunter.Core
             }
             return false;
             
-        }
-
-        //// A helper method for setting the IsWalkable property on a Cell
-        //public void SetIsWalkable(int x, int y, bool isWalkable)
-        //{
-        //    Cell cell = Cell(x, y);
-        //    SetCellProperties(cell.X, cell.Y, cell.IsTransparent, isWalkable, cell.IsExplored);
-        //}
-
-        public void GetCellsAlongLine()
-        {
-
         }
     }
 }
