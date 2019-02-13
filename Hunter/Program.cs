@@ -67,7 +67,7 @@ namespace Hunter
             CommandSystem = new CommandSystem();
             //Generate the map
             MapGenerator mapGenerator = new MapGenerator(_mapWidth, _mapHeight);
-            MapCreateRedo mapCreation = new MapCreateRedo(_mapWidth, _mapHeight, _maxrooms, _roomMinSize, _roomMaxSize);
+            SimpleBsp mapCreation = new SimpleBsp(_mapWidth, _mapHeight, _maxrooms, _roomMinSize, _roomMaxSize);
             DungeonMap = mapCreation.CreateMap();
             DungeonMap.UpdatePlayerFieldOfView();
 

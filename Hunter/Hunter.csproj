@@ -66,6 +66,7 @@
     <Compile Include="Systems\MapGenerator.cs" />
     <Compile Include="Tools\MapCreateRedo.cs" />
     <Compile Include="Tools\MapCreationTools.cs" />
+    <Compile Include="Tools\SimpleBsp.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
