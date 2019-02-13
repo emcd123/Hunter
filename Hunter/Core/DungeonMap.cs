@@ -99,7 +99,8 @@ namespace Hunter.Core
                 {
                     SetCellProperties(actor.X, actor.Y, GetCell(actor.X, actor.Y).IsTransparent, true, GetCell(actor.X, actor.Y).IsExplored);
                     firstRun = false;
-                }                
+                }
+                firstRun = true;
                 // Update the actor's position
                 actor.X = x;
                 actor.Y = y;
@@ -115,22 +116,7 @@ namespace Hunter.Core
             return false;
             
         }
-
-        private void OpenDoor(Actor actor, int x, int y)
-        {
-            bool door = IsDoor(x, y);
-            if (door == true)
-            {
-                if(actor.X == x && actor.Y == y)
-                {
-                    var cell = GetCell(x, y);
-                    IsWalkedOn.Add(cell);
-                }
-                
-                // Once the door is opened it should be marked as transparent and no longer block field-of-view
-            }
-        }
-
+        
         public bool IsDoor(int x, int y)
         {
             if(GetCell(x, y).IsWalkable)
