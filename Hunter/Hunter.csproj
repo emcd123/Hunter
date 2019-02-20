@@ -68,6 +68,7 @@
     <Compile Include="Tools\FullRoomBsp.cs" />
     <Compile Include="Tools\MapCreationTools.cs" />
     <Compile Include="Tools\SimpleBsp.cs" />
+    <Compile Include="Unused\MapMethods.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

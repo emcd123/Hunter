@@ -18,6 +18,7 @@ namespace Hunter.Tools
         private readonly int _height;
         private readonly DungeonMap _map;
         public List<Rectangle> roomArr;
+        public List<Cell> DoorCoords;
         private Random rnd = new Random();
 
         public FullRoomBsp(int width, int height)
@@ -47,6 +48,8 @@ namespace Hunter.Tools
             {
                 Console.WriteLine(Rooms[i]);
                 MakeRoom(Rooms[i]);
+                if (i != 0 || i != Rooms.Count)
+                    MakeDoor(Rooms[i]);
             }
 
             PlacePlayer(_map, Rooms);
@@ -65,6 +68,36 @@ namespace Hunter.Tools
             for (int y = rm.Top; y < rm.Bottom; y++)
             {
                 _map.SetCellProperties(xi, y, false, false, true);
+            }
+        }
+
+        private void MakeDoor(Rectangle ROOM)
+        {
+
+            int DoorCoordX = ROOM.Left;
+            int DoorCoordY = ROOM.Center.Y;
+            if (DoorCoordX != 0)
+            {
+                _map.SetCellProperties(DoorCoordX, DoorCoordY, false, true, true);
+                _map.Doors.Add(new Door
+                {
+                    X = DoorCoordX,
+                    Y = DoorCoordY,
+                    IsOpen = false
+                });
+            }
+
+            DoorCoordX = ROOM.Center.X;
+            DoorCoordY = ROOM.Top;
+            if (DoorCoordY != 0)
+            {
+                _map.SetCellProperties(DoorCoordX, DoorCoordY, false, true, true);
+                _map.Doors.Add(new Door
+                {
+                    X = DoorCoordX,
+                    Y = DoorCoordY,
+                    IsOpen = false
+                });
             }
         }
 
