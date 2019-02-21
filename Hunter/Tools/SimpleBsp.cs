@@ -13,22 +13,19 @@ namespace Hunter.Tools
 {
     public class SimpleBsp
     {
-        //private readonly IRandom _random;
         private readonly int _width;
         private readonly int _height;
         private readonly DungeonMap _map;
-        private RLConsole _mapConsole;
         public List<Rectangle> roomArr;
         public List<Cell> DoorCoords;
         private Random rnd = new Random();
         private bool flag = true;
 
-        public SimpleBsp(int width, int height, RLConsole mapConsole)
+        public SimpleBsp(int width, int height)
         {
             _width = width;
             _height = height;
             _map = new DungeonMap();
-            _mapConsole = mapConsole;
 
         }
         public DungeonMap CreateMap()
@@ -67,6 +64,12 @@ namespace Hunter.Tools
             if (DoorCoordX != 0)
             {
                 _map.SetCellProperties(DoorCoordX, DoorCoordY, false, true, true);
+                _map.Doors.Add(new Door
+                {
+                    X = DoorCoordX,
+                    Y = DoorCoordY,
+                    IsOpen = false
+                });
             }
 
             DoorCoordX = ROOM.Center.X;
@@ -74,12 +77,13 @@ namespace Hunter.Tools
             if (DoorCoordY != 0)
             {
                 _map.SetCellProperties(DoorCoordX, DoorCoordY, false, true, true);
+                _map.Doors.Add(new Door
+                {
+                    X = DoorCoordX,
+                    Y = DoorCoordY,
+                    IsOpen = false
+                });
             }
-        }
-
-        private List<Cell> ReturnDoors()
-        {
-            return DoorCoords;
         }
 
         private void MakeRoom(Rectangle rm)
@@ -133,8 +137,7 @@ namespace Hunter.Tools
 
             Rectangle rect1;
             Rectangle rect2;
-
-            //int xBreak = GenerateRandomInt(2, width);
+            
             int xBreak = width / 2;
 
             rect1 = new Rectangle(rect.Left, rect.Top, xBreak, rect.Height);
@@ -150,8 +153,7 @@ namespace Hunter.Tools
 
             Rectangle rect1;
             Rectangle rect2;
-
-            //int yBreak = GenerateRandomInt(4, height);
+            
             int yBreak = height/2;
 
             rect1 = new Rectangle(rect.Left, rect.Top, width, yBreak);

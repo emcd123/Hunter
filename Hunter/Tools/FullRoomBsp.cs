@@ -18,6 +18,7 @@ namespace Hunter.Tools
         private readonly int _height;
         private readonly DungeonMap _map;
         public List<Rectangle> roomArr;
+        public List<Cell> DoorCoords;
         private Random rnd = new Random();
 
         public FullRoomBsp(int width, int height)
@@ -47,6 +48,8 @@ namespace Hunter.Tools
             {
                 Console.WriteLine(Rooms[i]);
                 MakeRoom(Rooms[i]);
+                if (i != 0 || i != Rooms.Count)
+                    MakeDoor(Rooms[i]);
             }
 
             PlacePlayer(_map, Rooms);
@@ -68,6 +71,36 @@ namespace Hunter.Tools
             }
         }
 
+        private void MakeDoor(Rectangle ROOM)
+        {
+
+            int DoorCoordX = ROOM.Left;
+            int DoorCoordY = ROOM.Center.Y;
+            if (DoorCoordX != 0)
+            {
+                _map.SetCellProperties(DoorCoordX, DoorCoordY, false, true, true);
+                _map.Doors.Add(new Door
+                {
+                    X = DoorCoordX,
+                    Y = DoorCoordY,
+                    IsOpen = false
+                });
+            }
+
+            DoorCoordX = ROOM.Center.X;
+            DoorCoordY = ROOM.Top;
+            if (DoorCoordY != 0)
+            {
+                _map.SetCellProperties(DoorCoordX, DoorCoordY, false, true, true);
+                _map.Doors.Add(new Door
+                {
+                    X = DoorCoordX,
+                    Y = DoorCoordY,
+                    IsOpen = false
+                });
+            }
+        }
+
         public List<Rectangle> SplitAction(List<Rectangle> RoomsList)
         {
             List<Rectangle> IterRectangles = new List<Rectangle>();
@@ -75,14 +108,17 @@ namespace Hunter.Tools
             {
                 int number = GenerateRandomInt(1, 5);
                 List<Rectangle> IterLi = new List<Rectangle>();
-                if (number > 3)
+                if (number > 3 && o.Width >= 4)
                 {
                     IterLi = SplitRectVertical(o);
                 }
-                else
+                else if (o.Height >= 4)
                 {
                     IterLi = SplitRectHorizontal(o);
                 }
+                else
+                    IterLi = new List<Rectangle> { o };
+
                 for (int i = 0; i < IterLi.Count; i++)
                 {
                     //Console.WriteLine(IterLi[i]);
@@ -100,7 +136,7 @@ namespace Hunter.Tools
             Rectangle rect1;
             Rectangle rect2;
             
-            int xBreak = GenerateRandomInt(2, width);
+            int xBreak = GenerateRandomInt(2, width-2);
                 
             rect1 = new Rectangle(rect.Left, rect.Top, xBreak, rect.Height);
             rect2 = new Rectangle(rect.Left + xBreak, rect.Top, rect.Width - xBreak, rect.Height);
@@ -116,7 +152,7 @@ namespace Hunter.Tools
             Rectangle rect1;
             Rectangle rect2;
 
-            int yBreak = GenerateRandomInt(2, height);
+            int yBreak = GenerateRandomInt(2, height-2);
             rect1 = new Rectangle(rect.Left, rect.Top, width, yBreak);
             rect2 = new Rectangle(rect.Left, rect.Top + yBreak, width, rect.Height - yBreak);    
 
