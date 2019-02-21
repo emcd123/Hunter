@@ -29,5 +29,6 @@ namespace Hunter.Core
         public static RLColor TextHeading = Palette.DbLight;
 
         public static RLColor Player = RLColor.White;
+        public static RLColor KoboldColor = Palette.DbBrightWood;
     }
 }

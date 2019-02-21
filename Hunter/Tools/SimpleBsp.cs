@@ -8,6 +8,8 @@ using RLNET;
 using RogueSharp;
 
 using Hunter.Core;
+using RogueSharp.DiceNotation;
+using Hunter.Monsters;
 
 namespace Hunter.Tools
 {
@@ -20,6 +22,7 @@ namespace Hunter.Tools
         public List<Cell> DoorCoords;
         private Random rnd = new Random();
         private bool flag = true;
+        private bool test = true;
 
         public SimpleBsp(int width, int height)
         {
@@ -50,9 +53,11 @@ namespace Hunter.Tools
                 MakeRoom(Rooms[i]);
                 if(i != 0 || i != Rooms.Count)
                     MakeDoor(Rooms[i]);
+
+                PlaceMonsters(Rooms[i]);
             }
 
-            PlacePlayer(_map, Rooms);
+            PlacePlayer(_map, Rooms);            
             return _map;
         }
 
@@ -189,6 +194,51 @@ namespace Hunter.Tools
             int X = roomArray[size - 1].Center.X;
             int Y = roomArray[size - 1].Center.Y;
             map.SetActorPosition(player, X, Y);
+        }
+
+        private void PlaceMonsters(Rectangle room)
+        {
+            // Each room has a 60% chance of having monsters
+            if (Dice.Roll("1D10") < 7)
+            {
+                // Generate between 1 and 4 monsters
+                var numberOfMonsters = Dice.Roll("1D4");
+                for (int i = 0; i < numberOfMonsters; i++)
+                {
+                    // Find a random walkable location in the room to place the monster
+                    Point randomRoomLocation = _map.GetRandomWalkableLocationInRoom(room);
+                    // It's possible that the room doesn't have space to place a monster
+                    // In that case skip creating the monster
+                    if (randomRoomLocation != null)
+                    {
+                        // Temporarily hard code this monster to be created at level 1
+                        var monster = Kobold.Create(1);
+                        monster.X = randomRoomLocation.X;
+                        monster.Y = randomRoomLocation.Y;
+                        _map.AddMonster(_map, monster);
+                    }
+                }
+            }
+            if (test == true)
+            {
+                // Generate between 1 and 4 monsters
+                var numberOfMonsters = 1;
+                for (int i = 0; i < numberOfMonsters; i++)
+                {
+                    // Find a random walkable location in the room to place the monster
+                    Point randomRoomLocation = _map.GetRandomWalkableLocationInRoom(room);
+                    // It's possible that the room doesn't have space to place a monster
+                    // In that case skip creating the monster
+                    if (randomRoomLocation != null)
+                    {
+                        // Temporarily hard code this monster to be created at level 1
+                        var monster = Kobold.Create(1);
+                        monster.X = randomRoomLocation.X;
+                        monster.Y = randomRoomLocation.Y;
+                        _map.AddMonster(_map, monster);
+                    }
+                }
+            }
         }
 
         public int GenerateRandomInt(int min, int max)

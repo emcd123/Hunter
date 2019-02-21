@@ -13,11 +13,15 @@ namespace Hunter.Core
     public class DungeonMap : Map
     {
         private bool firstRun;
+        private Random rnd = new Random();
         public List<Door> Doors { get; set; }
+
+        private readonly List<Monster> _monsters;
 
         public DungeonMap()
         { 
             Doors = new List<Door>();
+            _monsters = new List<Monster>();
         }
 
         // Return the door at the x,y position or null if one is not found.
@@ -38,6 +42,11 @@ namespace Hunter.Core
             foreach (Door door in Doors)
             {
                 door.Draw(mapConsole, this);
+            }
+            // Iterate through each monster on the map and draw it after drawing the Cells
+            foreach (Monster monster in _monsters)
+            {
+                monster.Draw(mapConsole, this);
             }
         }
 
@@ -134,6 +143,57 @@ namespace Hunter.Core
                 // Once the door is opened it should be marked as transparent and no longer block field-of-view
                 SetCellProperties(x, y, true, cell.IsWalkable, cell.IsExplored);
             }
+        }
+
+        public void AddMonster(DungeonMap map, Monster monster)
+        {
+            _monsters.Add(monster);
+            // After adding the monster to the map make sure to make the cell not walkable
+            map.SetCellProperties(monster.X, monster.Y, true, false);
+        }
+
+        // Look for a random location in the room that is walkable.
+        public Point GetRandomWalkableLocationInRoom(Rectangle room)
+        {
+            //if (DoesRoomHaveWalkableSpace(room))
+            //{
+                for (int i = 0; i < 100; i++)
+                {
+                    int x = GenerateRandomInt(1, room.Width - 2) + room.X;
+                    int y = GenerateRandomInt(1, room.Height - 2) + room.Y;
+                    if (IsWalkable(x, y))
+                    {
+                        return new Point(x, y);
+                    }                
+                }
+                
+                    return new Point(room.Center.X, room.Center.Y);
+                
+            //}
+            // If we didn't find a walkable location in the room return null
+            //return null;
+        }
+
+        // Iterate through each Cell in the room and return true if any are walkable
+        public bool DoesRoomHaveWalkableSpace(Rectangle room)
+        {
+            for (int x = 1; x <= room.Width - 2; x++)
+            {
+                for (int y = 1; y <= room.Height - 2; y++)
+                {
+                    if (IsWalkable(x + room.X, y + room.Y))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public int GenerateRandomInt(int min, int max)
+        {
+            int num = rnd.Next(min, max);
+            return num;
         }
     }
 }
