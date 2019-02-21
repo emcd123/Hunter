@@ -108,14 +108,17 @@ namespace Hunter.Tools
             {
                 int number = GenerateRandomInt(1, 5);
                 List<Rectangle> IterLi = new List<Rectangle>();
-                if (number > 3)
+                if (number > 3 && o.Width >= 4)
                 {
                     IterLi = SplitRectVertical(o);
                 }
-                else
+                else if (o.Height >= 4)
                 {
                     IterLi = SplitRectHorizontal(o);
                 }
+                else
+                    IterLi = new List<Rectangle> { o };
+
                 for (int i = 0; i < IterLi.Count; i++)
                 {
                     //Console.WriteLine(IterLi[i]);
@@ -133,7 +136,7 @@ namespace Hunter.Tools
             Rectangle rect1;
             Rectangle rect2;
             
-            int xBreak = GenerateRandomInt(2, width);
+            int xBreak = GenerateRandomInt(2, width-2);
                 
             rect1 = new Rectangle(rect.Left, rect.Top, xBreak, rect.Height);
             rect2 = new Rectangle(rect.Left + xBreak, rect.Top, rect.Width - xBreak, rect.Height);
@@ -149,7 +152,7 @@ namespace Hunter.Tools
             Rectangle rect1;
             Rectangle rect2;
 
-            int yBreak = GenerateRandomInt(2, height);
+            int yBreak = GenerateRandomInt(2, height-2);
             rect1 = new Rectangle(rect.Left, rect.Top, width, yBreak);
             rect2 = new Rectangle(rect.Left, rect.Top + yBreak, width, rect.Height - yBreak);    
 

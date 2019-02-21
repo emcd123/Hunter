@@ -50,5 +50,21 @@ namespace Hunter.Unused
             }
             return false;
         }
+
+        //private void CreateHorizontalTunnel(int xStart, int xEnd, int yPosition)
+        //{
+        //    for (int x = Math.Min(xStart, xEnd); x <= Math.Max(xStart, xEnd); x++)
+        //    {
+        //        _map.SetCellProperties(x, yPosition, true, true);
+        //    }
+        //}
+
+        //private void CreateVerticalTunnel(int yStart, int yEnd, int xPosition)
+        //{
+        //    for (int y = Math.Min(yStart, yEnd); y <= Math.Max(yStart, yEnd); y++)
+        //    {
+        //        _map.SetCellProperties(xPosition, y, true, true);
+        //    }
+        //}
     }
 }

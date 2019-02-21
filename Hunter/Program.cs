@@ -67,8 +67,8 @@ namespace Hunter
             CommandSystem = new CommandSystem();
 
             //Generate the map           
-            SimpleBsp mapCreation = new SimpleBsp(_mapWidth, _mapHeight);
-            //FullRoomBsp mapCreation = new FullRoomBsp(_mapWidth, _mapHeight);
+            //SimpleBsp mapCreation = new SimpleBsp(_mapWidth, _mapHeight);
+            FullRoomBsp mapCreation = new FullRoomBsp(_mapWidth, _mapHeight);
 
             DungeonMap = mapCreation.CreateMap();
             DungeonMap.UpdatePlayerFieldOfView();

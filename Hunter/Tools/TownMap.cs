@@ -11,7 +11,7 @@ using Hunter.Core;
 
 namespace Hunter.Systems
 {
-    public class MapGenerator
+    public class TownMap
     {
         private readonly int _width;
         private readonly int _height;
@@ -19,7 +19,7 @@ namespace Hunter.Systems
         private readonly DungeonMap _map;
 
         // Constructing a new MapGenerator requires the dimensions of the maps it will create
-        public MapGenerator(int width, int height)
+        public TownMap(int width, int height)
         {
             _width = width;
             _height = height;
