@@ -122,13 +122,6 @@ namespace Hunter
             {
                 _renderRequired = true;
             }
-
-            // Set background color and text for each console 
-            // so that we can verify they are in the correct positions
-            _mapConsole.SetBackColor(0, 0, _mapWidth, _mapHeight, Colors.FloorBackground);            
-
-            _statConsole.SetBackColor(0, 0, _statWidth, _statHeight, Palette.DbOldStone);
-            _statConsole.Print(1, 1, "Stats", Colors.TextHeading);
         }
 
         // Event handler for RLNET's Render event
@@ -136,8 +129,13 @@ namespace Hunter
         {
             if (_renderRequired)
             {
-                DungeonMap.Draw(_mapConsole);
+                _mapConsole.Clear();
+                _statConsole.Clear();
+                _messageConsole.Clear();
+
+                DungeonMap.Draw(_mapConsole, _statConsole);
                 Player.Draw(_mapConsole);
+                Player.DrawStats(_statConsole);
                 MessageLog.Draw(_messageConsole);
 
                 // Blit the sub consoles to the root console in the correct locations
