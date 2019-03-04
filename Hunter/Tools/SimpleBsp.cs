@@ -194,6 +194,7 @@ namespace Hunter.Tools
             int X = roomArray[size - 1].Center.X;
             int Y = roomArray[size - 1].Center.Y;
             map.SetActorPosition(player, X, Y);
+            Game.SchedulingSystem.Add(player);
         }
 
         private void PlaceMonsters(Rectangle room)

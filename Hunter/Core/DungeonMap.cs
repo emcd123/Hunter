@@ -96,6 +96,8 @@ namespace Hunter.Core
             
         }
 
+
+
         // This method will be called any time we move the player to update field-of-view
         public void UpdatePlayerFieldOfView()
         {
@@ -159,6 +161,7 @@ namespace Hunter.Core
             _monsters.Add(monster);
             // After adding the monster to the map make sure to make the cell not walkable
             map.SetCellProperties(monster.X, monster.Y, true, false);
+            Game.SchedulingSystem.Add(monster);
         }
 
         public void RemoveMonster(Monster monster)
@@ -166,6 +169,7 @@ namespace Hunter.Core
             _monsters.Remove(monster);
             // After removing the monster from the map, make sure the cell is walkable again
             SetCellProperties(monster.X, monster.Y, true, true, true);
+            Game.SchedulingSystem.Remove(monster);
         }
 
         public Monster GetMonsterAt(int x, int y)
