@@ -6,11 +6,21 @@ using System.Threading.Tasks;
 
 using RogueSharp;
 using RLNET;
+using Hunter.Behaviours;
+using Hunter.Systems;
 
 namespace Hunter.Core
 {
     public class Monster : Actor
     {
+        public int? TurnsAlerted { get; set; }
+
+        public virtual void PerformAction(CommandSystem commandSystem)
+        {
+            var behavior = new StandardMoveAndAttack();
+            behavior.Act(this, commandSystem);
+        }
+
         public void DrawStats(RLConsole statConsole, int position)
         {
             // Start at Y=13 which is below the player stats.
