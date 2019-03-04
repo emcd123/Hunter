@@ -40,6 +40,7 @@ namespace Hunter
         public static CommandSystem CommandSystem { get; private set; }
         public static Player Player { get; private set; }
         public static DungeonMap DungeonMap { get; private set; }
+        public static MessageLog MessageLog { get; private set; }
 
         public static int _maxrooms = 4;
         public static int _roomMinSize = 10;
@@ -65,6 +66,11 @@ namespace Hunter
 
             Player = new Player();
             CommandSystem = new CommandSystem();
+
+            // Create a new MessageLog and print the random seed used to generate the level
+            MessageLog = new MessageLog();
+            MessageLog.Add("The rogue arrives on level 1");
+            MessageLog.Add("Prepare to fight for your life");
 
             //Generate the map           
             SimpleBsp mapCreation = new SimpleBsp(_mapWidth, _mapHeight);
@@ -119,10 +125,7 @@ namespace Hunter
 
             // Set background color and text for each console 
             // so that we can verify they are in the correct positions
-            _mapConsole.SetBackColor(0, 0, _mapWidth, _mapHeight, Colors.FloorBackground);
-
-            _messageConsole.SetBackColor(0, 0, _messageWidth, _messageHeight, Palette.DbDeepWater);
-            _messageConsole.Print(1, 1, "Messages", Colors.TextHeading);
+            _mapConsole.SetBackColor(0, 0, _mapWidth, _mapHeight, Colors.FloorBackground);            
 
             _statConsole.SetBackColor(0, 0, _statWidth, _statHeight, Palette.DbOldStone);
             _statConsole.Print(1, 1, "Stats", Colors.TextHeading);
@@ -135,6 +138,7 @@ namespace Hunter
             {
                 DungeonMap.Draw(_mapConsole);
                 Player.Draw(_mapConsole);
+                MessageLog.Draw(_messageConsole);
 
                 // Blit the sub consoles to the root console in the correct locations
                 RLConsole.Blit(_mapConsole, 0, 0, _mapWidth, _mapHeight,

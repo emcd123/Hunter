@@ -66,5 +66,13 @@ namespace Hunter.Unused
         //        _map.SetCellProperties(xPosition, y, true, true);
         //    }
         //}
-    }
+
+                    // In OnRootConsoleUpdate() replace the if ( didPlayerAct ) block
+            //if (didPlayerAct)
+            //{
+            //    // Every time the player acts increment the steps and log it
+            //    MessageLog.Add($"Step # {++_steps}");
+            //    _renderRequired = true;
+            //}
+}
 }
