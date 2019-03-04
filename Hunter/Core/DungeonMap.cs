@@ -161,6 +161,18 @@ namespace Hunter.Core
             map.SetCellProperties(monster.X, monster.Y, true, false);
         }
 
+        public void RemoveMonster(Monster monster)
+        {
+            _monsters.Remove(monster);
+            // After removing the monster from the map, make sure the cell is walkable again
+            SetCellProperties(monster.X, monster.Y, true, true, true);
+        }
+
+        public Monster GetMonsterAt(int x, int y)
+        {
+            return _monsters.FirstOrDefault(m => m.X == x && m.Y == y);
+        }
+
         // Look for a random location in the room that is walkable.
         public Point GetRandomWalkableLocationInRoom(Rectangle room)
         {
