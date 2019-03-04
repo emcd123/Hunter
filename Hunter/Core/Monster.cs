@@ -11,6 +11,5 @@ namespace Hunter.Core
 {
     public class Monster : Actor
     {
-        // Empty for now, we will add functionality later
     }
 }
