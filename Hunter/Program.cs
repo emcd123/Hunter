@@ -75,9 +75,10 @@ namespace Hunter
             MessageLog.Add("The rogue arrives on level 1");
             MessageLog.Add("Prepare to fight for your life");
 
-            //Generate the map           
+            //Generate the map   
+            TownMap mapCreation = new TownMap(_mapWidth, _mapHeight);
             //SimpleBsp mapCreation = new SimpleBsp(_mapWidth, _mapHeight);
-            FullRoomBsp mapCreation = new FullRoomBsp(_mapWidth, _mapHeight);
+            //FullRoomBsp mapCreation = new FullRoomBsp(_mapWidth, _mapHeight);
 
             DungeonMap = mapCreation.CreateMap();
             DungeonMap.UpdatePlayerFieldOfView();
