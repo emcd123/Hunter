@@ -71,6 +71,7 @@
     <Compile Include="Systems\CommandSystems.cs" />
     <Compile Include="Systems\MessageLog.cs" />
     <Compile Include="Systems\SchedulingSystem.cs" />
+    <Compile Include="Tools\BaseMap.cs" />
     <Compile Include="Tools\TownMap.cs" />
     <Compile Include="Tools\FullRoomBsp.cs" />
     <Compile Include="Tools\SimpleBsp.cs" />

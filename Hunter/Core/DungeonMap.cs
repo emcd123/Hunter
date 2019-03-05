@@ -24,12 +24,6 @@ namespace Hunter.Core
             _monsters = new List<Monster>();
         }
 
-        // Return the door at the x,y position or null if one is not found.
-        public Door GetDoor(int x, int y)
-        {
-            return Doors.SingleOrDefault(d => d.X == x && d.Y == y);
-        }
-
         // The Draw method will be called each time the map is updated
         // It will render all of the symbols/colors for each cell to the map sub console
         public void Draw(RLConsole mapConsole, RLConsole statConsole)
@@ -92,11 +86,8 @@ namespace Hunter.Core
                 {
                     console.Set(cell.X, cell.Y, Colors.Wall, Colors.WallBackground, '#');
                 }
-            }
-            
+            }            
         }
-
-
 
         // This method will be called any time we move the player to update field-of-view
         public void UpdatePlayerFieldOfView()
@@ -143,6 +134,12 @@ namespace Hunter.Core
             return false;            
         }
 
+        // Return the door at the x,y position or null if one is not found.
+        public Door GetDoor(int x, int y)
+        {
+            return Doors.SingleOrDefault(d => d.X == x && d.Y == y);
+        }
+
         // The actor opens the door located at the x,y position
         private void OpenDoor(Actor actor, int x, int y)
         {
@@ -182,37 +179,20 @@ namespace Hunter.Core
         {
             //if (DoesRoomHaveWalkableSpace(room))
             //{
-                for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 100; i++)
+            {
+                int x = GenerateRandomInt(1, room.Width - 1) + room.X;
+                int y = GenerateRandomInt(1, room.Height - 1) + room.Y;
+                if (IsWalkable(x, y))
                 {
-                    int x = GenerateRandomInt(1, room.Width - 2) + room.X;
-                    int y = GenerateRandomInt(1, room.Height - 2) + room.Y;
-                    if (IsWalkable(x, y))
-                    {
-                        return new Point(x, y);
-                    }                
-                }
+                    return new Point(x, y);
+                }                
+            }
                 
-                    return new Point(room.Center.X, room.Center.Y);
-                
+            return new Point(room.Center.X, room.Center.Y);                
             //}
             // If we didn't find a walkable location in the room return null
             //return null;
-        }
-
-        // Iterate through each Cell in the room and return true if any are walkable
-        public bool DoesRoomHaveWalkableSpace(Rectangle room)
-        {
-            for (int x = 1; x <= room.Width - 2; x++)
-            {
-                for (int y = 1; y <= room.Height - 2; y++)
-                {
-                    if (IsWalkable(x + room.X, y + room.Y))
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
         }
 
         public int GenerateRandomInt(int min, int max)

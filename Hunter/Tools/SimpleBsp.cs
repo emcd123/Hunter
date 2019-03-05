@@ -13,7 +13,7 @@ using Hunter.Monsters;
 
 namespace Hunter.Tools
 {
-    public class SimpleBsp
+    public class SimpleBsp : BaseMap
     {
         private readonly int _width;
         private readonly int _height;
@@ -40,7 +40,7 @@ namespace Hunter.Tools
             List<Rectangle> Rooms = new List<Rectangle>();
 
             var FullRectangle = new Rectangle(0, 0, _width, _height);
-            MakeExteriorWall(FullRectangle);
+            MakeExteriorWall(_map, FullRectangle);
             Rooms.Add(FullRectangle);
 
             for (int i = 0; i < 4; i++)
@@ -50,63 +50,18 @@ namespace Hunter.Tools
             for (int i = 0; i < Rooms.Count; i++)
             {
                 Console.WriteLine(Rooms[i]);
-                MakeRoom(Rooms[i]);
+                MakeRoom(_map, Rooms[i]);
                 if(i != 0 || i != Rooms.Count)
-                    MakeDoor(Rooms[i]);
+                    MakeDoor(_map, Rooms[i]);
 
-                PlaceMonsters(Rooms[i]);
+                PlaceMonsters(_map, Rooms[i]);
             }
 
             PlacePlayer(_map, Rooms);            
             return _map;
         }
 
-        private void MakeDoor(Rectangle ROOM)
-        {
-
-            int DoorCoordX = ROOM.Left;
-            int DoorCoordY = ROOM.Center.Y;
-            if (DoorCoordX != 0)
-            {
-                _map.SetCellProperties(DoorCoordX, DoorCoordY, false, true, true);
-                _map.Doors.Add(new Door
-                {
-                    X = DoorCoordX,
-                    Y = DoorCoordY,
-                    IsOpen = false
-                });
-            }
-
-            DoorCoordX = ROOM.Center.X;
-            DoorCoordY = ROOM.Top;
-            if (DoorCoordY != 0)
-            {
-                _map.SetCellProperties(DoorCoordX, DoorCoordY, false, true, true);
-                _map.Doors.Add(new Door
-                {
-                    X = DoorCoordX,
-                    Y = DoorCoordY,
-                    IsOpen = false
-                });
-            }
-        }
-
-        private void MakeRoom(Rectangle rm)
-        {
-            int xi = rm.Left;
-            int yi = rm.Top;
-
-            for (int x = rm.Left; x < rm.Right; x++)
-            {
-                _map.SetCellProperties(x, yi, false, false, true);
-            }
-            for (int y = rm.Top; y < rm.Bottom; y++)
-            {
-                _map.SetCellProperties(xi, y, false, false, true);
-            }
-        }
-
-        public List<Rectangle> SplitAction(List<Rectangle> RoomsList)
+        private List<Rectangle> SplitAction(List<Rectangle> RoomsList)
         {
             List<Rectangle> IterRectangles = new List<Rectangle>();
             foreach (Rectangle o in RoomsList.ToList())
@@ -135,7 +90,7 @@ namespace Hunter.Tools
             return IterRectangles;
         }
 
-        public List<Rectangle> SplitRectVertical(Rectangle rect)
+        private List<Rectangle> SplitRectVertical(Rectangle rect)
         {
             int width = rect.Width;
             int height = rect.Height;
@@ -151,7 +106,7 @@ namespace Hunter.Tools
             return new List<Rectangle>() { rect1, rect2 };
         }
 
-        public List<Rectangle> SplitRectHorizontal(Rectangle rect)
+        private List<Rectangle> SplitRectHorizontal(Rectangle rect)
         {
             int width = rect.Width;
             int height = rect.Height;
@@ -167,37 +122,23 @@ namespace Hunter.Tools
             return new List<Rectangle>() { rect1, rect2 };
         }
 
-        public void MakeExteriorWall(Rectangle rect)
-        {
-            int height = rect.Height;
-            int width = rect.Width;
-            foreach (Cell cell in _map.GetAllCells())
-            {
-                _map.SetCellProperties(cell.X, cell.Y, true, true, true);
-            }
-            foreach (Cell cell in _map.GetCellsInRows(0, height - 1))
-            {
-                _map.SetCellProperties(cell.X, cell.Y, false, false, true);
-            }
 
-            // Set the first and last columns in the map to not be transparent or walkable
-            foreach (Cell cell in _map.GetCellsInColumns(0, width - 1))
+        private void MakeRoom(DungeonMap map, Rectangle rm)
+        {
+            int xi = rm.Left;
+            int yi = rm.Top;
+
+            for (int x = rm.Left; x < rm.Right; x++)
             {
-                _map.SetCellProperties(cell.X, cell.Y, false, false, true);
+                _map.SetCellProperties(x, yi, false, false, true);
+            }
+            for (int y = rm.Top; y < rm.Bottom; y++)
+            {
+                _map.SetCellProperties(xi, y, false, false, true);
             }
         }
 
-        public void PlacePlayer(DungeonMap map, List<Rectangle> roomArray)
-        {
-            int size = roomArray.Count;
-            Player player = Game.Player;
-            int X = roomArray[size - 1].Center.X;
-            int Y = roomArray[size - 1].Center.Y;
-            map.SetActorPosition(player, X, Y);
-            Game.SchedulingSystem.Add(player);
-        }
-
-        private void PlaceMonsters(Rectangle room)
+        private void PlaceMonsters(DungeonMap map, Rectangle room)
         {
             // Each room has a 60% chance of having monsters
             //if (Dice.Roll("1D10") < 7)
@@ -227,7 +168,7 @@ namespace Hunter.Tools
                 for (int i = 0; i < numberOfMonsters; i++)
                 {
                     // Find a random walkable location in the room to place the monster
-                    Point randomRoomLocation = _map.GetRandomWalkableLocationInRoom(room);
+                    Point randomRoomLocation = map.GetRandomWalkableLocationInRoom(room);
                     // It's possible that the room doesn't have space to place a monster
                     // In that case skip creating the monster
                     if (randomRoomLocation != null)
@@ -236,16 +177,10 @@ namespace Hunter.Tools
                         var monster = Kobold.Create(1);
                         monster.X = randomRoomLocation.X;
                         monster.Y = randomRoomLocation.Y;
-                        _map.AddMonster(_map, monster);
+                        map.AddMonster(map, monster);
                     }
                 }
             }
-        }
-
-        public int GenerateRandomInt(int min, int max)
-        {
-            int num = rnd.Next(min, max);
-            return num;
         }
     }
 }

@@ -8,10 +8,11 @@ using RLNET;
 using RogueSharp;
 
 using Hunter.Core;
+using Hunter.Monsters;
 
 namespace Hunter.Tools
 {
-    public class FullRoomBsp
+    public class FullRoomBsp : BaseMap
     {
         //private readonly IRandom _random;
         private readonly int _width;
@@ -20,6 +21,8 @@ namespace Hunter.Tools
         public List<Rectangle> roomArr;
         public List<Cell> DoorCoords;
         private Random rnd = new Random();
+
+        private static bool test = true;
 
         public FullRoomBsp(int width, int height)
         {
@@ -37,7 +40,7 @@ namespace Hunter.Tools
             List<Rectangle> Rooms = new List<Rectangle>();
 
             var FullRectangle = new Rectangle(0, 0, _width, _height);
-            MakeExteriorWall(FullRectangle);
+            MakeExteriorWall(_map, FullRectangle);
             Rooms.Add(FullRectangle);
 
             for (int i = 0; i < 4; i++)
@@ -49,64 +52,21 @@ namespace Hunter.Tools
                 Console.WriteLine(Rooms[i]);
                 MakeRoom(Rooms[i]);
                 if (i != 0 || i != Rooms.Count)
-                    MakeDoor(Rooms[i]);
+                    MakeDoor(_map, Rooms[i]);
+
+                PlaceMonsters(_map, Rooms[i]);
             }
 
             PlacePlayer(_map, Rooms);
             return _map;
         }
 
-        private void MakeRoom( Rectangle rm)
-        {
-            int xi = rm.Left;
-            int yi = rm.Top;
-
-            for (int x = rm.Left; x < rm.Right; x++)
-            {
-                _map.SetCellProperties(x, yi, false, false, true);
-            }
-            for (int y = rm.Top; y < rm.Bottom; y++)
-            {
-                _map.SetCellProperties(xi, y, false, false, true);
-            }
-        }
-
-        private void MakeDoor(Rectangle ROOM)
-        {
-
-            int DoorCoordX = ROOM.Left;
-            int DoorCoordY = ROOM.Center.Y;
-            if (DoorCoordX != 0)
-            {
-                _map.SetCellProperties(DoorCoordX, DoorCoordY, false, true, true);
-                _map.Doors.Add(new Door
-                {
-                    X = DoorCoordX,
-                    Y = DoorCoordY,
-                    IsOpen = false
-                });
-            }
-
-            DoorCoordX = ROOM.Center.X;
-            DoorCoordY = ROOM.Top;
-            if (DoorCoordY != 0)
-            {
-                _map.SetCellProperties(DoorCoordX, DoorCoordY, false, true, true);
-                _map.Doors.Add(new Door
-                {
-                    X = DoorCoordX,
-                    Y = DoorCoordY,
-                    IsOpen = false
-                });
-            }
-        }
-
-        public List<Rectangle> SplitAction(List<Rectangle> RoomsList)
+        private List<Rectangle> SplitAction(List<Rectangle> RoomsList)
         {
             List<Rectangle> IterRectangles = new List<Rectangle>();
             foreach (Rectangle o in RoomsList.ToList())
             {
-                int number = GenerateRandomInt(1, 5);
+                int number = GenerateRandomInt(rnd, 1, 5);
                 List<Rectangle> IterLi = new List<Rectangle>();
                 if (number > 3 && o.Width >= 4)
                 {
@@ -128,7 +88,7 @@ namespace Hunter.Tools
             return IterRectangles;
         }
 
-        public List<Rectangle> SplitRectVertical(Rectangle rect)
+        private List<Rectangle> SplitRectVertical(Rectangle rect)
         {
             int width = rect.Width;
             int height = rect.Height;
@@ -136,7 +96,7 @@ namespace Hunter.Tools
             Rectangle rect1;
             Rectangle rect2;
             
-            int xBreak = GenerateRandomInt(2, width-2);
+            int xBreak = GenerateRandomInt(rnd, 2, width-2);
                 
             rect1 = new Rectangle(rect.Left, rect.Top, xBreak, rect.Height);
             rect2 = new Rectangle(rect.Left + xBreak, rect.Top, rect.Width - xBreak, rect.Height);
@@ -144,7 +104,7 @@ namespace Hunter.Tools
             return new List<Rectangle>() { rect1, rect2 };
         }
 
-        public List<Rectangle> SplitRectHorizontal(Rectangle rect)
+        private List<Rectangle> SplitRectHorizontal(Rectangle rect)
         {
             int width = rect.Width;
             int height = rect.Height;
@@ -152,46 +112,71 @@ namespace Hunter.Tools
             Rectangle rect1;
             Rectangle rect2;
 
-            int yBreak = GenerateRandomInt(2, height-2);
+            int yBreak = GenerateRandomInt(rnd, 2, height-2);
             rect1 = new Rectangle(rect.Left, rect.Top, width, yBreak);
             rect2 = new Rectangle(rect.Left, rect.Top + yBreak, width, rect.Height - yBreak);    
 
             return new List<Rectangle>() { rect1, rect2 };
         }
 
-        public void MakeExteriorWall(Rectangle rect)
+        private void MakeRoom(Rectangle rm)
         {
-            int height = rect.Height;
-            int width = rect.Width;
-            foreach (Cell cell in _map.GetAllCells())
-            {
-                _map.SetCellProperties(cell.X, cell.Y, true, true, true);
-            }
-            foreach (Cell cell in _map.GetCellsInRows(0, height - 1))
-            {
-                _map.SetCellProperties(cell.X, cell.Y, false, false, true);
-            }
+            int xi = rm.Left;
+            int yi = rm.Top;
 
-            // Set the first and last columns in the map to not be transparent or walkable
-            foreach (Cell cell in _map.GetCellsInColumns(0, width - 1))
+            for (int x = rm.Left; x < rm.Right; x++)
             {
-                _map.SetCellProperties(cell.X, cell.Y, false, false, true);
+                _map.SetCellProperties(x, yi, false, false, true);
+            }
+            for (int y = rm.Top; y < rm.Bottom; y++)
+            {
+                _map.SetCellProperties(xi, y, false, false, true);
             }
         }
 
-        public void PlacePlayer(DungeonMap map, List<Rectangle> roomArray)
+        private void PlaceMonsters(DungeonMap map, Rectangle room)
         {
-            int size = roomArray.Count;
-            Player player = Game.Player;
-            int X = roomArray[size - 1].Center.X;
-            int Y = roomArray[size - 1].Center.Y;
-            map.SetActorPosition(player, X, Y);
-        }
-
-        public int GenerateRandomInt(int min, int max)
-        {
-            int num = rnd.Next(min, max);
-            return num;
+            // Each room has a 60% chance of having monsters
+            //if (Dice.Roll("1D10") < 7)
+            //{
+            //    // Generate between 1 and 4 monsters
+            //    var numberOfMonsters = Dice.Roll("1D4");
+            //    for (int i = 0; i < numberOfMonsters; i++)
+            //    {
+            //        // Find a random walkable location in the room to place the monster
+            //        Point randomRoomLocation = _map.GetRandomWalkableLocationInRoom(room);
+            //        // It's possible that the room doesn't have space to place a monster
+            //        // In that case skip creating the monster
+            //        if (randomRoomLocation != null)
+            //        {
+            //            // Temporarily hard code this monster to be created at level 1
+            //            var monster = Kobold.Create(1);
+            //            monster.X = randomRoomLocation.X;
+            //            monster.Y = randomRoomLocation.Y;
+            //            _map.AddMonster(_map, monster);
+            //        }
+            //    }
+            //}
+            if (test == true)
+            {
+                // Generate between 1 and 4 monsters
+                var numberOfMonsters = 1;
+                for (int i = 0; i < numberOfMonsters; i++)
+                {
+                    // Find a random walkable location in the room to place the monster
+                    Point randomRoomLocation = map.GetRandomWalkableLocationInRoom(room);
+                    // It's possible that the room doesn't have space to place a monster
+                    // In that case skip creating the monster
+                    if (randomRoomLocation != null)
+                    {
+                        // Temporarily hard code this monster to be created at level 1
+                        var monster = Kobold.Create(1);
+                        monster.X = randomRoomLocation.X;
+                        monster.Y = randomRoomLocation.Y;
+                        map.AddMonster(map, monster);
+                    }
+                }
+            }
         }
     }
 }

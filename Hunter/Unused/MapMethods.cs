@@ -12,6 +12,22 @@ namespace Hunter.Unused
     class MapMethods : Map
     {
 
+        // Iterate through each Cell in the room and return true if any are walkable
+        public bool DoesRoomHaveWalkableSpace(Rectangle room)
+        {
+            for (int x = 1; x <= room.Width - 2; x++)
+            {
+                for (int y = 1; y <= room.Height - 2; y++)
+                {
+                    if (IsWalkable(x + room.X, y + room.Y))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         public List<Door> PopulateDoors(Map map)
         {
             List<Door> DOORS = new List<Door>();
