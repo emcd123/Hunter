@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hunter.Tools
+namespace Hunter.MapGeneration
 {
     public class BaseMap
     {
