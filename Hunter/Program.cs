@@ -9,7 +9,7 @@ using RogueSharp;
 
 using Hunter.Core;
 using Hunter.Systems;
-using Hunter.Tools;
+using Hunter.MapGeneration;
 
 namespace Hunter
 {

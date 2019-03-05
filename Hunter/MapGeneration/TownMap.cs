@@ -8,7 +8,7 @@ using RLNET;
 using RogueSharp;
 
 using Hunter.Core;
-using Hunter.Tools;
+using Hunter.MapGeneration;
 
 namespace Hunter.Systems
 {

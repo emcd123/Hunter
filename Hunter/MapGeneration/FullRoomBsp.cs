@@ -8,23 +8,23 @@ using RLNET;
 using RogueSharp;
 
 using Hunter.Core;
-using RogueSharp.DiceNotation;
 using Hunter.Monsters;
 
-namespace Hunter.Tools
+namespace Hunter.MapGeneration
 {
-    public class SimpleBsp : BaseMap
+    public class FullRoomBsp : BaseMap
     {
+        //private readonly IRandom _random;
         private readonly int _width;
         private readonly int _height;
         private readonly DungeonMap _map;
         public List<Rectangle> roomArr;
         public List<Cell> DoorCoords;
         private Random rnd = new Random();
-        private bool flag = true;
-        private bool test = true;
 
-        public SimpleBsp(int width, int height)
+        private static bool test = true;
+
+        public FullRoomBsp(int width, int height)
         {
             _width = width;
             _height = height;
@@ -50,14 +50,14 @@ namespace Hunter.Tools
             for (int i = 0; i < Rooms.Count; i++)
             {
                 Console.WriteLine(Rooms[i]);
-                MakeRoom(_map, Rooms[i]);
-                if(i != 0 || i != Rooms.Count)
+                MakeRoom(Rooms[i]);
+                if (i != 0 || i != Rooms.Count)
                     MakeDoor(_map, Rooms[i]);
 
                 PlaceMonsters(_map, Rooms[i]);
             }
 
-            PlacePlayer(_map, Rooms);            
+            PlacePlayer(_map, Rooms);
             return _map;
         }
 
@@ -65,28 +65,26 @@ namespace Hunter.Tools
         {
             List<Rectangle> IterRectangles = new List<Rectangle>();
             foreach (Rectangle o in RoomsList.ToList())
-            {                
-                //int number = GenerateRandomInt(1, 5);
+            {
+                int number = GenerateRandomInt(rnd, 1, 5);
                 List<Rectangle> IterLi = new List<Rectangle>();
-                if (flag == true)
+                if (number > 3 && o.Width >= 4)
                 {
                     IterLi = SplitRectVertical(o);
                 }
-                else
+                else if (o.Height >= 4)
                 {
                     IterLi = SplitRectHorizontal(o);
                 }
+                else
+                    IterLi = new List<Rectangle> { o };
+
                 for (int i = 0; i < IterLi.Count; i++)
                 {
                     //Console.WriteLine(IterLi[i]);
                     IterRectangles.Add(IterLi[i]);
                 }
-                
             }
-            if (flag == true)
-                flag = false;
-            else
-                flag = true;
             return IterRectangles;
         }
 
@@ -98,10 +96,10 @@ namespace Hunter.Tools
             Rectangle rect1;
             Rectangle rect2;
             
-            int xBreak = width / 2;
-
+            int xBreak = GenerateRandomInt(rnd, 2, width-2);
+                
             rect1 = new Rectangle(rect.Left, rect.Top, xBreak, rect.Height);
-            rect2 = new Rectangle(rect.Left+xBreak, rect.Top, rect.Width - xBreak, rect.Height);
+            rect2 = new Rectangle(rect.Left + xBreak, rect.Top, rect.Width - xBreak, rect.Height);
 
             return new List<Rectangle>() { rect1, rect2 };
         }
@@ -113,17 +111,15 @@ namespace Hunter.Tools
 
             Rectangle rect1;
             Rectangle rect2;
-            
-            int yBreak = height/2;
 
+            int yBreak = GenerateRandomInt(rnd, 2, height-2);
             rect1 = new Rectangle(rect.Left, rect.Top, width, yBreak);
-            rect2 = new Rectangle(rect.Left, rect.Top + yBreak, width, rect.Height - yBreak);
+            rect2 = new Rectangle(rect.Left, rect.Top + yBreak, width, rect.Height - yBreak);    
 
             return new List<Rectangle>() { rect1, rect2 };
         }
 
-
-        private void MakeRoom(DungeonMap map, Rectangle rm)
+        private void MakeRoom(Rectangle rm)
         {
             int xi = rm.Left;
             int yi = rm.Top;
@@ -174,7 +170,7 @@ namespace Hunter.Tools
                     if (randomRoomLocation != null)
                     {
                         // Temporarily hard code this monster to be created at level 1
-                        var monster = Kobold.Create(1);
+                        var monster = Goon.Create(1);
                         monster.X = randomRoomLocation.X;
                         monster.Y = randomRoomLocation.Y;
                         map.AddMonster(map, monster);
@@ -184,4 +180,3 @@ namespace Hunter.Tools
         }
     }
 }
-
