@@ -8,10 +8,11 @@ using RLNET;
 using RogueSharp;
 
 using Hunter.Core;
+using Hunter.Tools;
 
 namespace Hunter.Systems
 {
-    public class TownMap
+    public class TownMap : BaseMap
     {
         private readonly int _width;
         private readonly int _height;
