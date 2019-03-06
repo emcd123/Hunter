@@ -9,7 +9,7 @@ namespace Hunter.Core
 {
     public class Menu
     {
-        private RLConsole menuConsole;
+        private static RLConsole menuConsole;
         private int _width;
         private int _height;
 
@@ -25,7 +25,26 @@ namespace Hunter.Core
 
             menuConsole.Clear();
 
+            Draw();
+
             RLConsole.Blit(menuConsole, 0, 0, _width, _height, rootConsole, 0, 0);
+        }
+        
+        private List<string> LineArray()
+        {
+            List<string> linesLocal = new List<string>();
+            linesLocal.Add("Your mission should you choose to accept it");
+            return linesLocal;
+        }
+
+        public void Draw()
+        {
+            List<string> lines = LineArray();
+            for (int i = 0; i < lines.Count; i++)
+            {
+                //Console.WriteLine(lines[i]);
+                menuConsole.Print(1, i + 1, lines[i], RLColor.White);
+            }
         }
     }
 }

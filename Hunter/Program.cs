@@ -115,6 +115,10 @@ namespace Hunter
                             CommandSystem.CloseMenu();
                             didPlayerAct = true;
                         }
+                        else if (keyPress.Key == RLKey.Escape)
+                        {
+                            _rootConsole.Close();
+                        }
                     }
                 }
                 else
@@ -169,6 +173,7 @@ namespace Hunter
                 Player.Draw(_mapConsole);
                 Player.DrawStats(_statConsole);
                 MessageLog.Draw(_messageConsole);
+                    
 
                 if (!Globals.BuildingEntranceIsTriggered)
                 {
@@ -182,7 +187,7 @@ namespace Hunter
                 }
                 else
                 {
-                    Menu.CreateMenu(_rootConsole);                    
+                    Menu.CreateMenu(_rootConsole);
                 }
                 // Tell RLNET to draw the console that we set
                 _rootConsole.Draw();
