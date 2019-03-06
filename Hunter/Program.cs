@@ -106,30 +106,43 @@ namespace Hunter
 
             if (CommandSystem.IsPlayerTurn)
             {
-                if (keyPress != null)
+                if (Globals.BuildingEntranceIsTriggered == true)
                 {
-                    if (keyPress.Key == RLKey.Up)
+                    if (keyPress != null)
                     {
-                        didPlayerAct = CommandSystem.MovePlayer(Direction.Up);
-                    }
-                    else if (keyPress.Key == RLKey.Down)
-                    {
-                        didPlayerAct = CommandSystem.MovePlayer(Direction.Down);
-                    }
-                    else if (keyPress.Key == RLKey.Left)
-                    {
-                        didPlayerAct = CommandSystem.MovePlayer(Direction.Left);
-                    }
-                    else if (keyPress.Key == RLKey.Right)
-                    {
-                        didPlayerAct = CommandSystem.MovePlayer(Direction.Right);
-                    }
-                    else if (keyPress.Key == RLKey.Escape)
-                    {
-                        _rootConsole.Close();
+                        if (keyPress.Key == RLKey.E)
+                        {                            
+                            CommandSystem.CloseMenu();
+                            didPlayerAct = true;
+                        }
                     }
                 }
-
+                else
+                {
+                    if (keyPress != null)
+                    {
+                        if (keyPress.Key == RLKey.Up)
+                        {
+                            didPlayerAct = CommandSystem.MovePlayer(Direction.Up);
+                        }
+                        else if (keyPress.Key == RLKey.Down)
+                        {
+                            didPlayerAct = CommandSystem.MovePlayer(Direction.Down);
+                        }
+                        else if (keyPress.Key == RLKey.Left)
+                        {
+                            didPlayerAct = CommandSystem.MovePlayer(Direction.Left);
+                        }
+                        else if (keyPress.Key == RLKey.Right)
+                        {
+                            didPlayerAct = CommandSystem.MovePlayer(Direction.Right);
+                        }
+                        else if (keyPress.Key == RLKey.Escape)
+                        {
+                            _rootConsole.Close();
+                        }
+                    }
+                }
                 if (didPlayerAct)
                 {
                     _renderRequired = true;
