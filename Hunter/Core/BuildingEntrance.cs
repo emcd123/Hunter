@@ -16,7 +16,7 @@ namespace Hunter.Core
             Color = Colors.BuildingEntrance;
             BackgroundColor = Colors.BuildingEntranceBackground;
         }
-        //public bool IsOpen { get; set; }
+        public bool IsTriggered { get; set; }
 
         public RLColor Color { get; set; }
         public RLColor BackgroundColor { get; set; }
@@ -31,7 +31,7 @@ namespace Hunter.Core
                 return;
             }
 
-            //Symbol = IsOpen ? '1' : '1';
+            //Symbol = IsTriggered ? '1' : '1';
             if (map.IsInFov(X, Y))
             {
                 Color = Colors.BuildingEntranceFov;

@@ -25,6 +25,10 @@ namespace Hunter
         private static readonly int _mapHeight = 80;
         private static RLConsole _mapConsole;
 
+        private static readonly int _menuWidth = 80;
+        private static readonly int _menuHeight = 80;
+        //private static RLConsole _menuConsole;
+
         // Below the map console is the message console which displays attack rolls and other information
         private static readonly int _messageWidth = 80;
         private static readonly int _messageHeight = 10;
@@ -38,6 +42,7 @@ namespace Hunter
         private static bool _renderRequired = true;
 
         public static CommandSystem CommandSystem { get; private set; }
+        public static Menu Menu { get; private set; }
         public static Player Player { get; private set; }
         public static DungeonMap DungeonMap { get; private set; }
         public static MessageLog MessageLog { get; private set; }
@@ -63,11 +68,12 @@ namespace Hunter
             _mapConsole = new RLConsole(_mapWidth, _mapHeight);
             _messageConsole = new RLConsole(_messageWidth, _messageHeight);
             _statConsole = new RLConsole(_statWidth, _statHeight);
+            
 
 
             Player = new Player();
             CommandSystem = new CommandSystem();
-
+            Menu = new Menu(_menuWidth, _menuHeight);
             SchedulingSystem = new SchedulingSystem();
 
             // Create a new MessageLog and print the random seed used to generate the level
@@ -150,7 +156,6 @@ namespace Hunter
                 Player.Draw(_mapConsole);
                 Player.DrawStats(_statConsole);
                 MessageLog.Draw(_messageConsole);
-
                 // Blit the sub consoles to the root console in the correct locations
                 RLConsole.Blit(_mapConsole, 0, 0, _mapWidth, _mapHeight,
                   _rootConsole, 0, 0);
@@ -159,6 +164,8 @@ namespace Hunter
                 RLConsole.Blit(_messageConsole, 0, 0, _messageWidth, _messageHeight,
                   _rootConsole, 0, _screenHeight - _messageHeight);
 
+
+                Menu.CreateMenu(_rootConsole);
                 // Tell RLNET to draw the console that we set
                 _rootConsole.Draw();
                 _renderRequired = false;

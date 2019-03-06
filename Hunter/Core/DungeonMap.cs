@@ -158,6 +158,23 @@ namespace Hunter.Core
             }
         }
 
+        // Return the door at the x,y position or null if one is not found.
+        public BuildingEntrance GetBuildingEntrance(int x, int y)
+        {
+            return BuildingEntrances.SingleOrDefault(d => d.X == x && d.Y == y);
+        }
+
+        // The actor opens the door located at the x,y position
+        private void OpenBuildingEntrance(Actor actor, int x, int y)
+        {
+            BuildingEntrance buildingEntrance = GetBuildingEntrance(x, y);
+            if (buildingEntrance != null && !buildingEntrance.IsTriggered)
+            {
+                buildingEntrance.IsTriggered = true;
+                var cell = GetCell(x, y);
+            }
+        }
+
         public void AddMonster(DungeonMap map, Monster monster)
         {
             _monsters.Add(monster);
