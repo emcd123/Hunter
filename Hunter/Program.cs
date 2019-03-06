@@ -50,7 +50,7 @@ namespace Hunter
 
         public static int _maxrooms = 4;
         public static int _roomMinSize = 10;
-        public static int _roomMaxSize = 15;
+        public static int _roomMaxSize = 15;        
 
         public static void Main()
         {
@@ -156,16 +156,21 @@ namespace Hunter
                 Player.Draw(_mapConsole);
                 Player.DrawStats(_statConsole);
                 MessageLog.Draw(_messageConsole);
-                // Blit the sub consoles to the root console in the correct locations
-                RLConsole.Blit(_mapConsole, 0, 0, _mapWidth, _mapHeight,
-                  _rootConsole, 0, 0);
-                RLConsole.Blit(_statConsole, 0, 0, _statWidth, _statHeight,
-                  _rootConsole, _mapWidth, 0);
-                RLConsole.Blit(_messageConsole, 0, 0, _messageWidth, _messageHeight,
-                  _rootConsole, 0, _screenHeight - _messageHeight);
 
-
-                Menu.CreateMenu(_rootConsole);
+                if (!Globals.BuildingEntranceIsTriggered)
+                {
+                    // Blit the sub consoles to the root console in the correct locations
+                    RLConsole.Blit(_mapConsole, 0, 0, _mapWidth, _mapHeight,
+                      _rootConsole, 0, 0);
+                    RLConsole.Blit(_statConsole, 0, 0, _statWidth, _statHeight,
+                      _rootConsole, _mapWidth, 0);
+                    RLConsole.Blit(_messageConsole, 0, 0, _messageWidth, _messageHeight,
+                      _rootConsole, 0, _screenHeight - _messageHeight);
+                }
+                else
+                {
+                    Menu.CreateMenu(_rootConsole);                    
+                }
                 // Tell RLNET to draw the console that we set
                 _rootConsole.Draw();
                 _renderRequired = false;

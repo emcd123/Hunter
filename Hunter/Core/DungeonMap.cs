@@ -134,6 +134,7 @@ namespace Hunter.Core
                     UpdatePlayerFieldOfView();
                 }
                 OpenDoor(actor, x, y);
+                OpenBuildingEntrance(actor, x, y);
                 return true;
             }
             return false;            
@@ -161,7 +162,7 @@ namespace Hunter.Core
         // Return the door at the x,y position or null if one is not found.
         public BuildingEntrance GetBuildingEntrance(int x, int y)
         {
-            return BuildingEntrances.SingleOrDefault(d => d.X == x && d.Y == y);
+            return BuildingEntrances.SingleOrDefault(b => b.X == x && b.Y == y);
         }
 
         // The actor opens the door located at the x,y position
@@ -170,7 +171,7 @@ namespace Hunter.Core
             BuildingEntrance buildingEntrance = GetBuildingEntrance(x, y);
             if (buildingEntrance != null && !buildingEntrance.IsTriggered)
             {
-                buildingEntrance.IsTriggered = true;
+                Globals.BuildingEntranceIsTriggered = true;
                 var cell = GetCell(x, y);
             }
         }
