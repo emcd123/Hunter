@@ -16,7 +16,6 @@ namespace Hunter.Systems
     {
         private readonly int _width;
         private readonly int _height;
-        public List<Cell> DoorCoords;
 
         private readonly DungeonMap _map;
 
@@ -46,9 +45,6 @@ namespace Hunter.Systems
             {
                 Console.WriteLine(Rooms[i]);
                 MakeRoom(_map, Rooms[i]);
-                if (i != 0 || i != Rooms.Count)
-                    MakeDoor(_map, Rooms[i]);
-
                 PlaceSheriffsOffice(_map, Rooms[i]);//N
                 PlaceGunShop(_map, Rooms[i]);//S
                 PlaceGeneralStore(_map, Rooms[i]);//W
@@ -92,9 +88,7 @@ namespace Hunter.Systems
             {
                 map.SetCellProperties(cell.X, cell.Y, false, false, true);
             }
-            MakeTownDoor(map, centerX, doorCoord);
-            //Rectangle building = new Rectangle(centerX - 5, doorCoord - 10, 10, 10);
-            //MakeBuilding(_map, building);
+            MakeTownDoor(map, centerX, doorCoord, '1');
         }
 
         private void PlaceSaloon(DungeonMap map, Rectangle Room)
@@ -110,9 +104,7 @@ namespace Hunter.Systems
             {
                 map.SetCellProperties(cell.X, cell.Y, false, false, true);
             }
-            MakeTownDoor(map, doorCoord, centerY);
-            //Rectangle building = new Rectangle(centerX - 5, doorCoord - 10, 10, 10);
-            //MakeBuilding(_map, building);
+            MakeTownDoor(map, doorCoord, centerY, '2');
         }
 
         private void PlaceGeneralStore(DungeonMap map, Rectangle Room)
@@ -128,9 +120,7 @@ namespace Hunter.Systems
             {
                 map.SetCellProperties(cell.X, cell.Y, false, false, true);
             }
-            MakeTownDoor(map, doorCoord, centerY);
-            //Rectangle building = new Rectangle(centerX - 5, doorCoord - 10, 10, 10);
-            //MakeBuilding(_map, building);
+            MakeTownDoor(map, doorCoord, centerY, '4');
         }
 
         private void PlaceGunShop(DungeonMap map, Rectangle Room)
@@ -146,19 +136,18 @@ namespace Hunter.Systems
             {
                 map.SetCellProperties(cell.X, cell.Y, false, false, true);
             }
-            MakeTownDoor(map, centerX, doorCoord);
-            //Rectangle building = new Rectangle(centerX - 5, doorCoord - 10, 10, 10);
-            //MakeBuilding(_map, building);
+            MakeTownDoor(map, centerX, doorCoord, '3');
         }
 
-        private void MakeTownDoor(DungeonMap map, int DoorCoordX, int DoorCoordY)
+        private void MakeTownDoor(DungeonMap map, int DoorCoordX, int DoorCoordY, char sym)
         {
             map.SetCellProperties(DoorCoordX, DoorCoordY, false, true, true);
-            map.Doors.Add(new Door
+            map.BuildingEntrances.Add(new BuildingEntrance
             {
+                Symbol = sym,
                 X = DoorCoordX,
                 Y = DoorCoordY,
-                IsOpen = false
+                //IsOpen = false
             });
         }
     }
