@@ -28,6 +28,9 @@ namespace Hunter.Core
             linesLocal.Add("For you first mission you are assigned to track Outlaw Billy,");
             linesLocal.Add("He's been shooting up saloons along the valley.");
             linesLocal.Add("Dead or Alive, preferably dead.");
+            linesLocal.Add("");
+            linesLocal.Add("");
+            linesLocal.Add("[Press 'Enter' to begin mission, 'E' to close this menu]");
             return linesLocal;
         }
     }
