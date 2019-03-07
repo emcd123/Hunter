@@ -17,13 +17,23 @@ namespace Hunter.Core
         public List<Door> Doors { get; set; }
         public List<BuildingEntrance> BuildingEntrances { get; set; }
 
+        public Stairs StairsUp { get; set; }
+        public Stairs StairsDown { get; set; }
+
         private readonly List<Monster> _monsters;
 
         public DungeonMap()
-        { 
+        {
+            Game.SchedulingSystem.Clear();
             Doors = new List<Door>();
             BuildingEntrances = new List<BuildingEntrance>();
             _monsters = new List<Monster>();
+        }
+
+        public bool CanMoveDownToNextLevel()
+        {
+            Player player = Game.Player;
+            return StairsDown.X == player.X && StairsDown.Y == player.Y;
         }
 
         // The Draw method will be called each time the map is updated
@@ -42,6 +52,9 @@ namespace Hunter.Core
             {
                 buildingEntrance.Draw(mapConsole, this);
             }
+            // Add the following code after we finish drawing doors.
+            StairsUp.Draw(mapConsole, this);
+            StairsDown.Draw(mapConsole, this);
             // Keep an index so we know which position to draw monster stats at
             int i = 0;
             // Iterate through each monster on the map and draw it after drawing the Cells

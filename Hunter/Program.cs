@@ -47,6 +47,7 @@ namespace Hunter
         public static DungeonMap DungeonMap { get; private set; }
         public static MessageLog MessageLog { get; private set; }
         public static SchedulingSystem SchedulingSystem { get; private set; }
+        private static int _mapLevel = 1;
 
         public static int _maxrooms = 4;
         public static int _roomMinSize = 10;
@@ -82,8 +83,8 @@ namespace Hunter
             MessageLog.Add("Prepare to fight for your life");
 
             //Generate the map   
-            TownMap mapCreation = new TownMap(_mapWidth, _mapHeight);
-            //SimpleBsp mapCreation = new SimpleBsp(_mapWidth, _mapHeight);
+            //TownMap mapCreation = new TownMap(_mapWidth, _mapHeight);
+            SimpleBsp mapCreation = new SimpleBsp(_mapWidth, _mapHeight);
             //FullRoomBsp mapCreation = new FullRoomBsp(_mapWidth, _mapHeight);
 
             DungeonMap = mapCreation.CreateMap();
@@ -140,6 +141,17 @@ namespace Hunter
                         else if (keyPress.Key == RLKey.Right)
                         {
                             didPlayerAct = CommandSystem.MovePlayer(Direction.Right);
+                        }
+                        else if (keyPress.Key == RLKey.Period)
+                        {
+                            if (DungeonMap.CanMoveDownToNextLevel())
+                            {
+                                SimpleBsp mapGenerator = new SimpleBsp(_mapWidth, _mapHeight);
+                                DungeonMap = mapGenerator.CreateMap();
+                                MessageLog = new MessageLog();
+                                CommandSystem = new CommandSystem();
+                                didPlayerAct = true;
+                            }
                         }
                         else if (keyPress.Key == RLKey.Escape)
                         {
