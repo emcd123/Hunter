@@ -47,6 +47,7 @@ namespace Hunter
         public static DungeonMap DungeonMap { get; private set; }
         public static MessageLog MessageLog { get; private set; }
         public static SchedulingSystem SchedulingSystem { get; private set; }
+        private static int _mapLevel = 1;
 
         public static int _maxrooms = 4;
         public static int _roomMinSize = 10;
@@ -115,6 +116,15 @@ namespace Hunter
                             CommandSystem.CloseMenu();
                             didPlayerAct = true;
                         }
+                        else if (keyPress.Key == RLKey.Enter)
+                        {
+                            SimpleBsp mapGenerator = new SimpleBsp(_mapWidth, _mapHeight);
+                            DungeonMap = mapGenerator.CreateMap();
+                            MessageLog = new MessageLog();
+                            CommandSystem = new CommandSystem();
+                            CommandSystem.CloseMenu();
+                            didPlayerAct = true;
+                        }
                         else if (keyPress.Key == RLKey.Escape)
                         {
                             _rootConsole.Close();
@@ -141,6 +151,17 @@ namespace Hunter
                         {
                             didPlayerAct = CommandSystem.MovePlayer(Direction.Right);
                         }
+                        //else if (keyPress.Key == RLKey.Period)
+                        //{
+                        //    if (DungeonMap.CanMoveDownToNextLevel())
+                        //    {
+                        //        SimpleBsp mapGenerator = new SimpleBsp(_mapWidth, _mapHeight);
+                        //        DungeonMap = mapGenerator.CreateMap();
+                        //        MessageLog = new MessageLog();
+                        //        CommandSystem = new CommandSystem();
+                        //        didPlayerAct = true;
+                        //    }
+                        //}
                         else if (keyPress.Key == RLKey.Escape)
                         {
                             _rootConsole.Close();
@@ -187,7 +208,13 @@ namespace Hunter
                 }
                 else
                 {
-                    Menu.CreateMenu(_rootConsole);
+                    if (Globals.SheriffTriggered)
+                        Menu.CreateMenu(_rootConsole);
+                    else
+                    {
+                        Globals.BuildingEntranceIsTriggered = false;
+                        Globals.SheriffTriggered = false;
+                    }
                 }
                 // Tell RLNET to draw the console that we set
                 _rootConsole.Draw();

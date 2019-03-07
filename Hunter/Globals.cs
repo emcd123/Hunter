@@ -9,5 +9,6 @@ namespace Hunter
     public static class Globals
     {
         public static bool BuildingEntranceIsTriggered = false; // Modifiable
+        public static bool SheriffTriggered = false;
     }
 }

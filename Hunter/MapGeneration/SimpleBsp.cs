@@ -56,9 +56,25 @@ namespace Hunter.MapGeneration
 
                 PlaceMonsters(_map, Rooms[i]);
             }
-
+            //CreateStairs(Rooms);
             PlacePlayer(_map, Rooms);            
             return _map;
+        }
+
+        private void CreateStairs(List<Rectangle> Rooms)
+        {
+            _map.StairsUp = new Stairs
+            {
+                X = Rooms.First().Center.X + 1,
+                Y = Rooms.First().Center.Y,
+                IsUp = true
+            };
+            _map.StairsDown = new Stairs
+            {
+                X = Rooms.Last().Center.X,
+                Y = Rooms.Last().Center.Y,
+                IsUp = false
+            };
         }
 
         private List<Rectangle> SplitAction(List<Rectangle> RoomsList)
