@@ -208,7 +208,13 @@ namespace Hunter
                 }
                 else
                 {
-                    Menu.CreateMenu(_rootConsole);
+                    if (Globals.SheriffTriggered)
+                        Menu.CreateMenu(_rootConsole);
+                    else
+                    {
+                        Globals.BuildingEntranceIsTriggered = false;
+                        Globals.SheriffTriggered = false;
+                    }
                 }
                 // Tell RLNET to draw the console that we set
                 _rootConsole.Draw();

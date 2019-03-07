@@ -33,7 +33,13 @@ namespace Hunter.Core
         private List<string> LineArray()
         {
             List<string> linesLocal = new List<string>();
+            linesLocal.Add("Location: Country Sheriff's Office");
+            linesLocal.Add("");
             linesLocal.Add("Your mission should you choose to accept it");
+            linesLocal.Add("");
+            linesLocal.Add("For you first mission you are assigned to track Outlaw Billy,");
+            linesLocal.Add("He's been shooting up saloons along the valley.");
+            linesLocal.Add("Dead or Alive, preferably dead.");
             return linesLocal;
         }
 

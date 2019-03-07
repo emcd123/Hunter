@@ -185,6 +185,9 @@ namespace Hunter.Core
             BuildingEntrance buildingEntrance = GetBuildingEntrance(x, y);
             if (buildingEntrance != null && !buildingEntrance.IsTriggered)
             {
+                if (buildingEntrance.Symbol == '1')
+                    Globals.SheriffTriggered = true;
+
                 Globals.BuildingEntranceIsTriggered = true;
                 var cell = GetCell(x, y);
             }
