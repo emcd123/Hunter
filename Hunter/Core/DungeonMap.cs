@@ -52,9 +52,10 @@ namespace Hunter.Core
             {
                 buildingEntrance.Draw(mapConsole, this);
             }
-            // Add the following code after we finish drawing doors.
-            StairsUp.Draw(mapConsole, this);
-            StairsDown.Draw(mapConsole, this);
+
+            //StairsUp.Draw(mapConsole, this);
+            //StairsDown.Draw(mapConsole, this);
+
             // Keep an index so we know which position to draw monster stats at
             int i = 0;
             // Iterate through each monster on the map and draw it after drawing the Cells

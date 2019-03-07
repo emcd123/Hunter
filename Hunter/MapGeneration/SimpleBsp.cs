@@ -56,7 +56,7 @@ namespace Hunter.MapGeneration
 
                 PlaceMonsters(_map, Rooms[i]);
             }
-            CreateStairs(Rooms);
+            //CreateStairs(Rooms);
             PlacePlayer(_map, Rooms);            
             return _map;
         }

@@ -83,8 +83,8 @@ namespace Hunter
             MessageLog.Add("Prepare to fight for your life");
 
             //Generate the map   
-            //TownMap mapCreation = new TownMap(_mapWidth, _mapHeight);
-            SimpleBsp mapCreation = new SimpleBsp(_mapWidth, _mapHeight);
+            TownMap mapCreation = new TownMap(_mapWidth, _mapHeight);
+            //SimpleBsp mapCreation = new SimpleBsp(_mapWidth, _mapHeight);
             //FullRoomBsp mapCreation = new FullRoomBsp(_mapWidth, _mapHeight);
 
             DungeonMap = mapCreation.CreateMap();
@@ -116,6 +116,15 @@ namespace Hunter
                             CommandSystem.CloseMenu();
                             didPlayerAct = true;
                         }
+                        else if (keyPress.Key == RLKey.Enter)
+                        {
+                            SimpleBsp mapGenerator = new SimpleBsp(_mapWidth, _mapHeight);
+                            DungeonMap = mapGenerator.CreateMap();
+                            MessageLog = new MessageLog();
+                            CommandSystem = new CommandSystem();
+                            CommandSystem.CloseMenu();
+                            didPlayerAct = true;
+                        }
                         else if (keyPress.Key == RLKey.Escape)
                         {
                             _rootConsole.Close();
@@ -142,17 +151,17 @@ namespace Hunter
                         {
                             didPlayerAct = CommandSystem.MovePlayer(Direction.Right);
                         }
-                        else if (keyPress.Key == RLKey.Period)
-                        {
-                            if (DungeonMap.CanMoveDownToNextLevel())
-                            {
-                                SimpleBsp mapGenerator = new SimpleBsp(_mapWidth, _mapHeight);
-                                DungeonMap = mapGenerator.CreateMap();
-                                MessageLog = new MessageLog();
-                                CommandSystem = new CommandSystem();
-                                didPlayerAct = true;
-                            }
-                        }
+                        //else if (keyPress.Key == RLKey.Period)
+                        //{
+                        //    if (DungeonMap.CanMoveDownToNextLevel())
+                        //    {
+                        //        SimpleBsp mapGenerator = new SimpleBsp(_mapWidth, _mapHeight);
+                        //        DungeonMap = mapGenerator.CreateMap();
+                        //        MessageLog = new MessageLog();
+                        //        CommandSystem = new CommandSystem();
+                        //        didPlayerAct = true;
+                        //    }
+                        //}
                         else if (keyPress.Key == RLKey.Escape)
                         {
                             _rootConsole.Close();
