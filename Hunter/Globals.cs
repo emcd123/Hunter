@@ -10,5 +10,6 @@ namespace Hunter
     {
         public static bool BuildingEntranceIsTriggered = false; // Modifiable
         public static bool SheriffTriggered = false;
+        public static bool GenericMenuTriggered = false;
     }
 }

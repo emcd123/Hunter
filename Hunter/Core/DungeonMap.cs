@@ -187,6 +187,8 @@ namespace Hunter.Core
             {
                 if (buildingEntrance.Symbol == '1')
                     Globals.SheriffTriggered = true;
+                else
+                    Globals.GenericMenuTriggered = true;
 
                 Globals.BuildingEntranceIsTriggered = true;
                 var cell = GetCell(x, y);

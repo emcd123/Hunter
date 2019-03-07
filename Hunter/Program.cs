@@ -43,6 +43,8 @@ namespace Hunter
 
         public static CommandSystem CommandSystem { get; private set; }
         public static Menu Menu { get; private set; }
+        public static QuestMenu QuestMenu { get; private set; }
+
         public static Player Player { get; private set; }
         public static DungeonMap DungeonMap { get; private set; }
         public static MessageLog MessageLog { get; private set; }
@@ -74,6 +76,7 @@ namespace Hunter
 
             Player = new Player();
             CommandSystem = new CommandSystem();
+            QuestMenu = new QuestMenu(_menuWidth, _menuHeight);
             Menu = new Menu(_menuWidth, _menuHeight);
             SchedulingSystem = new SchedulingSystem();
 
@@ -114,6 +117,8 @@ namespace Hunter
                         if (keyPress.Key == RLKey.E)
                         {                            
                             CommandSystem.CloseMenu();
+                            Globals.SheriffTriggered = false;
+                            Globals.GenericMenuTriggered = false;
                             didPlayerAct = true;
                         }
                         else if (keyPress.Key == RLKey.Enter)
@@ -123,6 +128,7 @@ namespace Hunter
                             MessageLog = new MessageLog();
                             CommandSystem = new CommandSystem();
                             CommandSystem.CloseMenu();
+                            Globals.SheriffTriggered = false;
                             didPlayerAct = true;
                         }
                         else if (keyPress.Key == RLKey.Escape)
@@ -209,12 +215,11 @@ namespace Hunter
                 else
                 {
                     if (Globals.SheriffTriggered)
+                        QuestMenu.CreateQuestMenu(_rootConsole);
+                    else if (Globals.GenericMenuTriggered)
                         Menu.CreateMenu(_rootConsole);
-                    else
-                    {
+                    else                    
                         Globals.BuildingEntranceIsTriggered = false;
-                        Globals.SheriffTriggered = false;
-                    }
                 }
                 // Tell RLNET to draw the console that we set
                 _rootConsole.Draw();

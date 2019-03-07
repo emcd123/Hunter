@@ -25,27 +25,36 @@ namespace Hunter.Core
 
             menuConsole.Clear();
 
-            Draw();
+            List<string> LineArr = new List<string>();
+            LineArr.Add("");
+
+            Draw(LineArr);
 
             RLConsole.Blit(menuConsole, 0, 0, _width, _height, rootConsole, 0, 0);
         }
-        
+
+        public void CreateMenu(RLConsole rootConsole, List<string> LineArr)
+        {
+            menuConsole = new RLConsole(_width, _height);
+
+            menuConsole.Clear();
+
+            Draw(LineArr);
+
+            RLConsole.Blit(menuConsole, 0, 0, _width, _height, rootConsole, 0, 0);
+        }
+
+
         private List<string> LineArray()
         {
             List<string> linesLocal = new List<string>();
-            linesLocal.Add("Location: Country Sheriff's Office");
             linesLocal.Add("");
-            linesLocal.Add("Your mission should you choose to accept it");
-            linesLocal.Add("");
-            linesLocal.Add("For you first mission you are assigned to track Outlaw Billy,");
-            linesLocal.Add("He's been shooting up saloons along the valley.");
-            linesLocal.Add("Dead or Alive, preferably dead.");
             return linesLocal;
         }
 
-        public void Draw()
+        public void Draw(List<string> LineArray)
         {
-            List<string> lines = LineArray();
+            List<string> lines = LineArray;
             for (int i = 0; i < lines.Count; i++)
             {
                 //Console.WriteLine(lines[i]);
