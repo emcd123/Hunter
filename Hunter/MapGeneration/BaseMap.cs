@@ -31,6 +31,22 @@ namespace Hunter.MapGeneration
             Game.SchedulingSystem.Add(player);
         }
 
+        public void CreateStairs(DungeonMap map, List<Rectangle> Rooms)
+        {
+            map.StairsUp = new Stairs
+            {
+                X = Rooms.First().Center.X + 1,
+                Y = Rooms.First().Center.Y,
+                IsUp = true
+            };
+            map.StairsDown = new Stairs
+            {
+                X = Rooms.Last().Center.X,
+                Y = Rooms.Last().Center.Y,
+                IsUp = false
+            };
+        }
+
         public void MakeDoor(DungeonMap map, Rectangle ROOM)
         {
             int DoorCoordX = ROOM.Left;
