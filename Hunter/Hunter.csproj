@@ -54,13 +54,18 @@
   <ItemGroup>
     <Compile Include="Behaviours\StandardMoveAndAttack.cs" />
     <Compile Include="Core\Actor.cs" />
+    <Compile Include="Core\BuildingEntrance.cs" />
     <Compile Include="Core\Colors.cs" />
     <Compile Include="Core\Direction.cs" />
     <Compile Include="Core\Door.cs" />
     <Compile Include="Core\DungeonMap.cs" />
+    <Compile Include="Core\Menu.cs" />
     <Compile Include="Core\Monster.cs" />
     <Compile Include="Core\Palette.cs" />
     <Compile Include="Core\Player.cs" />
+    <Compile Include="Core\QuestMenu.cs" />
+    <Compile Include="Core\Stairs.cs" />
+    <Compile Include="Globals.cs" />
     <Compile Include="Interfaces\IActor.cs" />
     <Compile Include="Interfaces\IBehavior.cs" />
     <Compile Include="Interfaces\IDrawable.cs" />

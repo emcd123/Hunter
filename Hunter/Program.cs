@@ -25,6 +25,10 @@ namespace Hunter
         private static readonly int _mapHeight = 80;
         private static RLConsole _mapConsole;
 
+        private static readonly int _menuWidth = 80;
+        private static readonly int _menuHeight = 80;
+        //private static RLConsole _menuConsole;
+
         // Below the map console is the message console which displays attack rolls and other information
         private static readonly int _messageWidth = 80;
         private static readonly int _messageHeight = 10;
@@ -38,14 +42,18 @@ namespace Hunter
         private static bool _renderRequired = true;
 
         public static CommandSystem CommandSystem { get; private set; }
+        public static Menu Menu { get; private set; }
+        public static QuestMenu QuestMenu { get; private set; }
+
         public static Player Player { get; private set; }
         public static DungeonMap DungeonMap { get; private set; }
         public static MessageLog MessageLog { get; private set; }
         public static SchedulingSystem SchedulingSystem { get; private set; }
+        private static int _mapLevel = 1;
 
         public static int _maxrooms = 4;
         public static int _roomMinSize = 10;
-        public static int _roomMaxSize = 15;
+        public static int _roomMaxSize = 15;        
 
         public static void Main()
         {
@@ -63,11 +71,13 @@ namespace Hunter
             _mapConsole = new RLConsole(_mapWidth, _mapHeight);
             _messageConsole = new RLConsole(_messageWidth, _messageHeight);
             _statConsole = new RLConsole(_statWidth, _statHeight);
+            
 
 
             Player = new Player();
             CommandSystem = new CommandSystem();
-
+            QuestMenu = new QuestMenu(_menuWidth, _menuHeight);
+            Menu = new Menu(_menuWidth, _menuHeight);
             SchedulingSystem = new SchedulingSystem();
 
             // Create a new MessageLog and print the random seed used to generate the level
@@ -100,30 +110,70 @@ namespace Hunter
 
             if (CommandSystem.IsPlayerTurn)
             {
-                if (keyPress != null)
+                if (Globals.BuildingEntranceIsTriggered == true)
                 {
-                    if (keyPress.Key == RLKey.Up)
+                    if (keyPress != null)
                     {
-                        didPlayerAct = CommandSystem.MovePlayer(Direction.Up);
-                    }
-                    else if (keyPress.Key == RLKey.Down)
-                    {
-                        didPlayerAct = CommandSystem.MovePlayer(Direction.Down);
-                    }
-                    else if (keyPress.Key == RLKey.Left)
-                    {
-                        didPlayerAct = CommandSystem.MovePlayer(Direction.Left);
-                    }
-                    else if (keyPress.Key == RLKey.Right)
-                    {
-                        didPlayerAct = CommandSystem.MovePlayer(Direction.Right);
-                    }
-                    else if (keyPress.Key == RLKey.Escape)
-                    {
-                        _rootConsole.Close();
+                        if (keyPress.Key == RLKey.E)
+                        {                            
+                            CommandSystem.CloseMenu();
+                            Globals.SheriffTriggered = false;
+                            Globals.GenericMenuTriggered = false;
+                            didPlayerAct = true;
+                        }
+                        else if (keyPress.Key == RLKey.Enter)
+                        {
+                            SimpleBsp mapGenerator = new SimpleBsp(_mapWidth, _mapHeight);
+                            DungeonMap = mapGenerator.CreateMap();
+                            MessageLog = new MessageLog();
+                            CommandSystem = new CommandSystem();
+                            CommandSystem.CloseMenu();
+                            Globals.SheriffTriggered = false;
+                            didPlayerAct = true;
+                        }
+                        else if (keyPress.Key == RLKey.Escape)
+                        {
+                            _rootConsole.Close();
+                        }
                     }
                 }
-
+                else
+                {
+                    if (keyPress != null)
+                    {
+                        if (keyPress.Key == RLKey.Up)
+                        {
+                            didPlayerAct = CommandSystem.MovePlayer(Direction.Up);
+                        }
+                        else if (keyPress.Key == RLKey.Down)
+                        {
+                            didPlayerAct = CommandSystem.MovePlayer(Direction.Down);
+                        }
+                        else if (keyPress.Key == RLKey.Left)
+                        {
+                            didPlayerAct = CommandSystem.MovePlayer(Direction.Left);
+                        }
+                        else if (keyPress.Key == RLKey.Right)
+                        {
+                            didPlayerAct = CommandSystem.MovePlayer(Direction.Right);
+                        }
+                        //else if (keyPress.Key == RLKey.Period)
+                        //{
+                        //    if (DungeonMap.CanMoveDownToNextLevel())
+                        //    {
+                        //        SimpleBsp mapGenerator = new SimpleBsp(_mapWidth, _mapHeight);
+                        //        DungeonMap = mapGenerator.CreateMap();
+                        //        MessageLog = new MessageLog();
+                        //        CommandSystem = new CommandSystem();
+                        //        didPlayerAct = true;
+                        //    }
+                        //}
+                        else if (keyPress.Key == RLKey.Escape)
+                        {
+                            _rootConsole.Close();
+                        }
+                    }
+                }
                 if (didPlayerAct)
                 {
                     _renderRequired = true;
@@ -150,15 +200,27 @@ namespace Hunter
                 Player.Draw(_mapConsole);
                 Player.DrawStats(_statConsole);
                 MessageLog.Draw(_messageConsole);
+                    
 
-                // Blit the sub consoles to the root console in the correct locations
-                RLConsole.Blit(_mapConsole, 0, 0, _mapWidth, _mapHeight,
-                  _rootConsole, 0, 0);
-                RLConsole.Blit(_statConsole, 0, 0, _statWidth, _statHeight,
-                  _rootConsole, _mapWidth, 0);
-                RLConsole.Blit(_messageConsole, 0, 0, _messageWidth, _messageHeight,
-                  _rootConsole, 0, _screenHeight - _messageHeight);
-
+                if (!Globals.BuildingEntranceIsTriggered)
+                {
+                    // Blit the sub consoles to the root console in the correct locations
+                    RLConsole.Blit(_mapConsole, 0, 0, _mapWidth, _mapHeight,
+                      _rootConsole, 0, 0);
+                    RLConsole.Blit(_statConsole, 0, 0, _statWidth, _statHeight,
+                      _rootConsole, _mapWidth, 0);
+                    RLConsole.Blit(_messageConsole, 0, 0, _messageWidth, _messageHeight,
+                      _rootConsole, 0, _screenHeight - _messageHeight);
+                }
+                else
+                {
+                    if (Globals.SheriffTriggered)
+                        QuestMenu.CreateQuestMenu(_rootConsole);
+                    else if (Globals.GenericMenuTriggered)
+                        Menu.CreateMenu(_rootConsole);
+                    else                    
+                        Globals.BuildingEntranceIsTriggered = false;
+                }
                 // Tell RLNET to draw the console that we set
                 _rootConsole.Draw();
                 _renderRequired = false;

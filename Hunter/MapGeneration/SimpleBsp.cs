@@ -56,10 +56,10 @@ namespace Hunter.MapGeneration
 
                 PlaceMonsters(_map, Rooms[i]);
             }
-
+            //CreateStairs(_map, Rooms);
             PlacePlayer(_map, Rooms);            
             return _map;
-        }
+        }        
 
         private List<Rectangle> SplitAction(List<Rectangle> RoomsList)
         {

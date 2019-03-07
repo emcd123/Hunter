@@ -65,6 +65,11 @@ namespace Hunter.Systems
             return false;
         }
 
+        public void CloseMenu()
+        {
+            Globals.BuildingEntranceIsTriggered = false;
+        }
+
         public void Attack(Actor attacker, Actor defender)
         {
             StringBuilder attackMessage = new StringBuilder();

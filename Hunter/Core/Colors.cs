@@ -26,6 +26,11 @@ namespace Hunter.Core
         public static RLColor DoorBackgroundFov = Palette.DbDark;
         public static RLColor DoorFov = Palette.DbSun;
 
+        public static RLColor BuildingEntranceBackground = RLColor.Black;
+        public static RLColor BuildingEntrance = RLColor.Magenta;
+        public static RLColor BuildingEntranceBackgroundFov = Palette.DbDark;
+        public static RLColor BuildingEntranceFov = RLColor.LightMagenta;
+
         public static RLColor TextHeading = Palette.DbLight;
 
         public static RLColor Player = RLColor.White;
