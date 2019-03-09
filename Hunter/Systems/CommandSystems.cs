@@ -241,8 +241,8 @@ namespace Hunter.Systems
             {
                 int npcX = npcCell.X;
                 int npcY = npcCell.Y;
-                //console.Set(npcX, npcX, Colors.Floor, Colors.FloorBackground, '.');
-                Console.WriteLine(randomDir);
+                
+                //Console.WriteLine(randomDir);
                 if (randomDir == 1)
                     Game.DungeonMap.SetActorPosition(villager, npcX, npcY - 1);
                 else if (randomDir == 2)

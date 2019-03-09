@@ -18,8 +18,8 @@ namespace Hunter.Behaviours
 
             ICell NpcCell = dungeonMap.GetCell(villager.X, villager.Y);
             
-            int randomDir = Game.rng.Next(25, 100);
-            randomDir = randomDir / 25;
+            int randomDir = Game.rng.Next(0,5);
+            //randomDir = randomDir / 25;
 
             commandSystem.MoveVillager(NpcCell, villager, randomDir);
             return true;
