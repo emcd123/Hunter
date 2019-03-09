@@ -49,7 +49,8 @@ namespace Hunter
         public static DungeonMap DungeonMap { get; private set; }
         public static MessageLog MessageLog { get; private set; }
         public static SchedulingSystem SchedulingSystem { get; private set; }
-        private static int _mapLevel = 1;
+        public static Random rng = new Random();
+        //private static int _mapLevel = 1;
 
         public static int _maxrooms = 4;
         public static int _roomMinSize = 10;
@@ -71,8 +72,6 @@ namespace Hunter
             _mapConsole = new RLConsole(_mapWidth, _mapHeight);
             _messageConsole = new RLConsole(_messageWidth, _messageHeight);
             _statConsole = new RLConsole(_statWidth, _statHeight);
-            
-
 
             Player = new Player();
             CommandSystem = new CommandSystem();
@@ -123,7 +122,8 @@ namespace Hunter
                         }
                         else if (keyPress.Key == RLKey.Enter)
                         {
-                            SimpleBsp mapGenerator = new SimpleBsp(_mapWidth, _mapHeight);
+                            //SimpleBsp mapGenerator = new SimpleBsp(_mapWidth, _mapHeight);
+                            FullRoomBsp mapGenerator = new FullRoomBsp(_mapWidth, _mapHeight);
                             DungeonMap = mapGenerator.CreateMap();
                             MessageLog = new MessageLog();
                             CommandSystem = new CommandSystem();

@@ -199,6 +199,17 @@ namespace Hunter.Systems
             IsPlayerTurn = true;
             Game.SchedulingSystem.Add( Game.Player );
           }
+          else if (scheduleable is Npc)
+          {
+                Npc Npc = scheduleable as Npc;
+
+                if (Npc != null)
+                {
+                    Npc.PerformAction(this);
+                    Game.SchedulingSystem.Add(Npc);
+                }
+                ActivateMonsters();
+            }
           else
           {
             Monster monster = scheduleable as Monster;
@@ -222,6 +233,25 @@ namespace Hunter.Systems
               Attack( monster, Game.Player );
             }
           }
+        }
+
+        public void MoveVillager(ICell npcCell, Npc villager, int randomDir)
+        {
+            if (!Game.DungeonMap.SetActorPosition(villager, npcCell.X, npcCell.Y))
+            {
+                int npcX = npcCell.X;
+                int npcY = npcCell.Y;
+                //console.Set(npcX, npcX, Colors.Floor, Colors.FloorBackground, '.');
+                Console.WriteLine(randomDir);
+                if (randomDir == 1)
+                    Game.DungeonMap.SetActorPosition(villager, npcX, npcY - 1);
+                else if (randomDir == 2)
+                    Game.DungeonMap.SetActorPosition(villager, npcX, npcY + 1);
+                else if (randomDir == 3)
+                    Game.DungeonMap.SetActorPosition(villager, npcX, npcY + 1);
+                else if (randomDir == 4)
+                    Game.DungeonMap.SetActorPosition(villager, npcX - 1, npcY);
+            }
         }
     }
 }
