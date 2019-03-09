@@ -21,6 +21,7 @@ namespace Hunter.Core
         public Stairs StairsDown { get; set; }
 
         private readonly List<Monster> _monsters;
+        private readonly List<Npc> _villagers;
 
         public DungeonMap()
         {
@@ -28,6 +29,7 @@ namespace Hunter.Core
             Doors = new List<Door>();
             BuildingEntrances = new List<BuildingEntrance>();
             _monsters = new List<Monster>();
+            _villagers = new List<Npc>();
         }
 
         public bool CanMoveDownToNextLevel()
@@ -69,6 +71,11 @@ namespace Hunter.Core
                     monster.DrawStats(statConsole, i);
                     i++;
                 }
+            }
+
+            foreach (Npc villager in _villagers)
+            {
+                villager.Draw(mapConsole, this);
             }
         }
 
@@ -195,11 +202,19 @@ namespace Hunter.Core
             }
         }
 
+        public void AddVillager(DungeonMap map, Npc villager)
+        {
+            _villagers.Add(villager);
+            // After adding the monster to the map make sure to make the cell not walkable
+            map.SetCellProperties(villager.X, villager.Y, true, false, true);
+            Game.SchedulingSystem.Add(villager);
+        }
+
         public void AddMonster(DungeonMap map, Monster monster)
         {
             _monsters.Add(monster);
             // After adding the monster to the map make sure to make the cell not walkable
-            map.SetCellProperties(monster.X, monster.Y, true, false);
+            map.SetCellProperties(monster.X, monster.Y, true, false, true);
             Game.SchedulingSystem.Add(monster);
         }
 

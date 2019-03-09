@@ -65,6 +65,22 @@ namespace Hunter.Systems
             return false;
         }
 
+        public void MoveVillager(ICell npcCell, Npc villager, int randomDir)
+        {
+            int npcX = npcCell.X;
+            int npcY = npcCell.Y;
+            //console.Set(npcX, npcX, Colors.Floor, Colors.FloorBackground, '.');
+
+            if (randomDir == 1)
+                Game.DungeonMap.SetActorPosition(villager, npcX, npcY-1);
+            else if (randomDir == 2)
+                Game.DungeonMap.SetActorPosition(villager, npcX, npcY+1);
+            else if (randomDir == 3)
+                Game.DungeonMap.SetActorPosition(villager, npcX, npcY+1);
+            else if (randomDir == 4)
+                Game.DungeonMap.SetActorPosition(villager, npcX-1, npcY);
+        }
+
         public void CloseMenu()
         {
             Globals.BuildingEntranceIsTriggered = false;
@@ -199,6 +215,18 @@ namespace Hunter.Systems
             IsPlayerTurn = true;
             Game.SchedulingSystem.Add( Game.Player );
           }
+          else if (scheduleable is Npc)
+          {
+                Npc Npc = scheduleable as Npc;
+
+                if (Npc != null)
+                {
+                    Npc.PerformAction(this);
+                    Game.SchedulingSystem.Add(Npc);
+                }
+
+                ActivateMonsters();
+            }
           else
           {
             Monster monster = scheduleable as Monster;

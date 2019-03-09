@@ -9,6 +9,7 @@ using RogueSharp;
 
 using Hunter.Core;
 using Hunter.MapGeneration;
+using Hunter.Monsters;
 
 namespace Hunter.Systems
 {
@@ -18,6 +19,7 @@ namespace Hunter.Systems
         private readonly int _height;
 
         private readonly DungeonMap _map;
+        private bool test = true;
 
         // Constructing a new MapGenerator requires the dimensions of the maps it will create
         public TownMap(int width, int height)
@@ -39,7 +41,7 @@ namespace Hunter.Systems
 
             var FullRectangle = new Rectangle(0, 0, _width, _height);
             MakeExteriorWall(_map, FullRectangle);
-            Rooms.Add(FullRectangle);            
+            Rooms.Add(FullRectangle);
 
             for (int i = 0; i < Rooms.Count; i++)
             {
@@ -49,6 +51,7 @@ namespace Hunter.Systems
                 PlaceGunShop(_map, Rooms[i]);//S
                 PlaceGeneralStore(_map, Rooms[i]);//W
                 PlaceSaloon(_map, Rooms[i]);//E
+                PlaceVillagers(_map, Rooms[i]);
             }
 
             PlacePlayer(_map, Rooms);
@@ -81,7 +84,7 @@ namespace Hunter.Systems
             int centerX = Room.Center.X;
             int centerY = Room.Center.Y;
 
-            int buildingCenter = centerY-25;
+            int buildingCenter = centerY - 25;
             int doorCoord = buildingCenter + 5;
 
             foreach (Cell cell in map.GetCellsInSquare(centerX, buildingCenter, 5))
@@ -149,6 +152,29 @@ namespace Hunter.Systems
                 Y = DoorCoordY,
                 //IsOpen = false
             });
+        }
+
+        private void PlaceVillagers(DungeonMap map, Rectangle room)
+        {
+            if (test == true)
+            {
+                // Generate between 1 and 4 monsters
+                var numberOfTownspeople = 1;
+                for (int i = 0; i < numberOfTownspeople; i++)
+                {
+                    // Find a random walkable location in the room to place the monster
+                    Point randomRoomLocation = map.GetRandomWalkableLocationInRoom(room);
+                    // It's possible that the room doesn't have space to place a monster
+                    // In that case skip creating the monster
+                    if (randomRoomLocation != null)
+                    {
+                        var villager = Villager.Create(1);
+                        villager.X = randomRoomLocation.X;
+                        villager.Y = randomRoomLocation.Y;
+                        map.AddVillager(map, villager);
+                    }
+                }
+            }
         }
     }
 }

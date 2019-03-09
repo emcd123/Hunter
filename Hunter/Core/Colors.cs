@@ -38,6 +38,11 @@ namespace Hunter.Core
         public static RLColor OutlawColor = Palette.DbBrightWood;
         public static RLColor GoonColor = Palette.DbStone;
 
+        public static RLColor VillagerBackground = Palette.DbStone;
+        public static RLColor Villager = Palette.DbStone;
+        public static RLColor VillagerBackgroundFov = Palette.DbStone;
+        public static RLColor VillagerFov = Palette.DbStone;
+
         public static RLColor Text = Palette.DbLight;
         public static RLColor Gold = Palette.DbSun;
     }
