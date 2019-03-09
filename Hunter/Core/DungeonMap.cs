@@ -13,12 +13,10 @@ namespace Hunter.Core
     public class DungeonMap : Map
     {
         private bool firstRun;
-        //private Random rnd = new Random();
         public List<Door> Doors { get; set; }
         public List<BuildingEntrance> BuildingEntrances { get; set; }
-
-        public Stairs StairsUp { get; set; }
-        public Stairs StairsDown { get; set; }
+        public List<Stairs> StairsUpList { get; set; }
+        public List<Stairs> StairsDownList { get; set; }
 
         private readonly List<Monster> _monsters;
         private readonly List<Npc> _villagers;
@@ -28,14 +26,17 @@ namespace Hunter.Core
             Game.SchedulingSystem.Clear();
             Doors = new List<Door>();
             BuildingEntrances = new List<BuildingEntrance>();
+            StairsUpList = new List<Stairs>();
+            StairsDownList = new List<Stairs>();
             _monsters = new List<Monster>();
             _villagers = new List<Npc>();
         }
 
         public bool CanMoveDownToNextLevel()
         {
-            Player player = Game.Player;
-            return StairsDown.X == player.X && StairsDown.Y == player.Y;
+            //Player player = Game.Player;
+            //return StairsDown.X == player.X && StairsDown.Y == player.Y;
+            return true;
         }
 
         // The Draw method will be called each time the map is updated
@@ -54,9 +55,14 @@ namespace Hunter.Core
             {
                 buildingEntrance.Draw(mapConsole, this);
             }
-
-            //StairsUp.Draw(mapConsole, this);
-            //StairsDown.Draw(mapConsole, this);
+            foreach (Stairs upstair in StairsUpList)
+            {
+                upstair.Draw(mapConsole, this);
+            }
+            foreach (Stairs downstair in StairsDownList)
+            {
+                downstair.Draw(mapConsole, this);
+            }
 
             // Keep an index so we know which position to draw monster stats at
             int i = 0;

@@ -55,8 +55,11 @@ namespace Hunter.MapGeneration
 
                 PlaceMonsters(_map, Rooms[i]);
             }
-            //CreateStairs(_map, Rooms);
-            PlacePlayer(_map, Rooms);            
+            //HACK HERE: Placeplayer returns an integer as a side effect of it purpose
+            // In reality PlacePlayer is a void function that directly affects the map.
+            // Needs Refactoring
+            int RoomIndex = PlacePlayer(_map, Rooms);
+            CreateUpStairs(_map, Rooms, RoomIndex);
             return _map;
         }        
 

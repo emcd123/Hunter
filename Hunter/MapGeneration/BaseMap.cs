@@ -21,30 +21,37 @@ namespace Hunter.MapGeneration
             return num;
         }
 
-        public void PlacePlayer(DungeonMap map, List<Rectangle> roomArray)
+        public int PlacePlayer(DungeonMap map, List<Rectangle> roomArray)
         {
             int size = roomArray.Count;
+            int RoomIndex = GenerateRandomInt(0, roomArray.Count);
             Player player = Game.Player;
-            int X = roomArray[size - 1].Center.X;
-            int Y = roomArray[size - 1].Center.Y;
+            int X = roomArray[RoomIndex].Center.X;
+            int Y = roomArray[RoomIndex].Center.Y;
             map.SetActorPosition(player, X, Y);
             Game.SchedulingSystem.Add(player);
+
+            return RoomIndex;
         }
 
-        public void CreateStairs(DungeonMap map, List<Rectangle> Rooms)
+        public void CreateUpStairs(DungeonMap map, List<Rectangle> Rooms, int RoomNumber)
         {
-            map.StairsUp = new Stairs
+            map.StairsUpList.Add(new Stairs
             {
-                X = Rooms.First().Center.X + 1,
-                Y = Rooms.First().Center.Y,
+                X = Rooms[RoomNumber].Center.X + 1,
+                Y = Rooms[RoomNumber].Center.Y,
                 IsUp = true
-            };
-            map.StairsDown = new Stairs
+            });
+        }
+
+        public void CreateDownStairs(DungeonMap map, List<Rectangle> Rooms)
+        {
+            map.StairsDownList.Add(new Stairs
             {
                 X = Rooms.Last().Center.X,
                 Y = Rooms.Last().Center.Y,
                 IsUp = false
-            };
+            });
         }
 
         public void MakeDoor(DungeonMap map, Rectangle ROOM)
