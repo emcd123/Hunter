@@ -157,17 +157,17 @@ namespace Hunter
                         {
                             didPlayerAct = CommandSystem.MovePlayer(Direction.Right);
                         }
-                        //else if (keyPress.Key == RLKey.Period)
-                        //{
-                        //    if (DungeonMap.CanMoveDownToNextLevel())
-                        //    {
-                        //        SimpleBsp mapGenerator = new SimpleBsp(_mapWidth, _mapHeight);
-                        //        DungeonMap = mapGenerator.CreateMap();
-                        //        MessageLog = new MessageLog();
-                        //        CommandSystem = new CommandSystem();
-                        //        didPlayerAct = true;
-                        //    }
-                        //}
+                        else if (keyPress.Key == RLKey.Comma)
+                        {
+                            //if (DungeonMap.CanMoveDownToNextLevel())
+                            //{
+                                TownMap mapGenerator = new TownMap(_mapWidth, _mapHeight);
+                                DungeonMap = mapGenerator.CreateMap();
+                                MessageLog = new MessageLog();
+                                CommandSystem = new CommandSystem();
+                                didPlayerAct = true;
+                            //}
+                        }
                         else if (keyPress.Key == RLKey.Escape)
                         {
                             _rootConsole.Close();
