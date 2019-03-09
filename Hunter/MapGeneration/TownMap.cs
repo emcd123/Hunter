@@ -53,7 +53,7 @@ namespace Hunter.Systems
                 PlaceSaloon(_map, Rooms[i]);//E
                 PlaceVillagers(_map, Rooms[i]);
             }
-
+            //CreateUpStairs(_map, Rooms);
             PlacePlayer(_map, Rooms);
             return _map;
         }
