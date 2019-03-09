@@ -13,7 +13,7 @@ namespace Hunter.Core
     public class DungeonMap : Map
     {
         private bool firstRun;
-        private Random rnd = new Random();
+        //private Random rnd = new Random();
         public List<Door> Doors { get; set; }
         public List<BuildingEntrance> BuildingEntrances { get; set; }
 
@@ -254,7 +254,7 @@ namespace Hunter.Core
 
         public int GenerateRandomInt(int min, int max)
         {
-            int num = rnd.Next(min, max);
+            int num = Game.rng.Next(min, max);
             return num;
         }
     }

@@ -159,7 +159,7 @@ namespace Hunter.Systems
             if (test == true)
             {
                 // Generate between 1 and 4 monsters
-                var numberOfTownspeople = 1;
+                var numberOfTownspeople = 40;
                 for (int i = 0; i < numberOfTownspeople; i++)
                 {
                     // Find a random walkable location in the room to place the monster

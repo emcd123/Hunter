@@ -65,22 +65,6 @@ namespace Hunter.Systems
             return false;
         }
 
-        public void MoveVillager(ICell npcCell, Npc villager, int randomDir)
-        {
-            int npcX = npcCell.X;
-            int npcY = npcCell.Y;
-            //console.Set(npcX, npcX, Colors.Floor, Colors.FloorBackground, '.');
-
-            if (randomDir == 1)
-                Game.DungeonMap.SetActorPosition(villager, npcX, npcY-1);
-            else if (randomDir == 2)
-                Game.DungeonMap.SetActorPosition(villager, npcX, npcY+1);
-            else if (randomDir == 3)
-                Game.DungeonMap.SetActorPosition(villager, npcX, npcY+1);
-            else if (randomDir == 4)
-                Game.DungeonMap.SetActorPosition(villager, npcX-1, npcY);
-        }
-
         public void CloseMenu()
         {
             Globals.BuildingEntranceIsTriggered = false;
@@ -224,7 +208,6 @@ namespace Hunter.Systems
                     Npc.PerformAction(this);
                     Game.SchedulingSystem.Add(Npc);
                 }
-
                 ActivateMonsters();
             }
           else
@@ -250,6 +233,25 @@ namespace Hunter.Systems
               Attack( monster, Game.Player );
             }
           }
+        }
+
+        public void MoveVillager(ICell npcCell, Npc villager, int randomDir)
+        {
+            if (!Game.DungeonMap.SetActorPosition(villager, npcCell.X, npcCell.Y))
+            {
+                int npcX = npcCell.X;
+                int npcY = npcCell.Y;
+                //console.Set(npcX, npcX, Colors.Floor, Colors.FloorBackground, '.');
+                Console.WriteLine(randomDir);
+                if (randomDir == 1)
+                    Game.DungeonMap.SetActorPosition(villager, npcX, npcY - 1);
+                else if (randomDir == 2)
+                    Game.DungeonMap.SetActorPosition(villager, npcX, npcY + 1);
+                else if (randomDir == 3)
+                    Game.DungeonMap.SetActorPosition(villager, npcX, npcY + 1);
+                else if (randomDir == 4)
+                    Game.DungeonMap.SetActorPosition(villager, npcX - 1, npcY);
+            }
         }
     }
 }

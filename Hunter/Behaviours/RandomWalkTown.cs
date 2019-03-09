@@ -17,9 +17,9 @@ namespace Hunter.Behaviours
             DungeonMap dungeonMap = Game.DungeonMap;
 
             ICell NpcCell = dungeonMap.GetCell(villager.X, villager.Y);
-
-            Random rng = new Random();
-            int randomDir = rng.Next(0, 5);
+            
+            int randomDir = Game.rng.Next(25, 100);
+            randomDir = randomDir / 25;
 
             commandSystem.MoveVillager(NpcCell, villager, randomDir);
             return true;

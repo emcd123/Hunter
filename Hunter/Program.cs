@@ -49,6 +49,7 @@ namespace Hunter
         public static DungeonMap DungeonMap { get; private set; }
         public static MessageLog MessageLog { get; private set; }
         public static SchedulingSystem SchedulingSystem { get; private set; }
+        public static Random rng = new Random();
         private static int _mapLevel = 1;
 
         public static int _maxrooms = 4;

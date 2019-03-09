@@ -20,7 +20,6 @@ namespace Hunter.MapGeneration
         private readonly DungeonMap _map;
         public List<Rectangle> roomArr;
         public List<Cell> DoorCoords;
-        private Random rnd = new Random();
         private bool flag = true;
         private bool test = true;
 

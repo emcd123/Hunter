@@ -15,9 +15,9 @@ namespace Hunter.MapGeneration
 
         }
 
-        public int GenerateRandomInt(Random rnd, int min, int max)
+        public int GenerateRandomInt(int min, int max)
         {
-            int num = rnd.Next(min, max);
+            int num = Game.rng.Next(min, max);
             return num;
         }
 

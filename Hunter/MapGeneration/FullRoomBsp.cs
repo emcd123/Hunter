@@ -20,7 +20,6 @@ namespace Hunter.MapGeneration
         private readonly DungeonMap _map;
         public List<Rectangle> roomArr;
         public List<Cell> DoorCoords;
-        private Random rnd = new Random();
 
         private static bool test = true;
 
@@ -66,7 +65,7 @@ namespace Hunter.MapGeneration
             List<Rectangle> IterRectangles = new List<Rectangle>();
             foreach (Rectangle o in RoomsList.ToList())
             {
-                int number = GenerateRandomInt(rnd, 1, 5);
+                int number = GenerateRandomInt(1, 5);
                 List<Rectangle> IterLi = new List<Rectangle>();
                 if (number > 3 && o.Width >= 4)
                 {
@@ -96,7 +95,7 @@ namespace Hunter.MapGeneration
             Rectangle rect1;
             Rectangle rect2;
             
-            int xBreak = GenerateRandomInt(rnd, 2, width-2);
+            int xBreak = GenerateRandomInt(2, width-2);
                 
             rect1 = new Rectangle(rect.Left, rect.Top, xBreak, rect.Height);
             rect2 = new Rectangle(rect.Left + xBreak, rect.Top, rect.Width - xBreak, rect.Height);
@@ -112,7 +111,7 @@ namespace Hunter.MapGeneration
             Rectangle rect1;
             Rectangle rect2;
 
-            int yBreak = GenerateRandomInt(rnd, 2, height-2);
+            int yBreak = GenerateRandomInt(2, height-2);
             rect1 = new Rectangle(rect.Left, rect.Top, width, yBreak);
             rect2 = new Rectangle(rect.Left, rect.Top + yBreak, width, rect.Height - yBreak);    
 
