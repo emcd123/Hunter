@@ -182,6 +182,11 @@ namespace Hunter.Systems
                 Game.DungeonMap.RemoveMonster((Monster)defender);
 
                 Game.MessageLog.Add($"  {defender.Name} died and dropped {defender.Gold} gold");
+                if(Monster.IsBoss == true)
+                {
+                    Globals.IsBossDead = true;
+                    Game.MessageLog.Add("You have killed the Boss");
+                }
             }
         }
 

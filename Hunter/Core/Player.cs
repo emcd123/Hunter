@@ -19,8 +19,8 @@ namespace Hunter.Core
             Defense = 2;
             DefenseChance = 40;
             Gold = 0;
-            Health = 25;
-            MaxHealth = 25;
+            Health = 100;
+            MaxHealth = 100;
             Name = "Rogue";
             Speed = 10;
             Symbol = '@';

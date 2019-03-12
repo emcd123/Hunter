@@ -68,6 +68,7 @@
     <Compile Include="Core\Player.cs" />
     <Compile Include="Core\QuestMenu.cs" />
     <Compile Include="Core\Stairs.cs" />
+    <Compile Include="Core\WinMenu.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Interfaces\IActor.cs" />
     <Compile Include="Interfaces\IBehavior.cs" />

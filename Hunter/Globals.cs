@@ -12,5 +12,6 @@ namespace Hunter
         public static bool SheriffTriggered = false;
         public static bool GenericMenuTriggered = false;
         public static bool IsPlayerDead = false;
+        public static bool IsBossDead = false;
     }
 }

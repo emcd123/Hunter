@@ -10,9 +10,11 @@ namespace Hunter.Monsters
 {
     public class Outlaw : Monster
     {
+
         public static Outlaw Create(int level)
         {
             int health = Dice.Roll("5D5");
+            IsBoss = true;
             return new Outlaw
             {
                 Attack = Dice.Roll("1D5") + level / 3,

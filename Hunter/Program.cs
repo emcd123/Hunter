@@ -45,6 +45,7 @@ namespace Hunter
         public static Menu Menu { get; private set; }
         public static QuestMenu QuestMenu { get; private set; }
         public static DeathScreen DeathScreen { get; private set; }
+        public static WinMenu WinMenu { get; private set; }
 
         public static Player Player { get; private set; }
         public static DungeonMap DungeonMap { get; private set; }
@@ -78,6 +79,7 @@ namespace Hunter
             CommandSystem = new CommandSystem();
             QuestMenu = new QuestMenu(_menuWidth, _menuHeight);
             DeathScreen = new DeathScreen(_menuWidth, _menuHeight);
+            WinMenu = new WinMenu(_menuWidth, _menuHeight);
             Menu = new Menu(_menuWidth, _menuHeight);
             SchedulingSystem = new SchedulingSystem();
 
@@ -160,6 +162,33 @@ namespace Hunter
                         }
                     }
                 }
+                else if (Globals.IsBossDead)
+                {
+                    if (keyPress != null)
+                    {
+                        if (keyPress.Key == RLKey.Enter)
+                        {
+                            TownMap mapGenerator = new TownMap(_mapWidth, _mapHeight);
+                            DungeonMap = mapGenerator.CreateMap();
+                            MessageLog = new MessageLog();
+                            CommandSystem = new CommandSystem();
+                            CommandSystem.CloseMenu();
+                            Player.Health = Player.MaxHealth;
+                            Globals.IsBossDead = false;
+                            didPlayerAct = true;
+                        }
+                        else if (keyPress.Key == RLKey.E)
+                        {
+                            CommandSystem.CloseMenu();
+                            Globals.IsBossDead = false;
+                            didPlayerAct = true;
+                        }
+                        else if (keyPress.Key == RLKey.Escape)
+                        {
+                            _rootConsole.Close();
+                        }
+                    }
+                }
                 else
                 {
                     if (keyPress != null)
@@ -184,11 +213,12 @@ namespace Hunter
                         {
                             //if (DungeonMap.CanMoveDownToNextLevel())
                             //{
-                                TownMap mapGenerator = new TownMap(_mapWidth, _mapHeight);
-                                DungeonMap = mapGenerator.CreateMap();
-                                MessageLog = new MessageLog();
-                                CommandSystem = new CommandSystem();
-                                didPlayerAct = true;
+                            TownMap mapGenerator = new TownMap(_mapWidth, _mapHeight);
+                            DungeonMap = mapGenerator.CreateMap();
+                            MessageLog = new MessageLog();
+                            CommandSystem = new CommandSystem();
+                            Player.Health = Player.MaxHealth;
+                            didPlayerAct = true;
                             //}
                         }
                         else if (keyPress.Key == RLKey.Escape)
@@ -225,7 +255,7 @@ namespace Hunter
                 MessageLog.Draw(_messageConsole);
                     
 
-                if (!Globals.BuildingEntranceIsTriggered && !Globals.IsPlayerDead)
+                if (!Globals.BuildingEntranceIsTriggered && !Globals.IsPlayerDead && !Globals.IsBossDead)
                 {
                     // Blit the sub consoles to the root console in the correct locations
                     RLConsole.Blit(_mapConsole, 0, 0, _mapWidth, _mapHeight,
@@ -243,6 +273,10 @@ namespace Hunter
                         Menu.CreateMenu(_rootConsole);
                     else                    
                         Globals.BuildingEntranceIsTriggered = false;
+                }
+                else if (Globals.IsBossDead)
+                {                    
+                    WinMenu.CreateWinScreen(_rootConsole);
                 }
                 else if (Globals.IsPlayerDead)
                 {
