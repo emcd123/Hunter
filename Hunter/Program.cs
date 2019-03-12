@@ -44,6 +44,7 @@ namespace Hunter
         public static CommandSystem CommandSystem { get; private set; }
         public static Menu Menu { get; private set; }
         public static QuestMenu QuestMenu { get; private set; }
+        public static DeathScreen DeathScreen { get; private set; }
 
         public static Player Player { get; private set; }
         public static DungeonMap DungeonMap { get; private set; }
@@ -76,6 +77,7 @@ namespace Hunter
             Player = new Player();
             CommandSystem = new CommandSystem();
             QuestMenu = new QuestMenu(_menuWidth, _menuHeight);
+            DeathScreen = new DeathScreen(_menuWidth, _menuHeight);
             Menu = new Menu(_menuWidth, _menuHeight);
             SchedulingSystem = new SchedulingSystem();
 
@@ -109,7 +111,7 @@ namespace Hunter
 
             if (CommandSystem.IsPlayerTurn)
             {
-                if (Globals.BuildingEntranceIsTriggered == true)
+                if (Globals.BuildingEntranceIsTriggered)
                 {
                     if (keyPress != null)
                     {
@@ -129,6 +131,27 @@ namespace Hunter
                             CommandSystem = new CommandSystem();
                             CommandSystem.CloseMenu();
                             Globals.SheriffTriggered = false;
+                            didPlayerAct = true;
+                        }
+                        else if (keyPress.Key == RLKey.Escape)
+                        {
+                            _rootConsole.Close();
+                        }
+                    }
+                }
+                else if (Globals.IsPlayerDead)
+                {
+                    if (keyPress != null)
+                    {
+                        if (keyPress.Key == RLKey.Enter)
+                        {                            
+                            TownMap mapGenerator = new TownMap(_mapWidth, _mapHeight);
+                            DungeonMap = mapGenerator.CreateMap();
+                            MessageLog = new MessageLog();
+                            CommandSystem = new CommandSystem();
+                            CommandSystem.CloseMenu();
+                            Player.Health = Player.MaxHealth;
+                            Globals.IsPlayerDead = false;
                             didPlayerAct = true;
                         }
                         else if (keyPress.Key == RLKey.Escape)
@@ -202,7 +225,7 @@ namespace Hunter
                 MessageLog.Draw(_messageConsole);
                     
 
-                if (!Globals.BuildingEntranceIsTriggered)
+                if (!Globals.BuildingEntranceIsTriggered && !Globals.IsPlayerDead)
                 {
                     // Blit the sub consoles to the root console in the correct locations
                     RLConsole.Blit(_mapConsole, 0, 0, _mapWidth, _mapHeight,
@@ -212,7 +235,7 @@ namespace Hunter
                     RLConsole.Blit(_messageConsole, 0, 0, _messageWidth, _messageHeight,
                       _rootConsole, 0, _screenHeight - _messageHeight);
                 }
-                else
+                else if(Globals.BuildingEntranceIsTriggered)
                 {
                     if (Globals.SheriffTriggered)
                         QuestMenu.CreateQuestMenu(_rootConsole);
@@ -220,6 +243,13 @@ namespace Hunter
                         Menu.CreateMenu(_rootConsole);
                     else                    
                         Globals.BuildingEntranceIsTriggered = false;
+                }
+                else if (Globals.IsPlayerDead)
+                {
+                    if (Player.Health <= 0)
+                        DeathScreen.CreateDeathScreen(_rootConsole);
+                    else
+                        Globals.IsPlayerDead = false;
                 }
                 // Tell RLNET to draw the console that we set
                 _rootConsole.Draw();

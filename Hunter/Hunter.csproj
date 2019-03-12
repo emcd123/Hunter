@@ -57,6 +57,7 @@
     <Compile Include="Core\Actor.cs" />
     <Compile Include="Core\BuildingEntrance.cs" />
     <Compile Include="Core\Colors.cs" />
+    <Compile Include="Core\DeathScreen.cs" />
     <Compile Include="Core\Direction.cs" />
     <Compile Include="Core\Door.cs" />
     <Compile Include="Core\DungeonMap.cs" />

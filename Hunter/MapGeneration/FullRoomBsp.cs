@@ -172,7 +172,7 @@ namespace Hunter.MapGeneration
                     if (randomRoomLocation != null)
                     {
                         // Temporarily hard code this monster to be created at level 1
-                        var monster = Goon.Create(1);
+                        var monster = Goon.Create(100);
                         monster.X = randomRoomLocation.X;
                         monster.Y = randomRoomLocation.Y;
                         map.AddMonster(map, monster);

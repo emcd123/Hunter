@@ -174,6 +174,7 @@ namespace Hunter.Systems
         {
             if (defender is Player)
             {
+                Globals.IsPlayerDead = true;
                 Game.MessageLog.Add("YOU DIED");
             }
             else if (defender is Monster)
