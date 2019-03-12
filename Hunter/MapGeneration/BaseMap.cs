@@ -1,4 +1,5 @@
 ﻿using Hunter.Core;
+using Hunter.Monsters;
 using RogueSharp;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ namespace Hunter.MapGeneration
 {
     public class BaseMap
     {
+        private bool test = true;
+
         public BaseMap()
         {          
 
@@ -101,6 +104,69 @@ namespace Hunter.MapGeneration
             {
                 map.SetCellProperties(cell.X, cell.Y, false, false, true);
             }
+        }
+
+
+        public void PlaceMonsters(DungeonMap map, Rectangle room)
+        {
+            // Each room has a 60% chance of having monsters
+            //if (Dice.Roll("1D10") < 7)
+            //{
+            //    // Generate between 1 and 4 monsters
+            //    var numberOfMonsters = Dice.Roll("1D4");
+            //    for (int i = 0; i < numberOfMonsters; i++)
+            //    {
+            //        // Find a random walkable location in the room to place the monster
+            //        Point randomRoomLocation = _map.GetRandomWalkableLocationInRoom(room);
+            //        // It's possible that the room doesn't have space to place a monster
+            //        // In that case skip creating the monster
+            //        if (randomRoomLocation != null)
+            //        {
+            //            // Temporarily hard code this monster to be created at level 1
+            //            var monster = Kobold.Create(1);
+            //            monster.X = randomRoomLocation.X;
+            //            monster.Y = randomRoomLocation.Y;
+            //            _map.AddMonster(_map, monster);
+            //        }
+            //    }
+            //}
+            if (test == true)
+            {
+                // Generate between 1 and 4 monsters
+                var numberOfMonsters = 1;
+                for (int i = 0; i < numberOfMonsters; i++)
+                {
+                    // Find a random walkable location in the room to place the monster
+                    Point randomRoomLocation = map.GetRandomWalkableLocationInRoom(room);
+                    // It's possible that the room doesn't have space to place a monster
+                    // In that case skip creating the monster
+                    if (randomRoomLocation != null)
+                    {
+                        // Temporarily hard code this monster to be created at level 1
+                        var monster = Goon.Create(1);
+                        monster.X = randomRoomLocation.X;
+                        monster.Y = randomRoomLocation.Y;
+                        map.AddMonster(map, monster);
+                    }
+                }
+            }
+        }
+
+        public void PlaceBoss(DungeonMap map, List<Rectangle> rooms)
+        {            
+            int roomIndex = GenerateRandomInt(0, rooms.Count);
+            Console.WriteLine(roomIndex);
+            Rectangle room = rooms[roomIndex];
+            Point randomRoomLocation = map.GetRandomWalkableLocationInRoom(room);
+            if (randomRoomLocation != null)
+            {
+                // Temporarily hard code this monster to be created at level 1
+                var boss = Outlaw.Create(1);
+                boss.X = randomRoomLocation.X;
+                boss.Y = randomRoomLocation.Y;
+                map.AddMonster(map, boss);
+            }
+
         }
     }
 }

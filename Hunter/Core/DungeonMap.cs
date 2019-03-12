@@ -232,6 +232,22 @@ namespace Hunter.Core
             Game.SchedulingSystem.Remove(monster);
         }
 
+        public void AddBoss(DungeonMap map, Monster monster)
+        {
+            _monsters.Add(monster);
+            // After adding the monster to the map make sure to make the cell not walkable
+            map.SetCellProperties(monster.X, monster.Y, true, false, true);
+            Game.SchedulingSystem.Add(monster);
+        }
+
+        public void RemoveBoss(Monster monster)
+        {
+            _monsters.Remove(monster);
+            // After removing the monster from the map, make sure the cell is walkable again
+            SetCellProperties(monster.X, monster.Y, true, true, true);
+            Game.SchedulingSystem.Remove(monster);
+        }
+
         public Monster GetMonsterAt(int x, int y)
         {
             return _monsters.FirstOrDefault(m => m.X == x && m.Y == y);

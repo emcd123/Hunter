@@ -55,6 +55,8 @@ namespace Hunter.MapGeneration
 
                 PlaceMonsters(_map, Rooms[i]);
             }
+            PlaceBoss(_map, Rooms);
+
             //HACK HERE: Placeplayer returns an integer as a side effect of it purpose
             // In reality PlacePlayer is a void function that directly affects the map.
             // Needs Refactoring
@@ -133,51 +135,6 @@ namespace Hunter.MapGeneration
             for (int y = rm.Top; y < rm.Bottom; y++)
             {
                 _map.SetCellProperties(xi, y, false, false, true);
-            }
-        }
-
-        private void PlaceMonsters(DungeonMap map, Rectangle room)
-        {
-            // Each room has a 60% chance of having monsters
-            //if (Dice.Roll("1D10") < 7)
-            //{
-            //    // Generate between 1 and 4 monsters
-            //    var numberOfMonsters = Dice.Roll("1D4");
-            //    for (int i = 0; i < numberOfMonsters; i++)
-            //    {
-            //        // Find a random walkable location in the room to place the monster
-            //        Point randomRoomLocation = _map.GetRandomWalkableLocationInRoom(room);
-            //        // It's possible that the room doesn't have space to place a monster
-            //        // In that case skip creating the monster
-            //        if (randomRoomLocation != null)
-            //        {
-            //            // Temporarily hard code this monster to be created at level 1
-            //            var monster = Kobold.Create(1);
-            //            monster.X = randomRoomLocation.X;
-            //            monster.Y = randomRoomLocation.Y;
-            //            _map.AddMonster(_map, monster);
-            //        }
-            //    }
-            //}
-            if (test == true)
-            {
-                // Generate between 1 and 4 monsters
-                var numberOfMonsters = 1;
-                for (int i = 0; i < numberOfMonsters; i++)
-                {
-                    // Find a random walkable location in the room to place the monster
-                    Point randomRoomLocation = map.GetRandomWalkableLocationInRoom(room);
-                    // It's possible that the room doesn't have space to place a monster
-                    // In that case skip creating the monster
-                    if (randomRoomLocation != null)
-                    {
-                        // Temporarily hard code this monster to be created at level 1
-                        var monster = Goon.Create(100);
-                        monster.X = randomRoomLocation.X;
-                        monster.Y = randomRoomLocation.Y;
-                        map.AddMonster(map, monster);
-                    }
-                }
             }
         }
     }
