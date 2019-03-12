@@ -26,8 +26,24 @@ namespace Hunter.Core
         public static RLColor DoorBackgroundFov = Palette.DbDark;
         public static RLColor DoorFov = Palette.DbSun;
 
+        public static RLColor BuildingEntranceBackground = RLColor.Black;
+        public static RLColor BuildingEntrance = RLColor.Magenta;
+        public static RLColor BuildingEntranceBackgroundFov = Palette.DbDark;
+        public static RLColor BuildingEntranceFov = RLColor.LightMagenta;
+
         public static RLColor TextHeading = Palette.DbLight;
 
         public static RLColor Player = RLColor.White;
+        public static RLColor KoboldColor = Palette.DbBrightWood;
+        public static RLColor OutlawColor = Palette.DbBrightWood;
+        public static RLColor GoonColor = Palette.DbStone;
+
+        public static RLColor VillagerBackground = Palette.DbStone;
+        public static RLColor Villager = Palette.DbStone;
+        public static RLColor VillagerBackgroundFov = Palette.DbStone;
+        public static RLColor VillagerFov = Palette.DbStone;
+
+        public static RLColor Text = Palette.DbLight;
+        public static RLColor Gold = Palette.DbSun;
     }
 }

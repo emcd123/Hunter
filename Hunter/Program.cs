@@ -9,7 +9,7 @@ using RogueSharp;
 
 using Hunter.Core;
 using Hunter.Systems;
-using Hunter.Tools;
+using Hunter.MapGeneration;
 
 namespace Hunter
 {
@@ -25,6 +25,10 @@ namespace Hunter
         private static readonly int _mapHeight = 80;
         private static RLConsole _mapConsole;
 
+        private static readonly int _menuWidth = 80;
+        private static readonly int _menuHeight = 80;
+        //private static RLConsole _menuConsole;
+
         // Below the map console is the message console which displays attack rolls and other information
         private static readonly int _messageWidth = 80;
         private static readonly int _messageHeight = 10;
@@ -38,12 +42,21 @@ namespace Hunter
         private static bool _renderRequired = true;
 
         public static CommandSystem CommandSystem { get; private set; }
+        public static Menu Menu { get; private set; }
+        public static QuestMenu QuestMenu { get; private set; }
+        public static DeathScreen DeathScreen { get; private set; }
+        public static WinMenu WinMenu { get; private set; }
+
         public static Player Player { get; private set; }
         public static DungeonMap DungeonMap { get; private set; }
+        public static MessageLog MessageLog { get; private set; }
+        public static SchedulingSystem SchedulingSystem { get; private set; }
+        public static Random rng = new Random();
+        //private static int _mapLevel = 1;
 
         public static int _maxrooms = 4;
         public static int _roomMinSize = 10;
-        public static int _roomMaxSize = 15;
+        public static int _roomMaxSize = 15;        
 
         public static void Main()
         {
@@ -62,13 +75,23 @@ namespace Hunter
             _messageConsole = new RLConsole(_messageWidth, _messageHeight);
             _statConsole = new RLConsole(_statWidth, _statHeight);
 
-
             Player = new Player();
             CommandSystem = new CommandSystem();
+            QuestMenu = new QuestMenu(_menuWidth, _menuHeight);
+            DeathScreen = new DeathScreen(_menuWidth, _menuHeight);
+            WinMenu = new WinMenu(_menuWidth, _menuHeight);
+            Menu = new Menu(_menuWidth, _menuHeight);
+            SchedulingSystem = new SchedulingSystem();
 
-            //Generate the map           
+            // Create a new MessageLog and print the random seed used to generate the level
+            MessageLog = new MessageLog();
+            MessageLog.Add("The rogue arrives on level 1");
+            MessageLog.Add("Prepare to fight for your life");
+
+            //Generate the map   
+            TownMap mapCreation = new TownMap(_mapWidth, _mapHeight);
             //SimpleBsp mapCreation = new SimpleBsp(_mapWidth, _mapHeight);
-            FullRoomBsp mapCreation = new FullRoomBsp(_mapWidth, _mapHeight);
+            //FullRoomBsp mapCreation = new FullRoomBsp(_mapWidth, _mapHeight);
 
             DungeonMap = mapCreation.CreateMap();
             DungeonMap.UpdatePlayerFieldOfView();
@@ -88,44 +111,133 @@ namespace Hunter
             bool didPlayerAct = false;
             RLKeyPress keyPress = _rootConsole.Keyboard.GetKeyPress();
 
-            if (keyPress != null)
+            if (CommandSystem.IsPlayerTurn)
             {
-                if (keyPress.Key == RLKey.Up)
+                if (Globals.BuildingEntranceIsTriggered)
                 {
-                    didPlayerAct = CommandSystem.MovePlayer(Direction.Up);
+                    if (keyPress != null)
+                    {
+                        if (keyPress.Key == RLKey.E)
+                        {                            
+                            CommandSystem.CloseMenu();
+                            Globals.SheriffTriggered = false;
+                            Globals.GenericMenuTriggered = false;
+                            didPlayerAct = true;
+                        }
+                        else if (keyPress.Key == RLKey.Enter)
+                        {
+                            //SimpleBsp mapGenerator = new SimpleBsp(_mapWidth, _mapHeight);
+                            FullRoomBsp mapGenerator = new FullRoomBsp(_mapWidth, _mapHeight);
+                            DungeonMap = mapGenerator.CreateMap();
+                            MessageLog = new MessageLog();
+                            CommandSystem = new CommandSystem();
+                            CommandSystem.CloseMenu();
+                            Globals.SheriffTriggered = false;
+                            didPlayerAct = true;
+                        }
+                        else if (keyPress.Key == RLKey.Escape)
+                        {
+                            _rootConsole.Close();
+                        }
+                    }
                 }
-                else if (keyPress.Key == RLKey.Down)
+                else if (Globals.IsPlayerDead)
                 {
-                    didPlayerAct = CommandSystem.MovePlayer(Direction.Down);
+                    if (keyPress != null)
+                    {
+                        if (keyPress.Key == RLKey.Enter)
+                        {                            
+                            TownMap mapGenerator = new TownMap(_mapWidth, _mapHeight);
+                            DungeonMap = mapGenerator.CreateMap();
+                            MessageLog = new MessageLog();
+                            CommandSystem = new CommandSystem();
+                            CommandSystem.CloseMenu();
+                            Player.Health = Player.MaxHealth;
+                            Globals.IsPlayerDead = false;
+                            didPlayerAct = true;
+                        }
+                        else if (keyPress.Key == RLKey.Escape)
+                        {
+                            _rootConsole.Close();
+                        }
+                    }
                 }
-                else if (keyPress.Key == RLKey.Left)
+                else if (Globals.IsBossDead)
                 {
-                    didPlayerAct = CommandSystem.MovePlayer(Direction.Left);
+                    if (keyPress != null)
+                    {
+                        if (keyPress.Key == RLKey.Enter)
+                        {
+                            TownMap mapGenerator = new TownMap(_mapWidth, _mapHeight);
+                            DungeonMap = mapGenerator.CreateMap();
+                            MessageLog = new MessageLog();
+                            CommandSystem = new CommandSystem();
+                            CommandSystem.CloseMenu();
+                            Player.Health = Player.MaxHealth;
+                            Globals.IsBossDead = false;
+                            didPlayerAct = true;
+                        }
+                        else if (keyPress.Key == RLKey.E)
+                        {
+                            CommandSystem.CloseMenu();
+                            Globals.IsBossDead = false;
+                            didPlayerAct = true;
+                        }
+                        else if (keyPress.Key == RLKey.Escape)
+                        {
+                            _rootConsole.Close();
+                        }
+                    }
                 }
-                else if (keyPress.Key == RLKey.Right)
+                else
                 {
-                    didPlayerAct = CommandSystem.MovePlayer(Direction.Right);
+                    if (keyPress != null)
+                    {
+                        if (keyPress.Key == RLKey.Up)
+                        {
+                            didPlayerAct = CommandSystem.MovePlayer(Direction.Up);
+                        }
+                        else if (keyPress.Key == RLKey.Down)
+                        {
+                            didPlayerAct = CommandSystem.MovePlayer(Direction.Down);
+                        }
+                        else if (keyPress.Key == RLKey.Left)
+                        {
+                            didPlayerAct = CommandSystem.MovePlayer(Direction.Left);
+                        }
+                        else if (keyPress.Key == RLKey.Right)
+                        {
+                            didPlayerAct = CommandSystem.MovePlayer(Direction.Right);
+                        }
+                        else if (keyPress.Key == RLKey.Comma)
+                        {
+                            //if (DungeonMap.CanMoveDownToNextLevel())
+                            //{
+                            TownMap mapGenerator = new TownMap(_mapWidth, _mapHeight);
+                            DungeonMap = mapGenerator.CreateMap();
+                            MessageLog = new MessageLog();
+                            CommandSystem = new CommandSystem();
+                            Player.Health = Player.MaxHealth;
+                            didPlayerAct = true;
+                            //}
+                        }
+                        else if (keyPress.Key == RLKey.Escape)
+                        {
+                            _rootConsole.Close();
+                        }
+                    }
                 }
-                else if (keyPress.Key == RLKey.Escape)
+                if (didPlayerAct)
                 {
-                    _rootConsole.Close();
+                    _renderRequired = true;
+                    CommandSystem.EndPlayerTurn();
                 }
             }
-
-            if (didPlayerAct)
+            else
             {
+                CommandSystem.ActivateMonsters();
                 _renderRequired = true;
             }
-
-            // Set background color and text for each console 
-            // so that we can verify they are in the correct positions
-            _mapConsole.SetBackColor(0, 0, _mapWidth, _mapHeight, Colors.FloorBackground);
-
-            _messageConsole.SetBackColor(0, 0, _messageWidth, _messageHeight, Palette.DbDeepWater);
-            _messageConsole.Print(1, 1, "Messages", Colors.TextHeading);
-
-            _statConsole.SetBackColor(0, 0, _statWidth, _statHeight, Palette.DbOldStone);
-            _statConsole.Print(1, 1, "Stats", Colors.TextHeading);
         }
 
         // Event handler for RLNET's Render event
@@ -133,17 +245,46 @@ namespace Hunter
         {
             if (_renderRequired)
             {
-                DungeonMap.Draw(_mapConsole);
+                _mapConsole.Clear();
+                _statConsole.Clear();
+                _messageConsole.Clear();
+
+                DungeonMap.Draw(_mapConsole, _statConsole);
                 Player.Draw(_mapConsole);
+                Player.DrawStats(_statConsole);
+                MessageLog.Draw(_messageConsole);
+                    
 
-                // Blit the sub consoles to the root console in the correct locations
-                RLConsole.Blit(_mapConsole, 0, 0, _mapWidth, _mapHeight,
-                  _rootConsole, 0, 0);
-                RLConsole.Blit(_statConsole, 0, 0, _statWidth, _statHeight,
-                  _rootConsole, _mapWidth, 0);
-                RLConsole.Blit(_messageConsole, 0, 0, _messageWidth, _messageHeight,
-                  _rootConsole, 0, _screenHeight - _messageHeight);
-
+                if (!Globals.BuildingEntranceIsTriggered && !Globals.IsPlayerDead && !Globals.IsBossDead)
+                {
+                    // Blit the sub consoles to the root console in the correct locations
+                    RLConsole.Blit(_mapConsole, 0, 0, _mapWidth, _mapHeight,
+                      _rootConsole, 0, 0);
+                    RLConsole.Blit(_statConsole, 0, 0, _statWidth, _statHeight,
+                      _rootConsole, _mapWidth, 0);
+                    RLConsole.Blit(_messageConsole, 0, 0, _messageWidth, _messageHeight,
+                      _rootConsole, 0, _screenHeight - _messageHeight);
+                }
+                else if(Globals.BuildingEntranceIsTriggered)
+                {
+                    if (Globals.SheriffTriggered)
+                        QuestMenu.CreateQuestMenu(_rootConsole);
+                    else if (Globals.GenericMenuTriggered)
+                        Menu.CreateMenu(_rootConsole);
+                    else                    
+                        Globals.BuildingEntranceIsTriggered = false;
+                }
+                else if (Globals.IsBossDead)
+                {                    
+                    WinMenu.CreateWinScreen(_rootConsole);
+                }
+                else if (Globals.IsPlayerDead)
+                {
+                    if (Player.Health <= 0)
+                        DeathScreen.CreateDeathScreen(_rootConsole);
+                    else
+                        Globals.IsPlayerDead = false;
+                }
                 // Tell RLNET to draw the console that we set
                 _rootConsole.Draw();
                 _renderRequired = false;

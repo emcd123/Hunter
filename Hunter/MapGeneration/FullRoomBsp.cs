@@ -8,10 +8,11 @@ using RLNET;
 using RogueSharp;
 
 using Hunter.Core;
+using Hunter.Monsters;
 
-namespace Hunter.Tools
+namespace Hunter.MapGeneration
 {
-    public class FullRoomBsp
+    public class FullRoomBsp : BaseMap
     {
         //private readonly IRandom _random;
         private readonly int _width;
@@ -19,7 +20,8 @@ namespace Hunter.Tools
         private readonly DungeonMap _map;
         public List<Rectangle> roomArr;
         public List<Cell> DoorCoords;
-        private Random rnd = new Random();
+
+        private static bool test = true;
 
         public FullRoomBsp(int width, int height)
         {
@@ -37,7 +39,7 @@ namespace Hunter.Tools
             List<Rectangle> Rooms = new List<Rectangle>();
 
             var FullRectangle = new Rectangle(0, 0, _width, _height);
-            MakeExteriorWall(FullRectangle);
+            MakeExteriorWall(_map, FullRectangle);
             Rooms.Add(FullRectangle);
 
             for (int i = 0; i < 4; i++)
@@ -49,59 +51,21 @@ namespace Hunter.Tools
                 Console.WriteLine(Rooms[i]);
                 MakeRoom(Rooms[i]);
                 if (i != 0 || i != Rooms.Count)
-                    MakeDoor(Rooms[i]);
-            }
+                    MakeDoor(_map, Rooms[i]);
 
-            PlacePlayer(_map, Rooms);
+                PlaceMonsters(_map, Rooms[i]);
+            }
+            PlaceBoss(_map, Rooms);
+
+            //HACK HERE: Placeplayer returns an integer as a side effect of it purpose
+            // In reality PlacePlayer is a void function that directly affects the map.
+            // Needs Refactoring
+            int RoomIndex = PlacePlayer(_map, Rooms);
+            CreateUpStairs(_map, Rooms, RoomIndex);
             return _map;
         }
 
-        private void MakeRoom( Rectangle rm)
-        {
-            int xi = rm.Left;
-            int yi = rm.Top;
-
-            for (int x = rm.Left; x < rm.Right; x++)
-            {
-                _map.SetCellProperties(x, yi, false, false, true);
-            }
-            for (int y = rm.Top; y < rm.Bottom; y++)
-            {
-                _map.SetCellProperties(xi, y, false, false, true);
-            }
-        }
-
-        private void MakeDoor(Rectangle ROOM)
-        {
-
-            int DoorCoordX = ROOM.Left;
-            int DoorCoordY = ROOM.Center.Y;
-            if (DoorCoordX != 0)
-            {
-                _map.SetCellProperties(DoorCoordX, DoorCoordY, false, true, true);
-                _map.Doors.Add(new Door
-                {
-                    X = DoorCoordX,
-                    Y = DoorCoordY,
-                    IsOpen = false
-                });
-            }
-
-            DoorCoordX = ROOM.Center.X;
-            DoorCoordY = ROOM.Top;
-            if (DoorCoordY != 0)
-            {
-                _map.SetCellProperties(DoorCoordX, DoorCoordY, false, true, true);
-                _map.Doors.Add(new Door
-                {
-                    X = DoorCoordX,
-                    Y = DoorCoordY,
-                    IsOpen = false
-                });
-            }
-        }
-
-        public List<Rectangle> SplitAction(List<Rectangle> RoomsList)
+        private List<Rectangle> SplitAction(List<Rectangle> RoomsList)
         {
             List<Rectangle> IterRectangles = new List<Rectangle>();
             foreach (Rectangle o in RoomsList.ToList())
@@ -128,7 +92,7 @@ namespace Hunter.Tools
             return IterRectangles;
         }
 
-        public List<Rectangle> SplitRectVertical(Rectangle rect)
+        private List<Rectangle> SplitRectVertical(Rectangle rect)
         {
             int width = rect.Width;
             int height = rect.Height;
@@ -144,7 +108,7 @@ namespace Hunter.Tools
             return new List<Rectangle>() { rect1, rect2 };
         }
 
-        public List<Rectangle> SplitRectHorizontal(Rectangle rect)
+        private List<Rectangle> SplitRectHorizontal(Rectangle rect)
         {
             int width = rect.Width;
             int height = rect.Height;
@@ -159,39 +123,19 @@ namespace Hunter.Tools
             return new List<Rectangle>() { rect1, rect2 };
         }
 
-        public void MakeExteriorWall(Rectangle rect)
+        private void MakeRoom(Rectangle rm)
         {
-            int height = rect.Height;
-            int width = rect.Width;
-            foreach (Cell cell in _map.GetAllCells())
-            {
-                _map.SetCellProperties(cell.X, cell.Y, true, true, true);
-            }
-            foreach (Cell cell in _map.GetCellsInRows(0, height - 1))
-            {
-                _map.SetCellProperties(cell.X, cell.Y, false, false, true);
-            }
+            int xi = rm.Left;
+            int yi = rm.Top;
 
-            // Set the first and last columns in the map to not be transparent or walkable
-            foreach (Cell cell in _map.GetCellsInColumns(0, width - 1))
+            for (int x = rm.Left; x < rm.Right; x++)
             {
-                _map.SetCellProperties(cell.X, cell.Y, false, false, true);
+                _map.SetCellProperties(x, yi, false, false, true);
             }
-        }
-
-        public void PlacePlayer(DungeonMap map, List<Rectangle> roomArray)
-        {
-            int size = roomArray.Count;
-            Player player = Game.Player;
-            int X = roomArray[size - 1].Center.X;
-            int Y = roomArray[size - 1].Center.Y;
-            map.SetActorPosition(player, X, Y);
-        }
-
-        public int GenerateRandomInt(int min, int max)
-        {
-            int num = rnd.Next(min, max);
-            return num;
+            for (int y = rm.Top; y < rm.Bottom; y++)
+            {
+                _map.SetCellProperties(xi, y, false, false, true);
+            }
         }
     }
 }
