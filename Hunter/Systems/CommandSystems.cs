@@ -186,6 +186,7 @@ namespace Hunter.Systems
                 {
                     Globals.IsBossDead = true;
                     Game.MessageLog.Add("You have killed the Boss");
+                    Monster.IsBoss = false;
                 }
             }
         }
