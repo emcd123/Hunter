@@ -17,11 +17,11 @@ namespace Hunter.Monsters
             return new Outlaw
             {
                 Attack = Dice.Roll("1D5") + level / 3,
-                AttackChance = Dice.Roll("25D3"),
+                //AttackChance = Dice.Roll("25D3"),
                 Awareness = 10,
                 Color = Colors.OutlawColor,
                 Defense = Dice.Roll("1D3") + level / 3,
-                DefenseChance = Dice.Roll("10D4"),
+                //DefenseChance = Dice.Roll("10D4"),
                 Gold = Dice.Roll("5D5"),
                 Health = health,
                 MaxHealth = health,
