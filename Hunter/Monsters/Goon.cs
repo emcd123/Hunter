@@ -13,6 +13,7 @@ namespace Hunter.Monsters
         public static Goon Create(int level)
         {
             int health = Dice.Roll("2D5");
+
             return new Goon
             {
                 Attack = Dice.Roll("1D3") + level / 3,
@@ -26,7 +27,8 @@ namespace Hunter.Monsters
                 MaxHealth = health,
                 Name = "Goon",
                 Speed = 17,
-                Symbol = 'g'
+                Symbol = 'g',
+                IsBoss = false
             };
         }
     }

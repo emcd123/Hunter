@@ -14,7 +14,6 @@ namespace Hunter.Monsters
         public static Outlaw Create(int level)
         {
             int health = Dice.Roll("5D5");
-            IsBoss = true;
             return new Outlaw
             {
                 Attack = Dice.Roll("1D5") + level / 3,
@@ -28,7 +27,8 @@ namespace Hunter.Monsters
                 MaxHealth = health,
                 Name = "Outlaw",
                 Speed = 14,
-                Symbol = 'o'
+                Symbol = 'o',
+                IsBoss = true
             };
         }
     }
