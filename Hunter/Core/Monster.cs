@@ -15,8 +15,6 @@ namespace Hunter.Core
     {
         public int? TurnsAlerted { get; set; }
 
-        public static bool IsBoss;
-
         public virtual void PerformAction(CommandSystem commandSystem)
         {
             var behavior = new StandardMoveAndAttack();

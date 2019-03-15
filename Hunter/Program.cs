@@ -10,6 +10,7 @@ using RogueSharp;
 using Hunter.Core;
 using Hunter.Systems;
 using Hunter.MapGeneration;
+using Hunter.Menus;
 
 namespace Hunter
 {
@@ -27,7 +28,6 @@ namespace Hunter
 
         private static readonly int _menuWidth = 80;
         private static readonly int _menuHeight = 80;
-        //private static RLConsole _menuConsole;
 
         // Below the map console is the message console which displays attack rolls and other information
         private static readonly int _messageWidth = 80;

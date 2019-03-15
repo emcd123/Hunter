@@ -13,6 +13,7 @@ namespace Hunter.Core
 {
     public class Actor : IActor, IDrawable, IScheduleable
     {
+
         // IActor
         private int _attack;
         private int _attackChance;
@@ -24,6 +25,7 @@ namespace Hunter.Core
         private int _maxHealth;
         private string _name;
         private int _speed;
+        private bool _IsBoss;
 
         public int Attack
         {
@@ -142,6 +144,18 @@ namespace Hunter.Core
             set
             {
                 _speed = value;
+            }
+        }
+
+        public bool IsBoss
+        {
+            get
+            {
+                return _IsBoss;
+            }
+            set
+            {
+                _IsBoss = value;
             }
         }
 

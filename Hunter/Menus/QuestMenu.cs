@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hunter.Core
+namespace Hunter.Menus
 {
     public class QuestMenu : Menu
     {
