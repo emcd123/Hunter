@@ -9,13 +9,14 @@ using System.Threading.Tasks;
 namespace Hunter.Core
 {
     public class Combat
-    {
+    {        
         public Combat()
         {
 
         }
         public void Attack(Actor attacker, Actor defender)
         {
+            bool CRT = false;
             StringBuilder attackMessage = new StringBuilder();
             StringBuilder defenseMessage = new StringBuilder();
 
@@ -29,12 +30,15 @@ namespace Hunter.Core
                 Game.MessageLog.Add(defenseMessage.ToString());
             }
 
-            int ACC = 0;
-            if (ACC > 95)
+            int ACC = Game.rng.Next(0,100);            
+            if (ACC > 90)
+            {
                 ATK *= 2;
+                CRT = true;
+            }
             int DMG = ATK - DEF;
 
-            ResolveDamage(defender, DMG);
+            ResolveDamage(defender, DMG, CRT);
         }
 
         // The attacker rolls based on his stats to see if he gets any hits
@@ -47,14 +51,14 @@ namespace Hunter.Core
             // Roll a standard damage rating for your first. We take the pure damage.
             // WHen weapons are implemented your fists will be rebalanced.
             // TODO: Will be switching to having items and will rebalance then
-            DiceExpression attackDice = new DiceExpression().Dice(2, 6);
+            DiceExpression attackDice = new DiceExpression().Dice(2, attacker.Attack);
             DiceResult attackResult = attackDice.Roll();
 
             // Look at the face value of each single die that was rolled
             foreach (TermResult termResult in attackResult.Results)
             {
                 attackMessage.Append(termResult.Value + ", ");
-                ATK_number++;
+                ATK_number += termResult.Value;
             }
             return ATK_number;
         }
@@ -70,22 +74,21 @@ namespace Hunter.Core
                 defenseMessage.AppendFormat("  {0} defends with a value of ", defender.Name);
 
                 // Roll a number of 100-sided dice equal to the Defense value of the defendering actor
-                DiceExpression defenseDice = new DiceExpression().Dice(1, 6);
+                DiceExpression defenseDice = new DiceExpression().Dice(1, defender.Defense);
                 DiceResult defenseRoll = defenseDice.Roll();
 
                 // Look at the face value of each single die that was rolled
                 foreach (TermResult termResult in defenseRoll.Results)
                 {
                     defenseMessage.Append(termResult.Value + ", ");
-                    DEF_number++;
+                    DEF_number += termResult.Value;
                 }
-                defenseMessage.AppendFormat("sustaining {0} damage.", DEF_number);
+                defenseMessage.AppendFormat("taking {0} damage.", DEF_number);
             }
             else
             {
                 attackMessage.Append("and misses completely.");
             }
-
             return DEF_number;
         }
 

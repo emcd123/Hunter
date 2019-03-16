@@ -10,18 +10,16 @@ namespace Hunter.Monsters
 {
     public class Goon : Monster
     {
-        public static Goon Create(int level)
+        public static Goon Create(int level=4)
         {
-            int health = Dice.Roll("2D5");
+            int health = 25;
 
             return new Goon
             {
-                Attack = Dice.Roll("1D3") + level / 3,
-                //AttackChance = Dice.Roll("25D3"),
+                Attack = Dice.Roll("1D6") + level,
                 Awareness = 10,
                 Color = Colors.GoonColor,
-                Defense = Dice.Roll("1D3") + level / 3,
-                //DefenseChance = Dice.Roll("10D4"),
+                Defense = Dice.Roll("1D6") + level,
                 Gold = Dice.Roll("5D5"),
                 Health = health,
                 MaxHealth = health,
