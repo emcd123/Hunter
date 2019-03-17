@@ -48,6 +48,7 @@ namespace Hunter
         public static WinMenu WinMenu { get; private set; }
 
         public static Player Player { get; private set; }
+        public static Equipment Equipment { get; private set; }
         public static DungeonMap DungeonMap { get; private set; }
         public static MessageLog MessageLog { get; private set; }
         public static SchedulingSystem SchedulingSystem { get; private set; }
@@ -76,6 +77,8 @@ namespace Hunter
             _statConsole = new RLConsole(_statWidth, _statHeight);
 
             Player = new Player();
+            Equipment = new Equipment();
+
             CommandSystem = new CommandSystem();
             QuestMenu = new QuestMenu(_menuWidth, _menuHeight);
             DeathScreen = new DeathScreen(_menuWidth, _menuHeight);
@@ -88,6 +91,8 @@ namespace Hunter
             MessageLog.Add("The rogue arrives on level 1");
             MessageLog.Add("Prepare to fight for your life");
 
+
+            Equipment.GiveStartingWeapons(Player);
             //Generate the map   
             TownMap mapCreation = new TownMap(_mapWidth, _mapHeight);
             //SimpleBsp mapCreation = new SimpleBsp(_mapWidth, _mapHeight);

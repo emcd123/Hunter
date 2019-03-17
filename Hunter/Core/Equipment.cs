@@ -1,4 +1,5 @@
-﻿using Hunter.Interfaces;
+﻿using Hunter.Equipments;
+using Hunter.Interfaces;
 using RLNET;
 using RogueSharp;
 using System;
@@ -76,6 +77,13 @@ namespace Hunter.Core
             {
                 _name = value;
             }
+        }
+
+        public void GiveStartingWeapons(IActor actor)
+        {
+            actor.Melee = new SwitchBlade();
+            if(actor is Player)
+                Game.MessageLog.Add($"{actor.Name} started with a {Name}");
         }
     }
 }

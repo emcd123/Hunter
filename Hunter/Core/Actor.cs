@@ -8,11 +8,18 @@ using RLNET;
 using RogueSharp;
 
 using Hunter.Interfaces;
+using Hunter.Equipments;
 
 namespace Hunter.Core
 {
     public class Actor : IActor, IDrawable, IScheduleable
     {
+        public Actor()
+        {
+            Melee = MeleeEquipment.None();
+        }
+
+        public MeleeEquipment Melee { get; set; }
 
         // IActor
         private int _attack;
@@ -31,7 +38,7 @@ namespace Hunter.Core
         {
             get
             {
-                return _attack;
+                return _attack + Melee.Attack;
             }
             set
             {
@@ -67,7 +74,7 @@ namespace Hunter.Core
         {
             get
             {
-                return _defense;
+                return _defense + Melee.Defense;
             }
             set
             {

@@ -10,6 +10,11 @@ namespace Hunter.Equipments
 {
     public class MeleeEquipment : Equipment
     {
+        public static MeleeEquipment None()
+        {
+            return new MeleeEquipment { Name = "None" };
+        }
+
         public void DrawStats(RLConsole EquipConsole, int position)
         {
 
