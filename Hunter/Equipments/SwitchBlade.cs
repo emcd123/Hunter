@@ -16,7 +16,7 @@ namespace Hunter.Equipments
             {
                 Attack = Dice.Roll("1D6"),
                 Color = Colors.GoonColor,
-                Defense = Dice.Roll("1D6"),
+                Defense = Dice.Roll("1D2"),
                 Name = "SwitchBlade",
                 Symbol = '|',
             };
