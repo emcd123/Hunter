@@ -77,7 +77,7 @@ namespace Hunter
             _statConsole = new RLConsole(_statWidth, _statHeight);
 
             Player = new Player();
-            Equipment = new Equipment();
+            Equipment = new Equipment();            
 
             CommandSystem = new CommandSystem();
             QuestMenu = new QuestMenu(_menuWidth, _menuHeight);

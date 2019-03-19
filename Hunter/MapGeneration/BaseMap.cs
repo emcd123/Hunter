@@ -147,6 +147,7 @@ namespace Hunter.MapGeneration
                         monster.X = randomRoomLocation.X;
                         monster.Y = randomRoomLocation.Y;
                         map.AddMonster(map, monster);
+                        Game.Equipment.GiveStartingWeapons(monster);
                     }
                 }
             }
