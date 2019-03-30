@@ -18,7 +18,7 @@ namespace Hunter.Equipments
                 Color = Colors.GoonColor,
                 Defense = Dice.Roll("1D2"),
                 Name = "SwitchBlade",
-                Symbol = '|',
+                Symbol = ')',
             };
         }
     }

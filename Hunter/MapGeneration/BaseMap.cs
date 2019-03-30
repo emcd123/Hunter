@@ -1,4 +1,5 @@
 ﻿using Hunter.Core;
+using Hunter.Equipments;
 using Hunter.Monsters;
 using RogueSharp;
 using System;
@@ -16,6 +17,21 @@ namespace Hunter.MapGeneration
         public BaseMap()
         {          
 
+        }
+
+        public void PlaceItemsInRooms(DungeonMap map, List<Rectangle> roomArray)
+        {
+            foreach (Rectangle room in roomArray)
+            {
+                Point randomRoomLocation = map.GetRandomWalkableLocationInRoom(room);
+                if (randomRoomLocation != null)
+                {
+                    var item = SwitchBlade.Create();
+                    item.X = randomRoomLocation.X;
+                    item.Y = randomRoomLocation.Y;
+                    map.AddItemToMap(map, item);
+                }
+            }
         }
 
         public int GenerateRandomInt(int min, int max)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Hunter.Equipments;
 using RLNET;
 using RogueSharp;
 
@@ -18,8 +18,9 @@ namespace Hunter.Core
         public List<Stairs> StairsUpList { get; set; }
         public List<Stairs> StairsDownList { get; set; }
 
-        private readonly List<Monster> _monsters;
-        private readonly List<Npc> _villagers;
+        public List<Monster> _monsters;
+        public List<Npc> _villagers;
+        public List<Item> ItemList { get; set; }
 
         public DungeonMap()
         {
@@ -28,6 +29,7 @@ namespace Hunter.Core
             BuildingEntrances = new List<BuildingEntrance>();
             StairsUpList = new List<Stairs>();
             StairsDownList = new List<Stairs>();
+            ItemList = new List<Item>();
             _monsters = new List<Monster>();
             _villagers = new List<Npc>();
         }
@@ -63,7 +65,10 @@ namespace Hunter.Core
             {
                 downstair.Draw(mapConsole, this);
             }
-
+            foreach (Item itemEntry in ItemList)
+            {
+                itemEntry.Draw(mapConsole, this);
+            }
             // Keep an index so we know which position to draw monster stats at
             int i = 0;
             // Iterate through each monster on the map and draw it after drawing the Cells
@@ -159,6 +164,9 @@ namespace Hunter.Core
                 if (actor is Player)
                 {
                     UpdatePlayerFieldOfView();
+                    if (GetItem(actor.X, actor.Y) != null){
+                        Game.MessageLog.Add("Player found a " + GetItem(actor.X, actor.Y).Name);
+                    }
                 }
                 OpenDoor(actor, x, y);
                 OpenBuildingEntrance(actor, x, y);
@@ -214,6 +222,18 @@ namespace Hunter.Core
             // After adding the monster to the map make sure to make the cell not walkable
             map.SetCellProperties(villager.X, villager.Y, true, false, true);
             Game.SchedulingSystem.Add(villager);
+        }
+
+        public Item GetItem(int x, int y)
+        {
+            return ItemList.SingleOrDefault(d => d.X == x && d.Y == y);
+        }
+
+        public void AddItemToMap(DungeonMap map, Item item)
+        {
+            map.ItemList.Add(item);
+            // After adding the monster to the map make sure to make the cell not walkable
+            map.SetCellProperties(item.X, item.Y, true, true, true);
         }
 
         public void AddMonster(DungeonMap map, Monster monster)
