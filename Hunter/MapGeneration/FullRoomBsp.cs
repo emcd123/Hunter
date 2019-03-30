@@ -19,9 +19,7 @@ namespace Hunter.MapGeneration
         private readonly int _height;
         private readonly DungeonMap _map;
         public List<Rectangle> roomArr;
-        public List<Cell> DoorCoords;
-
-        private static bool test = true;
+        public List<Cell> DoorCoords;        
 
         public FullRoomBsp(int width, int height)
         {

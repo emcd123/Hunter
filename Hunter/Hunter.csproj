@@ -58,6 +58,11 @@
     <Compile Include="Core\BuildingEntrance.cs" />
     <Compile Include="Core\Colors.cs" />
     <Compile Include="Core\Combat.cs" />
+    <Compile Include="Core\Equipment.cs" />
+    <Compile Include="Equipments\BaseBallBat.cs" />
+    <Compile Include="Equipments\MeleeEquipment.cs" />
+    <Compile Include="Equipments\SwitchBlade.cs" />
+    <Compile Include="Interfaces\IEquipment.cs" />
     <Compile Include="Menus\DeathScreen.cs" />
     <Compile Include="Core\Direction.cs" />
     <Compile Include="Core\Door.cs" />

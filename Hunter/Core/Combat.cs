@@ -9,19 +9,20 @@ using System.Threading.Tasks;
 namespace Hunter.Core
 {
     public class Combat
-    {
+    {        
         public Combat()
         {
 
         }
         public void Attack(Actor attacker, Actor defender)
         {
+            bool CRT = false;
             StringBuilder attackMessage = new StringBuilder();
             StringBuilder defenseMessage = new StringBuilder();
 
-            int hits = ResolveAttack(attacker, defender, attackMessage);
+            int ATK = ResolveAttack(attacker, defender, attackMessage);
 
-            int blocks = ResolveDefense(defender, hits, attackMessage, defenseMessage);
+            int DEF = ResolveDefense(defender, ATK, attackMessage, defenseMessage);
 
             Game.MessageLog.Add(attackMessage.ToString());
             if (!string.IsNullOrWhiteSpace(defenseMessage.ToString()))
@@ -29,78 +30,79 @@ namespace Hunter.Core
                 Game.MessageLog.Add(defenseMessage.ToString());
             }
 
-            int damage = hits - blocks;
+            int ACC = Game.rng.Next(0,100);            
+            if (ACC > 90)
+            {
+                ATK *= 2;
+                CRT = true;
+            }
+            int DMG = ATK - DEF;
 
-            ResolveDamage(defender, damage);
+            ResolveDamage(defender, DMG, CRT);
         }
 
         // The attacker rolls based on his stats to see if he gets any hits
         private static int ResolveAttack(Actor attacker, Actor defender, StringBuilder attackMessage)
         {
-            int hits = 0;
+            int ATK_number = 0;
 
-            attackMessage.AppendFormat("{0} attacks {1} and rolls: ", attacker.Name, defender.Name);
+            attackMessage.AppendFormat("{0} attacks {1} for ", attacker.Name, defender.Name);
 
-            // Roll a number of 100-sided dice equal to the Attack value of the attacking actor
-            DiceExpression attackDice = new DiceExpression().Dice(attacker.Attack, 100);
+            // Roll a standard damage rating for your first. We take the pure damage.
+            // WHen weapons are implemented your fists will be rebalanced.
+            // TODO: Will be switching to having items and will rebalance then
+            DiceExpression attackDice = new DiceExpression().Dice(2, attacker.Attack);
             DiceResult attackResult = attackDice.Roll();
 
             // Look at the face value of each single die that was rolled
             foreach (TermResult termResult in attackResult.Results)
             {
                 attackMessage.Append(termResult.Value + ", ");
-                // Compare the value to 100 minus the attack chance and add a hit if it's greater
-                if (termResult.Value >= 100 - attacker.AttackChance)
-                {
-                    hits++;
-                }
+                ATK_number += termResult.Value;
             }
-
-            return hits;
+            return ATK_number;
         }
 
         // The defender rolls based on his stats to see if he blocks any of the hits from the attacker
-        private static int ResolveDefense(Actor defender, int hits, StringBuilder attackMessage, StringBuilder defenseMessage)
+        private static int ResolveDefense(Actor defender, int ATK_number, StringBuilder attackMessage, StringBuilder defenseMessage)
         {
-            int blocks = 0;
+            int DEF_number = 0;
 
-            if (hits > 0)
+            if (ATK_number > 0)
             {
-                attackMessage.AppendFormat("scoring {0} hits.", hits);
-                defenseMessage.AppendFormat("  {0} defends and rolls: ", defender.Name);
+                attackMessage.AppendFormat("Inflicting {0} damage.", ATK_number);
+                defenseMessage.AppendFormat("  {0} defends with a value of ", defender.Name);
 
                 // Roll a number of 100-sided dice equal to the Defense value of the defendering actor
-                DiceExpression defenseDice = new DiceExpression().Dice(defender.Defense, 100);
+                DiceExpression defenseDice = new DiceExpression().Dice(1, defender.Defense);
                 DiceResult defenseRoll = defenseDice.Roll();
 
                 // Look at the face value of each single die that was rolled
                 foreach (TermResult termResult in defenseRoll.Results)
                 {
                     defenseMessage.Append(termResult.Value + ", ");
-                    // Compare the value to 100 minus the defense chance and add a block if it's greater
-                    if (termResult.Value >= 100 - defender.DefenseChance)
-                    {
-                        blocks++;
-                    }
+                    DEF_number += termResult.Value;
                 }
-                defenseMessage.AppendFormat("resulting in {0} blocks.", blocks);
+                defenseMessage.AppendFormat("taking {0} damage.", DEF_number);
             }
             else
             {
                 attackMessage.Append("and misses completely.");
             }
-
-            return blocks;
+            return DEF_number;
         }
 
         // Apply any damage that wasn't blocked to the defender
-        private static void ResolveDamage(Actor defender, int damage)
+        private static void ResolveDamage(Actor defender, int damage, bool crit)
         {
             if (damage > 0)
-            {
+            {                
                 defender.Health = defender.Health - damage;
 
-                Game.MessageLog.Add($"  {defender.Name} was hit for {damage} damage");
+                if(!crit)
+                    Game.MessageLog.Add($"  {defender.Name} was hit for {damage} damage");
+                else
+                    Game.MessageLog.Add($"  {defender.Name} was hit for {damage} CRITICAL damage");
 
                 if (defender.Health <= 0)
                 {

@@ -143,10 +143,11 @@ namespace Hunter.MapGeneration
                     if (randomRoomLocation != null)
                     {
                         // Temporarily hard code this monster to be created at level 1
-                        var monster = Goon.Create(1);
+                        var monster = Goon.Create(4);
                         monster.X = randomRoomLocation.X;
                         monster.Y = randomRoomLocation.Y;
                         map.AddMonster(map, monster);
+                        Game.Equipment.GiveStartingWeapons(monster);
                     }
                 }
             }
@@ -161,7 +162,7 @@ namespace Hunter.MapGeneration
             if (randomRoomLocation != null)
             {
                 // Temporarily hard code this monster to be created at level 1
-                var boss = Outlaw.Create(1);
+                var boss = Outlaw.Create();
                 boss.X = randomRoomLocation.X;
                 boss.Y = randomRoomLocation.Y;
                 map.AddMonster(map, boss);

@@ -8,18 +8,25 @@ using RLNET;
 using RogueSharp;
 
 using Hunter.Interfaces;
+using Hunter.Equipments;
 
 namespace Hunter.Core
 {
     public class Actor : IActor, IDrawable, IScheduleable
     {
+        public Actor()
+        {
+            Melee = MeleeEquipment.None();
+        }
+
+        public MeleeEquipment Melee { get; set; }
 
         // IActor
         private int _attack;
-        private int _attackChance;
+        //private int _attackChance;
         private int _awareness;
         private int _defense;
-        private int _defenseChance;
+        //private int _defenseChance;
         private int _gold;
         private int _health;
         private int _maxHealth;
@@ -31,7 +38,7 @@ namespace Hunter.Core
         {
             get
             {
-                return _attack;
+                return _attack + Melee.Attack;
             }
             set
             {
@@ -39,17 +46,17 @@ namespace Hunter.Core
             }
         }
 
-        public int AttackChance
-        {
-            get
-            {
-                return _attackChance;
-            }
-            set
-            {
-                _attackChance = value;
-            }
-        }
+        //public int AttackChance
+        //{
+        //    get
+        //    {
+        //        return _attackChance;
+        //    }
+        //    set
+        //    {
+        //        _attackChance = value;
+        //    }
+        //}
 
         public int Awareness
         {
@@ -67,7 +74,7 @@ namespace Hunter.Core
         {
             get
             {
-                return _defense;
+                return _defense + Melee.Defense;
             }
             set
             {
@@ -75,17 +82,17 @@ namespace Hunter.Core
             }
         }
 
-        public int DefenseChance
-        {
-            get
-            {
-                return _defenseChance;
-            }
-            set
-            {
-                _defenseChance = value;
-            }
-        }
+        //public int DefenseChance
+        //{
+        //    get
+        //    {
+        //        return _defenseChance;
+        //    }
+        //    set
+        //    {
+        //        _defenseChance = value;
+        //    }
+        //}
 
         public int Gold
         {

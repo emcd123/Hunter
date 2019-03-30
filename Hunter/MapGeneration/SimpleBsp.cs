@@ -21,7 +21,6 @@ namespace Hunter.MapGeneration
         public List<Rectangle> roomArr;
         public List<Cell> DoorCoords;
         private bool flag = true;
-        private bool test = true;
 
         public SimpleBsp(int width, int height)
         {
