@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Hunter.Equipments;
 using RLNET;
 using RogueSharp;
 
@@ -21,5 +21,6 @@ namespace Hunter.Interfaces
         int MaxHealth { get; set; }
         string Name { get; set; }
         int Speed { get; set; }
+        MeleeEquipment Melee { get; set; }
     }
 }
