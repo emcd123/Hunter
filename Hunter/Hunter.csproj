@@ -59,11 +59,14 @@
     <Compile Include="Core\Colors.cs" />
     <Compile Include="Core\Combat.cs" />
     <Compile Include="Core\Equipment.cs" />
+    <Compile Include="Core\Inventory.cs" />
     <Compile Include="Equipments\BaseBallBat.cs" />
     <Compile Include="Equipments\Item.cs" />
     <Compile Include="Equipments\MeleeEquipment.cs" />
     <Compile Include="Equipments\SwitchBlade.cs" />
+    <Compile Include="Interfaces\IItem.cs" />
     <Compile Include="Interfaces\IEquipment.cs" />
+    <Compile Include="Interfaces\IStorable.cs" />
     <Compile Include="Menus\DeathScreen.cs" />
     <Compile Include="Core\Direction.cs" />
     <Compile Include="Core\Door.cs" />

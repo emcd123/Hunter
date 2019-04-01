@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Hunter.Equipments
 {
-    public class Item : IDrawable, IEquipment
+    public class Item : IDrawable, I_Item
     {
         // IDrawable
         public RLColor Color { get; set; }
@@ -38,10 +38,14 @@ namespace Hunter.Equipments
             }
         }
 
-        // IEquipment
+        // I_Item
         private int _attack;
+        private int _awareness;
         private int _defense;
+        private int _gold;
+        private int _health;
         private string _name;
+        private int _speed;
 
         public int Attack
         {
@@ -52,6 +56,18 @@ namespace Hunter.Equipments
             set
             {
                 _attack = value;
+            }
+        }
+
+        public int Awareness
+        {
+            get
+            {
+                return _awareness;
+            }
+            set
+            {
+                _awareness = value;
             }
         }
 
@@ -67,6 +83,30 @@ namespace Hunter.Equipments
             }
         }
 
+        public int Gold
+        {
+            get
+            {
+                return _gold;
+            }
+            set
+            {
+                _gold = value;
+            }
+        }
+
+        public int Health
+        {
+            get
+            {
+                return _health;
+            }
+            set
+            {
+                _health = value;
+            }
+        }
+
         public string Name
         {
             get
@@ -76,6 +116,18 @@ namespace Hunter.Equipments
             set
             {
                 _name = value;
+            }
+        }
+
+        public int Speed
+        {
+            get
+            {
+                return _speed;
+            }
+            set
+            {
+                _speed = value;
             }
         }
     }
