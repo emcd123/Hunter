@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Hunter.Equipments
 {
-    public class Item : IDrawable, I_Item
+    public class Item : IDrawable, I_Item, IEquipment
     {
         // IDrawable
         public RLColor Color { get; set; }
@@ -128,6 +128,34 @@ namespace Hunter.Equipments
             set
             {
                 _speed = value;
+            }
+        }
+
+        // IEquipment
+        private bool _IsEquippable;
+        private bool _IsEquipped;
+
+        public bool IsEquippable
+        {
+            get
+            {
+                return _IsEquippable;
+            }
+            set
+            {
+                _IsEquippable = value;
+            }
+        }
+
+        public bool IsEquipped
+        {
+            get
+            {
+                return _IsEquipped;
+            }
+            set
+            {
+                _IsEquipped = value;
             }
         }
     }

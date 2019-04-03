@@ -11,7 +11,7 @@ namespace Hunter.Equipments
     public class SwitchBlade : MeleeEquipment
     {
         public static SwitchBlade Create()
-        {            
+        {
             return new SwitchBlade
             {
                 Attack = Dice.Roll("1D6"),
@@ -19,6 +19,8 @@ namespace Hunter.Equipments
                 Defense = Dice.Roll("1D2"),
                 Name = "SwitchBlade",
                 Symbol = ')',
+                IsEquippable = true,
+                IsEquipped = false
             };
         }
     }

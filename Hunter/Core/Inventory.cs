@@ -45,22 +45,25 @@ namespace Hunter.Core
 
         public void UseItem(Item selected_item)
         {
-
+            // This kind of item is not created yet
+            // This is a placeholder
         }
 
         public void EquipItem(Item selected_item)
         {
-
+            if(selected_item.IsEquippable)
+                selected_item.IsEquipped = true;
         }
 
         public void UnequipItem(Item selected_item)
         {
-
+            if (selected_item.IsEquippable)
+                selected_item.IsEquipped = false;
         }
 
         private void AddToMap(List<Item> item_list, Item selected_item)
         {
-
+            item_list.Add(selected_item);
         }
 
         private void RemoveFromMap(List<Item> item_list, Item selected_item)

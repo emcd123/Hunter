@@ -16,7 +16,8 @@ namespace Hunter.Core
         {
             actor.Melee = SwitchBlade.Create();
             actor.Inventory.AddItem(actor.Melee);
-            if(actor is Player)
+            actor.Inventory.EquipItem(actor.Melee);
+            if (actor is Player)
                 Game.MessageLog.Add($"{actor.Name} started with a {actor.Melee.Name}");
         }
 
