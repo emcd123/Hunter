@@ -164,9 +164,6 @@ namespace Hunter.Core
                 if (actor is Player)
                 {
                     UpdatePlayerFieldOfView();
-                    if (GetItem(actor.X, actor.Y) != null){
-                        Game.MessageLog.Add("Player found a " + GetItem(actor.X, actor.Y).Name);
-                    }
                 }
                 OpenDoor(actor, x, y);
                 OpenBuildingEntrance(actor, x, y);
@@ -222,6 +219,11 @@ namespace Hunter.Core
             // After adding the monster to the map make sure to make the cell not walkable
             map.SetCellProperties(villager.X, villager.Y, true, false, true);
             Game.SchedulingSystem.Add(villager);
+        }
+
+        public Stairs GetStairs(int x, int y)
+        {
+            return StairsUpList.SingleOrDefault(d => d.X == x && d.Y == y);
         }
 
         public Item GetItem(int x, int y)

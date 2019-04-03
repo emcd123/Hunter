@@ -11,6 +11,7 @@ using Hunter.Core;
 using Hunter.Systems;
 using Hunter.MapGeneration;
 using Hunter.Menus;
+using Hunter.Equipments;
 
 namespace Hunter
 {
@@ -158,6 +159,9 @@ namespace Hunter
                             CommandSystem = new CommandSystem();
                             CommandSystem.CloseMenu();
                             Player.Health = Player.MaxHealth;
+                            Player.Inventory.Reset();
+                            Player.Melee.Reset();
+                            Equipment.GiveStartingWeapons(Player);
                             Globals.IsPlayerDead = false;
                             didPlayerAct = true;
                         }
@@ -216,15 +220,26 @@ namespace Hunter
                         }
                         else if (keyPress.Key == RLKey.Comma)
                         {
-                            //if (DungeonMap.CanMoveDownToNextLevel())
-                            //{
-                            TownMap mapGenerator = new TownMap(_mapWidth, _mapHeight);
-                            DungeonMap = mapGenerator.CreateMap();
-                            MessageLog = new MessageLog();
-                            CommandSystem = new CommandSystem();
-                            Player.Health = Player.MaxHealth;
-                            didPlayerAct = true;
-                            //}
+                            if (DungeonMap.GetStairs(Player.X, Player.Y) != null)
+                            {
+                                TownMap mapGenerator = new TownMap(_mapWidth, _mapHeight);
+                                DungeonMap = mapGenerator.CreateMap();
+                                MessageLog = new MessageLog();
+                                CommandSystem = new CommandSystem();
+                                Player.Health = Player.MaxHealth;
+                                didPlayerAct = true;
+                            }
+                        }
+                        else if (keyPress.Key == RLKey.G)
+                        {
+                            if (DungeonMap.GetItem(Player.X, Player.Y) != null)
+                            {
+                                Item item = DungeonMap.GetItem(Player.X, Player.Y);
+                                Game.MessageLog.Add("Player found a " + DungeonMap.GetItem(Player.X, Player.Y).Name);
+                                Player.Inventory.PickUpItem(DungeonMap.ItemList, item);
+                                foreach(var item_at_index in Player.Inventory._inventory)
+                                    Console.WriteLine(item_at_index);
+                            }
                         }
                         else if (keyPress.Key == RLKey.Escape)
                         {

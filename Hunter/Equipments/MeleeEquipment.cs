@@ -14,5 +14,10 @@ namespace Hunter.Equipments
         {
             return new MeleeEquipment { Name = "None" };
         }
+
+        public MeleeEquipment Reset()
+        {
+            return new MeleeEquipment { Name = "None" };
+        }
     }
 }

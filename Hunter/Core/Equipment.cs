@@ -15,6 +15,7 @@ namespace Hunter.Core
         public void GiveStartingWeapons(IActor actor)
         {
             actor.Melee = SwitchBlade.Create();
+            actor.Inventory.AddItem(actor.Melee);
             if(actor is Player)
                 Game.MessageLog.Add($"{actor.Name} started with a {actor.Melee.Name}");
         }
