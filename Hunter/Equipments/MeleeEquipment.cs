@@ -15,9 +15,9 @@ namespace Hunter.Equipments
             return new MeleeEquipment { Name = "None" };
         }
 
-        public void DrawStats(RLConsole EquipConsole, int position)
+        public MeleeEquipment Reset()
         {
-
+            return new MeleeEquipment { Name = "None" };
         }
     }
 }

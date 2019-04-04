@@ -54,7 +54,7 @@ namespace Hunter.MapGeneration
                 PlaceMonsters(_map, Rooms[i]);
             }
             PlaceBoss(_map, Rooms);
-
+            PlaceItemsInRooms(_map, Rooms);
             //HACK HERE: Placeplayer returns an integer as a side effect of it purpose
             // In reality PlacePlayer is a void function that directly affects the map.
             // Needs Refactoring

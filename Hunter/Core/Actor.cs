@@ -17,9 +17,11 @@ namespace Hunter.Core
         public Actor()
         {
             Melee = MeleeEquipment.None();
+            Inventory = Inventory.Empty();
         }
 
         public MeleeEquipment Melee { get; set; }
+        public Inventory Inventory { get; set; }
 
         // IActor
         private int _attack;

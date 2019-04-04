@@ -8,8 +8,7 @@ namespace Hunter.Interfaces
 {
     public interface IEquipment
     {
-        int Attack { get; set; }
-        int Defense { get; set; }
-        string Name { get; set; }
+        bool IsEquippable { get; set; }
+        bool IsEquipped { get; set; }
     }
 }
