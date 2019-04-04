@@ -10,10 +10,13 @@ namespace Hunter.Equipments
 {
     public class SwitchBlade : MeleeEquipment
     {
+
+        public static readonly string damage = "1D6";
         public static SwitchBlade Create()
         {
             return new SwitchBlade
             {
+                DamageString = "1D6",
                 Attack = Dice.Roll("1D6"),
                 Color = Colors.GoonColor,
                 Defense = Dice.Roll("1D2"),

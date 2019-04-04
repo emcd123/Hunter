@@ -37,8 +37,12 @@ namespace Hunter
 
         // The stat console is to the right of the map and display player and monster stats
         private static readonly int _statWidth = 20;
-        private static readonly int _statHeight = 70;
+        private static readonly int _statHeight = 40;
         private static RLConsole _statConsole;
+
+        private static readonly int _equipWidth = 20;
+        private static readonly int _equipHeight = 40;
+        private static RLConsole _equipConsole;
 
         private static bool _renderRequired = true;
 
@@ -76,6 +80,7 @@ namespace Hunter
             _mapConsole = new RLConsole(_mapWidth, _mapHeight);
             _messageConsole = new RLConsole(_messageWidth, _messageHeight);
             _statConsole = new RLConsole(_statWidth, _statHeight);
+            _equipConsole = new RLConsole(_equipWidth, _equipHeight);
 
             Player = new Player();
             Equipment = new Equipment();            
@@ -267,11 +272,13 @@ namespace Hunter
             {
                 _mapConsole.Clear();
                 _statConsole.Clear();
+                _equipConsole.Clear();
                 _messageConsole.Clear();
 
                 DungeonMap.Draw(_mapConsole, _statConsole);
                 Player.Draw(_mapConsole);
                 Player.DrawStats(_statConsole);
+                Player.Inventory.DrawEquipped(_equipConsole);
                 MessageLog.Draw(_messageConsole);
                     
 
@@ -282,6 +289,8 @@ namespace Hunter
                       _rootConsole, 0, 0);
                     RLConsole.Blit(_statConsole, 0, 0, _statWidth, _statHeight,
                       _rootConsole, _mapWidth, 0);
+                    RLConsole.Blit(_equipConsole, 0, 0, _equipWidth, _equipHeight,
+                      _rootConsole, _mapWidth, _statHeight);
                     RLConsole.Blit(_messageConsole, 0, 0, _messageWidth, _messageHeight,
                       _rootConsole, 0, _screenHeight - _messageHeight);
                 }

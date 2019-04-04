@@ -1,5 +1,6 @@
 ﻿using Hunter.Equipments;
 using Hunter.Interfaces;
+using RLNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,9 +72,16 @@ namespace Hunter.Core
             item_list.Remove(selected_item);
         }
 
-        public void DrawEquipped()
+        public void DrawEquipped(RLConsole equipConsole)
         {
-
+            int y = 1;
+            foreach (Item item in _inventory) {
+                if (item.IsEquippable && item.IsEquipped)
+                {
+                    equipConsole.Print(1, y, $"{item.Name} {item.DamageString}", Colors.Text);
+                    y += 2;
+                }
+            }
         }
 
         public void DrawInventory()

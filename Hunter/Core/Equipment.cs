@@ -21,9 +21,9 @@ namespace Hunter.Core
                 Game.MessageLog.Add($"{actor.Name} started with a {actor.Melee.Name}");
         }
 
-        public void DrawStats(RLConsole EquipConsole, int position)
-        {
+        //public void DrawStats(RLConsole EquipConsole, int position)
+        //{
 
-        }
+        //}
     }
 }

@@ -46,6 +46,19 @@ namespace Hunter.Equipments
         private int _health;
         private string _name;
         private int _speed;
+        private string _damageString;
+
+        public string DamageString
+        {
+            get
+            {
+                return _damageString;
+            }
+            set
+            {
+                _damageString = value;
+            }
+        }
 
         public int Attack
         {
@@ -130,7 +143,7 @@ namespace Hunter.Equipments
                 _speed = value;
             }
         }
-
+        
         // IEquipment
         private bool _IsEquippable;
         private bool _IsEquipped;
