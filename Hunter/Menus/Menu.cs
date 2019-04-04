@@ -25,11 +25,6 @@ namespace Hunter.Menus
 
             menuConsole.Clear();
 
-            List<string> LineArr = new List<string>();
-            LineArr.Add("");
-
-            Draw(LineArr);
-
             RLConsole.Blit(menuConsole, 0, 0, _width, _height, rootConsole, 0, 0);
         }
 

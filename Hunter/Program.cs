@@ -49,6 +49,7 @@ namespace Hunter
         public static CommandSystem CommandSystem { get; private set; }
         public static Menu Menu { get; private set; }
         public static QuestMenu QuestMenu { get; private set; }
+        public static InventoryMenu InventoryMenu { get; private set; }
         public static DeathScreen DeathScreen { get; private set; }
         public static WinMenu WinMenu { get; private set; }
 
@@ -89,6 +90,7 @@ namespace Hunter
             QuestMenu = new QuestMenu(_menuWidth, _menuHeight);
             DeathScreen = new DeathScreen(_menuWidth, _menuHeight);
             WinMenu = new WinMenu(_menuWidth, _menuHeight);
+            InventoryMenu = new InventoryMenu(_menuWidth, _menuHeight);
             Menu = new Menu(_menuWidth, _menuHeight);
             SchedulingSystem = new SchedulingSystem();
 
@@ -203,6 +205,17 @@ namespace Hunter
                         }
                     }
                 }
+                else if (Globals.InventoryOpen)
+                {
+                    if (keyPress != null)
+                    {
+                        if (keyPress.Key == RLKey.Escape)
+                        {
+                            Globals.InventoryOpen = false;
+                            didPlayerAct = true;
+                        }
+                    }
+                }
                 else
                 {
                     if (keyPress != null)
@@ -244,7 +257,14 @@ namespace Hunter
                                 Player.Inventory.PickUpItem(DungeonMap.ItemList, item);
                                 foreach(var item_at_index in Player.Inventory._inventory)
                                     Console.WriteLine(item_at_index);
+
+                                didPlayerAct = true;
                             }
+                        }
+                        else if (keyPress.Key == RLKey.I)
+                        {
+                            Globals.InventoryOpen = true;
+                            didPlayerAct = true;
                         }
                         else if (keyPress.Key == RLKey.Escape)
                         {
@@ -280,9 +300,9 @@ namespace Hunter
                 Player.DrawStats(_statConsole);
                 Player.Inventory.DrawEquipped(_equipConsole);
                 MessageLog.Draw(_messageConsole);
-                    
 
-                if (!Globals.BuildingEntranceIsTriggered && !Globals.IsPlayerDead && !Globals.IsBossDead)
+
+                if (!Globals.BuildingEntranceIsTriggered && !Globals.IsPlayerDead && !Globals.IsBossDead && !Globals.InventoryOpen)
                 {
                     // Blit the sub consoles to the root console in the correct locations
                     RLConsole.Blit(_mapConsole, 0, 0, _mapWidth, _mapHeight,
@@ -294,18 +314,23 @@ namespace Hunter
                     RLConsole.Blit(_messageConsole, 0, 0, _messageWidth, _messageHeight,
                       _rootConsole, 0, _screenHeight - _messageHeight);
                 }
-                else if(Globals.BuildingEntranceIsTriggered)
+                else if (Globals.BuildingEntranceIsTriggered)
                 {
                     if (Globals.SheriffTriggered)
                         QuestMenu.CreateQuestMenu(_rootConsole);
                     else if (Globals.GenericMenuTriggered)
                         Menu.CreateMenu(_rootConsole);
-                    else                    
+                    else
                         Globals.BuildingEntranceIsTriggered = false;
                 }
                 else if (Globals.IsBossDead)
-                {                    
+                {
                     WinMenu.CreateWinScreen(_rootConsole);
+                }
+                else if (Globals.InventoryOpen)
+                {
+                    //InventoryMenu.CreateInventoryMenu(_rootConsole);
+                    Menu.CreateMenu(_rootConsole);
                 }
                 else if (Globals.IsPlayerDead)
                 {
