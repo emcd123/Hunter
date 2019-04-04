@@ -87,11 +87,15 @@ namespace Hunter
             Equipment = new Equipment();            
 
             CommandSystem = new CommandSystem();
+
+            // Menu Initialisation
+            // TODO: Rewrite these classes so they can be made static in order to remove instantiation
             QuestMenu = new QuestMenu(_menuWidth, _menuHeight);
             DeathScreen = new DeathScreen(_menuWidth, _menuHeight);
             WinMenu = new WinMenu(_menuWidth, _menuHeight);
             InventoryMenu = new InventoryMenu(_menuWidth, _menuHeight);
             Menu = new Menu(_menuWidth, _menuHeight);
+
             SchedulingSystem = new SchedulingSystem();
 
             // Create a new MessageLog and print the random seed used to generate the level
