@@ -13,13 +13,11 @@ namespace TestSandbox
         private static readonly int _screenWidth = 100;
         private static readonly int _screenHeight = 70;
         private static RLRootConsole _rootConsole;
-
-        // The map console takes up most of the screen and is where the map will be drawn
+        
         private static readonly int _menuBackgroundWidth = 100;
         private static readonly int _menuBackgroundHeight = 65;
         private static RLConsole _menuBackgroundConsole;
-
-        // Above the map is the inventory console which shows the players equipment, abilities, and items
+        
         private static readonly int _titleWidth = 100;
         private static readonly int _titleHeight = 5;
         private static RLConsole _titleConsole;
@@ -27,6 +25,9 @@ namespace TestSandbox
         private static readonly int _subMenuWidth = 40;
         private static readonly int _subMenuHeight = 5;
         private static RLConsole _subMenuConsole;
+
+        private static int _numConsoles = 3;
+        private static List<RLConsole> SubMenus = new List<RLConsole>() { };
 
         public static void Main()
         {
@@ -40,7 +41,12 @@ namespace TestSandbox
             // Initialize the sub consoles that we will Blit to the root console
             _menuBackgroundConsole = new RLConsole(_menuBackgroundWidth, _menuBackgroundHeight);
             _titleConsole = new RLConsole(_titleWidth, _titleHeight);
-            _subMenuConsole = new RLConsole(_subMenuWidth, _subMenuHeight);
+            //_subMenuConsole = new RLConsole(_subMenuWidth, _subMenuHeight);
+            for (int i = 0; i < _numConsoles; i++)
+            {
+                SubMenus.Add(Menu.CreateSubMenus(_rootConsole, _subMenuWidth, _subMenuHeight));
+            }
+            
 
             // Set up a handler for RLNET's Update event
             _rootConsole.Update += OnRootConsoleUpdate;
@@ -61,8 +67,12 @@ namespace TestSandbox
             _titleConsole.SetBackColor(0, 0, _titleWidth, _titleHeight, RLColor.Cyan);
             _titleConsole.Print(1, 1, "Inventory", RLColor.White);
 
-            _subMenuConsole.SetBackColor(0, 0, _subMenuWidth, _subMenuHeight, RLColor.Green);
-            _subMenuConsole.Print(1, 1, "Sub Menu", RLColor.White);
+            //_subMenuConsole.SetBackColor(0, 0, _subMenuWidth, _subMenuHeight, RLColor.Green);
+            //_subMenuConsole.Print(1, 1, "Sub Menu", RLColor.White);
+            for (int i = 0; i < _numConsoles; i++)
+            {
+                Menu.DrawSubMenus(SubMenus[i], _subMenuWidth, _subMenuHeight);
+            }
         }
 
         // Event handler for RLNET's Render event
@@ -72,10 +82,18 @@ namespace TestSandbox
             RLConsole.Blit(_menuBackgroundConsole, 0, 0, _menuBackgroundWidth, _menuBackgroundHeight,  _rootConsole, 0, _titleHeight);
             RLConsole.Blit(_titleConsole, 0, 0, _titleWidth, _titleHeight, _rootConsole, 0, 0);
 
-            RLConsole.Blit(_subMenuConsole, 0, 0, _subMenuWidth, _subMenuHeight, _rootConsole, 0, _titleHeight);
 
+            //RLConsole.Blit(_subMenuConsole, 0, 0, _subMenuWidth, _subMenuHeight, _rootConsole, 0, _titleHeight);            
+
+            int inc = 0;
+            for (int i = 0; i < _numConsoles; i++)
+            {
+                Menu.BlitSubMenus(_rootConsole, SubMenus[i], _subMenuWidth, _subMenuHeight, inc);
+                inc += 7;
+            }
             // Tell RLNET to draw the console that we set
             _rootConsole.Draw();
         }
+
     }
 }
