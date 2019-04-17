@@ -15,7 +15,7 @@ using Hunter.Equipments;
 
 namespace Hunter
 {
-    public class Game
+    public static class Game
     {
         // The screen height and width are in number of tiles
         private static readonly int _screenWidth = 100;
@@ -90,11 +90,11 @@ namespace Hunter
 
             // Menu Initialisation
             // TODO: Rewrite these classes so they can be made static in order to remove instantiation
-            QuestMenu = new QuestMenu(_menuWidth, _menuHeight);
-            DeathScreen = new DeathScreen(_menuWidth, _menuHeight);
-            WinMenu = new WinMenu(_menuWidth, _menuHeight);
-            InventoryMenu = new InventoryMenu(_menuWidth, _menuHeight);
-            Menu = new Menu(_menuWidth, _menuHeight);
+            QuestMenu = new QuestMenu(_screenWidth, _screenHeight);
+            DeathScreen = new DeathScreen(_screenWidth, _screenHeight);
+            WinMenu = new WinMenu(_screenWidth, _screenHeight);
+            InventoryMenu = new InventoryMenu(_screenWidth, _screenHeight);
+            Menu = new Menu(_screenWidth, _screenHeight);
 
             SchedulingSystem = new SchedulingSystem();
 
