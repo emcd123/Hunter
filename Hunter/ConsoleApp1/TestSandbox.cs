@@ -26,7 +26,7 @@ namespace TestSandbox
         private static readonly int _subMenuHeight = 5;
         private static RLConsole _subMenuConsole;
 
-        private static int _numConsoles = 3;
+        private static int _numConsoles = 7;
         private static List<RLConsole> SubMenus = new List<RLConsole>() { };
 
         public static void Main()
@@ -85,10 +85,16 @@ namespace TestSandbox
 
             //RLConsole.Blit(_subMenuConsole, 0, 0, _subMenuWidth, _subMenuHeight, _rootConsole, 0, _titleHeight);            
 
-            int inc = 0;
+            int inc = 5;
             for (int i = 0; i < _numConsoles; i++)
             {
-                Menu.BlitSubMenus(_rootConsole, SubMenus[i], _subMenuWidth, _subMenuHeight, inc);
+                if (i < 5)
+                    Menu.BlitSubMenus(_rootConsole, SubMenus[i], _subMenuWidth, _subMenuHeight, inc, 0);
+                else
+                {
+                    inc = 5;
+                    Menu.BlitSubMenus(_rootConsole, SubMenus[i], _subMenuWidth, _subMenuHeight, inc, 50);
+                }
                 inc += 7;
             }
             // Tell RLNET to draw the console that we set

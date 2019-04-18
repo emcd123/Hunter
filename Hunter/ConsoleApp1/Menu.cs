@@ -16,9 +16,9 @@ namespace TestSandbox
             return new RLConsole(_subMenuWidth, _subMenuHeight);         
         }
 
-        public static void BlitSubMenus(RLRootConsole _root, RLConsole _localsubMenuConsole, int _subMenuWidth, int _subMenuHeight, int increment)
+        public static void BlitSubMenus(RLRootConsole _root, RLConsole _localsubMenuConsole, int _subMenuWidth, int _subMenuHeight, int increment, int x_val)
         {
-            RLConsole.Blit(_localsubMenuConsole, 0, 0, _subMenuWidth, _subMenuHeight, _root, 0, 5+increment);
+            RLConsole.Blit(_localsubMenuConsole, 0, 0, _subMenuWidth, _subMenuHeight, _root, x_val, 5+increment);
         }
 
         public static void DrawSubMenus(RLConsole _localsubMenuConsole, int _subMenuWidth, int _subMenuHeight)
