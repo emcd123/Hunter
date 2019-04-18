@@ -13,20 +13,8 @@ namespace TestSandbox
         private static readonly int _screenWidth = 100;
         private static readonly int _screenHeight = 70;
         private static RLRootConsole _rootConsole;
-        
-        private static readonly int _menuBackgroundWidth = 100;
-        private static readonly int _menuBackgroundHeight = 65;
-        private static RLConsole _menuBackgroundConsole;
-        
-        private static readonly int _titleWidth = 100;
-        private static readonly int _titleHeight = 5;
-        private static RLConsole _titleConsole;
 
-        private static readonly int _subMenuWidth = 40;
-        private static readonly int _subMenuHeight = 5;
-        private static RLConsole _subMenuConsole;
-
-        private static int _numConsoles = 7;
+        
         private static List<RLConsole> SubMenus = new List<RLConsole>() { };
 
         public static void Main()
@@ -39,14 +27,8 @@ namespace TestSandbox
             _rootConsole = new RLRootConsole(fontFileName, _screenWidth, _screenHeight, 8, 8, 1f, consoleTitle);
 
             // Initialize the sub consoles that we will Blit to the root console
-            _menuBackgroundConsole = new RLConsole(_menuBackgroundWidth, _menuBackgroundHeight);
-            _titleConsole = new RLConsole(_titleWidth, _titleHeight);
-            //_subMenuConsole = new RLConsole(_subMenuWidth, _subMenuHeight);
-            for (int i = 0; i < _numConsoles; i++)
-            {
-                SubMenus.Add(Menu.CreateSubMenus(_rootConsole, _subMenuWidth, _subMenuHeight));
-            }
-            
+            Menu.InstantiateBaseMenu();
+            SubMenus = Menu.CreateSubMenusIter(_rootConsole);
 
             // Set up a handler for RLNET's Update event
             _rootConsole.Update += OnRootConsoleUpdate;
@@ -61,42 +43,22 @@ namespace TestSandbox
         {
             // Set background color and text for each console 
             // so that we can verify they are in the correct positions
-            _menuBackgroundConsole.SetBackColor(0, 0, _menuBackgroundWidth, _menuBackgroundHeight, RLColor.Black);
-            _menuBackgroundConsole.Print(1, 1, "Map", RLColor.White);
-
-            _titleConsole.SetBackColor(0, 0, _titleWidth, _titleHeight, RLColor.Cyan);
-            _titleConsole.Print(1, 1, "Inventory", RLColor.White);
+            Menu.DrawBaseMenu();
 
             //_subMenuConsole.SetBackColor(0, 0, _subMenuWidth, _subMenuHeight, RLColor.Green);
             //_subMenuConsole.Print(1, 1, "Sub Menu", RLColor.White);
-            for (int i = 0; i < _numConsoles; i++)
-            {
-                Menu.DrawSubMenus(SubMenus[i], _subMenuWidth, _subMenuHeight);
-            }
+            Menu.DrawSubMenusIter(SubMenus);
         }
 
         // Event handler for RLNET's Render event
         private static void OnRootConsoleRender(object sender, UpdateEventArgs e)
         {
             // Blit the sub consoles to the root console in the correct locations
-            RLConsole.Blit(_menuBackgroundConsole, 0, 0, _menuBackgroundWidth, _menuBackgroundHeight,  _rootConsole, 0, _titleHeight);
-            RLConsole.Blit(_titleConsole, 0, 0, _titleWidth, _titleHeight, _rootConsole, 0, 0);
-
+            Menu.BlitBaseMenu(_rootConsole);
 
             //RLConsole.Blit(_subMenuConsole, 0, 0, _subMenuWidth, _subMenuHeight, _rootConsole, 0, _titleHeight);            
-
-            int inc = 5;
-            for (int i = 0; i < _numConsoles; i++)
-            {
-                if (i < 5)
-                    Menu.BlitSubMenus(_rootConsole, SubMenus[i], _subMenuWidth, _subMenuHeight, inc, 0);
-                else
-                {
-                    inc = 5;
-                    Menu.BlitSubMenus(_rootConsole, SubMenus[i], _subMenuWidth, _subMenuHeight, inc, 50);
-                }
-                inc += 7;
-            }
+            Menu.BlitSubMenusIter(_rootConsole, SubMenus);
+           
             // Tell RLNET to draw the console that we set
             _rootConsole.Draw();
         }
