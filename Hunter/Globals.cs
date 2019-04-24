@@ -13,5 +13,6 @@ namespace Hunter
         public static bool GenericMenuTriggered = false;
         public static bool IsPlayerDead = false;
         public static bool IsBossDead = false;
+        public static bool InventoryOpen = false;
     }
 }

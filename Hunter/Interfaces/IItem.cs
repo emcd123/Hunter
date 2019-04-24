@@ -8,6 +8,7 @@ namespace Hunter.Interfaces
 {
     public interface I_Item
     {
+        string DamageString { get; set; }
         int Attack { get; set; }
         int Awareness { get; set; }
         int Defense { get; set; }

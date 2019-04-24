@@ -1,4 +1,5 @@
 ﻿using Hunter.Equipments;
+using RLNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace Hunter.Interfaces
         void UnequipItem(Item selected_item);
         //void AddToMap(List<Item> inventory, List<Item> item_list);
         //void RemoveFromMap(List<Item> inventory, List<Item> item_list);
-        void DrawEquipped();
+        void DrawEquipped(RLConsole equipConsole);
         void DrawInventory();
     }
 }

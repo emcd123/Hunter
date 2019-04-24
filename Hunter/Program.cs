@@ -15,7 +15,7 @@ using Hunter.Equipments;
 
 namespace Hunter
 {
-    public class Game
+    public static class Game
     {
         // The screen height and width are in number of tiles
         private static readonly int _screenWidth = 100;
@@ -37,14 +37,19 @@ namespace Hunter
 
         // The stat console is to the right of the map and display player and monster stats
         private static readonly int _statWidth = 20;
-        private static readonly int _statHeight = 70;
+        private static readonly int _statHeight = 40;
         private static RLConsole _statConsole;
+
+        private static readonly int _equipWidth = 20;
+        private static readonly int _equipHeight = 40;
+        private static RLConsole _equipConsole;
 
         private static bool _renderRequired = true;
 
         public static CommandSystem CommandSystem { get; private set; }
         public static Menu Menu { get; private set; }
         public static QuestMenu QuestMenu { get; private set; }
+        public static InventoryMenu InventoryMenu { get; private set; }
         public static DeathScreen DeathScreen { get; private set; }
         public static WinMenu WinMenu { get; private set; }
 
@@ -76,15 +81,21 @@ namespace Hunter
             _mapConsole = new RLConsole(_mapWidth, _mapHeight);
             _messageConsole = new RLConsole(_messageWidth, _messageHeight);
             _statConsole = new RLConsole(_statWidth, _statHeight);
+            _equipConsole = new RLConsole(_equipWidth, _equipHeight);
 
             Player = new Player();
             Equipment = new Equipment();            
 
             CommandSystem = new CommandSystem();
-            QuestMenu = new QuestMenu(_menuWidth, _menuHeight);
-            DeathScreen = new DeathScreen(_menuWidth, _menuHeight);
-            WinMenu = new WinMenu(_menuWidth, _menuHeight);
-            Menu = new Menu(_menuWidth, _menuHeight);
+
+            // Menu Initialisation
+            // TODO: Rewrite these classes so they can be made static in order to remove instantiation
+            QuestMenu = new QuestMenu(_screenWidth, _screenHeight);
+            DeathScreen = new DeathScreen(_screenWidth, _screenHeight);
+            WinMenu = new WinMenu(_screenWidth, _screenHeight);
+            InventoryMenu = new InventoryMenu(_screenWidth, _screenHeight);
+            Menu = new Menu(_screenWidth, _screenHeight);
+
             SchedulingSystem = new SchedulingSystem();
 
             // Create a new MessageLog and print the random seed used to generate the level
@@ -198,6 +209,17 @@ namespace Hunter
                         }
                     }
                 }
+                else if (Globals.InventoryOpen)
+                {
+                    if (keyPress != null)
+                    {
+                        if (keyPress.Key == RLKey.Escape)
+                        {
+                            Globals.InventoryOpen = false;
+                            didPlayerAct = true;
+                        }
+                    }
+                }
                 else
                 {
                     if (keyPress != null)
@@ -239,7 +261,14 @@ namespace Hunter
                                 Player.Inventory.PickUpItem(DungeonMap.ItemList, item);
                                 foreach(var item_at_index in Player.Inventory._inventory)
                                     Console.WriteLine(item_at_index);
+
+                                didPlayerAct = true;
                             }
+                        }
+                        else if (keyPress.Key == RLKey.I)
+                        {
+                            Globals.InventoryOpen = true;
+                            didPlayerAct = true;
                         }
                         else if (keyPress.Key == RLKey.Escape)
                         {
@@ -267,36 +296,45 @@ namespace Hunter
             {
                 _mapConsole.Clear();
                 _statConsole.Clear();
+                _equipConsole.Clear();
                 _messageConsole.Clear();
 
                 DungeonMap.Draw(_mapConsole, _statConsole);
                 Player.Draw(_mapConsole);
                 Player.DrawStats(_statConsole);
+                Player.Inventory.DrawEquipped(_equipConsole);
                 MessageLog.Draw(_messageConsole);
-                    
 
-                if (!Globals.BuildingEntranceIsTriggered && !Globals.IsPlayerDead && !Globals.IsBossDead)
+
+                if (!Globals.BuildingEntranceIsTriggered && !Globals.IsPlayerDead && !Globals.IsBossDead && !Globals.InventoryOpen)
                 {
                     // Blit the sub consoles to the root console in the correct locations
                     RLConsole.Blit(_mapConsole, 0, 0, _mapWidth, _mapHeight,
                       _rootConsole, 0, 0);
                     RLConsole.Blit(_statConsole, 0, 0, _statWidth, _statHeight,
                       _rootConsole, _mapWidth, 0);
+                    RLConsole.Blit(_equipConsole, 0, 0, _equipWidth, _equipHeight,
+                      _rootConsole, _mapWidth, _statHeight);
                     RLConsole.Blit(_messageConsole, 0, 0, _messageWidth, _messageHeight,
                       _rootConsole, 0, _screenHeight - _messageHeight);
                 }
-                else if(Globals.BuildingEntranceIsTriggered)
+                else if (Globals.BuildingEntranceIsTriggered)
                 {
                     if (Globals.SheriffTriggered)
                         QuestMenu.CreateQuestMenu(_rootConsole);
                     else if (Globals.GenericMenuTriggered)
                         Menu.CreateMenu(_rootConsole);
-                    else                    
+                    else
                         Globals.BuildingEntranceIsTriggered = false;
                 }
                 else if (Globals.IsBossDead)
-                {                    
+                {
                     WinMenu.CreateWinScreen(_rootConsole);
+                }
+                else if (Globals.InventoryOpen)
+                {
+                    //InventoryMenu.CreateInventoryMenu(_rootConsole);
+                    Menu.CreateMenu(_rootConsole);
                 }
                 else if (Globals.IsPlayerDead)
                 {
