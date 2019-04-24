@@ -14,7 +14,9 @@ namespace TestSandbox
         private static readonly int _screenHeight = 70;
         private static RLRootConsole _rootConsole;
 
-        
+        private static List<string> MenuData = new List<string>() { "health potion", "LongSword", "Rifle" };
+        public static int _numConsoles = MenuData.Count;
+
         private static List<RLConsole> SubMenus = new List<RLConsole>() { };
 
         public static void Main()
@@ -28,7 +30,7 @@ namespace TestSandbox
 
             // Initialize the sub consoles that we will Blit to the root console
             Menu.InstantiateBaseMenu();
-            SubMenus = Menu.CreateSubMenusIter(_rootConsole);
+            SubMenus = Menu.CreateSubMenusIter(_rootConsole, _numConsoles);
 
             // Set up a handler for RLNET's Update event
             _rootConsole.Update += OnRootConsoleUpdate;
@@ -47,7 +49,7 @@ namespace TestSandbox
 
             //_subMenuConsole.SetBackColor(0, 0, _subMenuWidth, _subMenuHeight, RLColor.Green);
             //_subMenuConsole.Print(1, 1, "Sub Menu", RLColor.White);
-            Menu.DrawSubMenusIter(SubMenus);
+            Menu.DrawSubMenusIter(SubMenus, MenuData);
         }
 
         // Event handler for RLNET's Render event
