@@ -43,13 +43,31 @@ namespace TestSandbox
         // Event handler for RLNET's Update event
         private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
         {
-            // Set background color and text for each console 
-            // so that we can verify they are in the correct positions
-            Menu.DrawBaseMenu();
-
+            RLKeyPress keyPress = _rootConsole.Keyboard.GetKeyPress();
+            if (keyPress != null)
+            {
+                if (keyPress.Key == RLKey.E)
+                {
+                    // Set background color and text for each console 
+                    // so that we can verify they are in the correct positions
+                    Menu.DrawBaseMenu();
+                    Menu.DrawSubMenusIter(SubMenus, MenuData, RLColor.White);
+                }                
+                else if(keyPress.Key == RLKey.Escape)
+                {
+                    //Change global is menu open variable to false again
+                    Menu.CloseMenu();
+                    _rootConsole.Close();
+                }
+                else
+                {
+                    var Menus = Menu.CreateConsoleItemDict(SubMenus, MenuData);
+                    Menu.SelectItemOnInput(Menus, keyPress.Key);
+                }
+            }
             //_subMenuConsole.SetBackColor(0, 0, _subMenuWidth, _subMenuHeight, RLColor.Green);
             //_subMenuConsole.Print(1, 1, "Sub Menu", RLColor.White);
-            Menu.DrawSubMenusIter(SubMenus, MenuData);
+            
         }
 
         // Event handler for RLNET's Render event

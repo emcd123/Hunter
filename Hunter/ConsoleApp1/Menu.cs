@@ -8,9 +8,7 @@ using System.Threading.Tasks;
 namespace TestSandbox
 {
     public class Menu
-    {
-        
-
+    { 
         private static readonly int _menuBackgroundWidth = 100;
         private static readonly int _menuBackgroundHeight = 65;
         private static RLConsole _menuBackgroundConsole;
@@ -37,7 +35,7 @@ namespace TestSandbox
         {
             _menuBackgroundConsole.SetBackColor(0, 0, _menuBackgroundWidth, _menuBackgroundHeight, RLColor.Black);
             _menuBackgroundConsole.Print(1, 1, "", RLColor.White);
-
+            
             _titleConsole.SetBackColor(0, 0, _titleWidth, _titleHeight, RLColor.Cyan);
             _titleConsole.Print(1, 1, "Inventory", RLColor.White);
         }
@@ -74,11 +72,14 @@ namespace TestSandbox
             }
         }
 
-        public static void DrawSubMenusIter(List<RLConsole> SubMenus, List<string> MenuData)
+        public static void DrawSubMenusIter(List<RLConsole> SubMenus, List<string> MenuData, RLColor color)
         {
             for (int i = 0; i < MenuData.Count; i++)
             {
-                Menu.DrawSubMenus(SubMenus[i], MenuData[i]);
+                if(i == 0)
+                    Menu.DrawSubMenus(SubMenus[i], MenuData[i], RLColor.Cyan);
+                else
+                    Menu.DrawSubMenus(SubMenus[i], MenuData[i], color);
             }
         }
 
@@ -92,10 +93,11 @@ namespace TestSandbox
             RLConsole.Blit(_localsubMenuConsole, 0, 0, _subMenuWidth, _subMenuHeight, _root, x_val, 5+increment);
         }
 
-        public static void DrawSubMenus(RLConsole _localsubMenuConsole, string text)
+        public static void DrawSubMenus(RLConsole _localsubMenuConsole, string text, RLColor color)
         {
+            _localsubMenuConsole.Clear();
             _localsubMenuConsole.SetBackColor(0, 0, _subMenuWidth, _subMenuHeight, RLColor.Black);
-            _localsubMenuConsole.Print(1, 1, text, RLColor.White);
+            _localsubMenuConsole.Print(1, 1, text, color);
         }
 
         public static void SelectItemOnInput(Dictionary<RLConsole, string> Data, RLKey input)
@@ -104,16 +106,20 @@ namespace TestSandbox
                 if (selectedIndex > 0)
                 {
                     selectedIndex -= 1;
-                    Data.Keys.ElementAt(selectedIndex + 1).Print(1, 1, Data.Values.ElementAt(selectedIndex), RLColor.White);
-                    Data.Keys.ElementAt(selectedIndex).Print(1, 1, Data.Values.ElementAt(selectedIndex), RLColor.Cyan);
+                    DrawSubMenus(Data.Keys.ElementAt(selectedIndex + 1), Data.Values.ElementAt(selectedIndex + 1), RLColor.White);
+                    //Data.Keys.ElementAt(selectedIndex + 1).Print(1, 1, Data.Values.ElementAt(selectedIndex), RLColor.White);
+                    DrawSubMenus(Data.Keys.ElementAt(selectedIndex), Data.Values.ElementAt(selectedIndex), RLColor.Cyan);
+                    //Data.Keys.ElementAt(selectedIndex).Print(1, 1, Data.Values.ElementAt(selectedIndex), RLColor.Cyan);
                 }
             }
             else if (input == RLKey.Down) {
-                if (selectedIndex < Data.Count)
+                if (selectedIndex < Data.Count-1)
                 {
                     selectedIndex += 1;
-                    Data.Keys.ElementAt(selectedIndex - 1).Print(1, 1, Data.Values.ElementAt(selectedIndex), RLColor.White);
-                    Data.Keys.ElementAt(selectedIndex).Print(1, 1, Data.Values.ElementAt(selectedIndex), RLColor.Cyan);
+                    DrawSubMenus(Data.Keys.ElementAt(selectedIndex - 1), Data.Values.ElementAt(selectedIndex - 1), RLColor.White);
+                    DrawSubMenus(Data.Keys.ElementAt(selectedIndex), Data.Values.ElementAt(selectedIndex), RLColor.Cyan);
+                    //Data.Keys.ElementAt(selectedIndex - 1).Print(1, 1, Data.Values.ElementAt(selectedIndex), RLColor.White);
+                    //Data.Keys.ElementAt(selectedIndex).Print(1, 1, Data.Values.ElementAt(selectedIndex), RLColor.Cyan);
                 }
             }
             else{
