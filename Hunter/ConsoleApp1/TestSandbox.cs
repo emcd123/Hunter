@@ -44,6 +44,7 @@ namespace TestSandbox
         private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
         {
             RLKeyPress keyPress = _rootConsole.Keyboard.GetKeyPress();
+            var Menus = Menu.CreateConsoleItemDict(SubMenus, MenuData);
             if (keyPress != null)
             {
                 if (keyPress.Key == RLKey.E)
@@ -59,9 +60,13 @@ namespace TestSandbox
                     Menu.CloseMenu();
                     _rootConsole.Close();
                 }
+                else if (keyPress.Key == RLKey.Enter)
+                {
+                    Menu.ActOnSelection(Menus);
+                }
                 else
                 {
-                    var Menus = Menu.CreateConsoleItemDict(SubMenus, MenuData);
+                    
                     Menu.SelectItemOnInput(Menus, keyPress.Key);
                 }
             }

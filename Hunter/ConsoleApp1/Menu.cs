@@ -83,6 +83,11 @@ namespace TestSandbox
             }
         }
 
+        internal static void ActOnSelection(Dictionary<RLConsole, string> menus)
+        {
+            throw new NotImplementedException();
+        }
+
         public static RLConsole CreateSubMenus( RLRootConsole _root)
         {
             return new RLConsole(_subMenuWidth, _subMenuHeight);         
